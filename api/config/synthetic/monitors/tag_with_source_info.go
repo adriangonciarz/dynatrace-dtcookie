@@ -1,6 +1,10 @@
 package monitors
 
-import "github.com/dtcookie/hcl"
+import (
+	"sort"
+
+	"github.com/dtcookie/hcl"
+)
 
 type TagsWithSourceInfo []*TagWithSourceInfo
 
@@ -20,7 +24,12 @@ func (me *TagsWithSourceInfo) Schema() map[string]*hcl.Schema {
 func (me TagsWithSourceInfo) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	entries := []interface{}{}
-	for _, tag := range me {
+	sorted := TagsWithSourceInfo{}
+	sorted = append(sorted, me...)
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Key < sorted[j].Key
+	})
+	for _, tag := range sorted {
 		if marshalled, err := tag.MarshalHCL(); err == nil {
 			entries = append(entries, marshalled)
 		} else {

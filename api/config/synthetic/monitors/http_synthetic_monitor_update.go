@@ -109,7 +109,9 @@ func (me *HTTPSyntheticMonitorUpdate) MarshalHCL() (map[string]interface{}, erro
 	if len(me.Locations) > 0 {
 		result["locations"] = me.Locations
 	}
-	result["enabled"] = me.Enabled
+	if me.Enabled {
+		result["enabled"] = me.Enabled
+	}
 	if len(me.ManuallyAssignedApps) > 0 {
 		result["manually_assigned_apps"] = me.ManuallyAssignedApps
 	}
@@ -145,8 +147,8 @@ func (me *HTTPSyntheticMonitorUpdate) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.FrequencyMin = int32(value.(int))
 	}
 	me.Locations = decoder.GetStringSet("locations")
-	if value, ok := decoder.GetBoolOk("enabled"); ok {
-		me.Enabled = value
+	if value, ok := decoder.GetOk("enabled"); ok {
+		me.Enabled = value.(bool)
 	}
 	me.ManuallyAssignedApps = decoder.GetStringSet("manually_assigned_apps")
 	if _, ok := decoder.GetOk("tags.#"); ok {
