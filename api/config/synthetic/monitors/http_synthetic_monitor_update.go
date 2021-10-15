@@ -63,7 +63,7 @@ func (me *HTTPSyntheticMonitorUpdate) Schema() map[string]*hcl.Schema {
 			Elem:        &hcl.Schema{Type: hcl.TypeString},
 		},
 		"enabled": {
-			Type:        hcl.TypeInt,
+			Type:        hcl.TypeBool,
 			Description: "The monitor is enabled (`true`) or disabled (`false`).",
 			Optional:    true,
 		},
@@ -109,9 +109,7 @@ func (me *HTTPSyntheticMonitorUpdate) MarshalHCL() (map[string]interface{}, erro
 	if len(me.Locations) > 0 {
 		result["locations"] = me.Locations
 	}
-	if me.Enabled {
-		result["enabled"] = me.Enabled
-	}
+	result["enabled"] = me.Enabled
 	if len(me.ManuallyAssignedApps) > 0 {
 		result["manually_assigned_apps"] = me.ManuallyAssignedApps
 	}
@@ -147,6 +145,9 @@ func (me *HTTPSyntheticMonitorUpdate) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.FrequencyMin = int32(value.(int))
 	}
 	me.Locations = decoder.GetStringSet("locations")
+	if value, ok := decoder.GetBoolOk("enabled"); ok {
+		me.Enabled = value
+	}
 	me.ManuallyAssignedApps = decoder.GetStringSet("manually_assigned_apps")
 	if _, ok := decoder.GetOk("tags.#"); ok {
 		me.Tags = TagsWithSourceInfo{}
