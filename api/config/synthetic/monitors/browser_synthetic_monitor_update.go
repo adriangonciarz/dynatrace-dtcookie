@@ -24,7 +24,6 @@ func (me *BrowserSyntheticMonitorUpdate) MarshalJSON() ([]byte, error) {
 		AnomalyDetection      *AnomalyDetection      `json:"anomalyDetection,omitempty"` // Configuration for Anomaly Detection
 		Locations             []string               `json:"locations"`                  // A list of locations from which the monitor is executed. \n\n To specify a location, use its entity ID
 		Tags                  TagsWithSourceInfo     `json:"tags"`                       // A set of tags assigned to the monitor. \n\n You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically. But preferred option is usage of TagWithSourceDto model
-		ManagementZones       []string               `json:"managementZones,omitempty"`  // The Management Zones this Monitor should apply to
 		ManuallyAssignedApps  []string               `json:"manuallyAssignedApps"`       // A set of manually assigned applications
 		KeyPerformanceMetrics *KeyPerformanceMetrics `json:"keyPerformanceMetrics"`      // The key performance metrics configuration
 		Script                *browser.Script        `json:"script,omitempty"`
@@ -37,7 +36,6 @@ func (me *BrowserSyntheticMonitorUpdate) MarshalJSON() ([]byte, error) {
 		me.AnomalyDetection,
 		me.Locations,
 		me.GetTags(),
-		me.ManagementZones,
 		me.ManuallyAssignedApps,
 		me.KeyPerformanceMetrics,
 		me.Script,
