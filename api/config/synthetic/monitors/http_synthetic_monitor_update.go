@@ -141,13 +141,13 @@ func (me *HTTPSyntheticMonitorUpdate) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
 	}
-	if value, ok := decoder.GetBoolOk("enabled"); ok {
-		me.Enabled = value
-	}
 	if value, ok := decoder.GetOk("frequency"); ok {
 		me.FrequencyMin = int32(value.(int))
 	}
 	me.Locations = decoder.GetStringSet("locations")
+	if value, ok := decoder.GetBoolOk("enabled"); ok {
+		me.Enabled = value
+	}
 	me.ManuallyAssignedApps = decoder.GetStringSet("manually_assigned_apps")
 	if _, ok := decoder.GetOk("tags.#"); ok {
 		me.Tags = TagsWithSourceInfo{}
