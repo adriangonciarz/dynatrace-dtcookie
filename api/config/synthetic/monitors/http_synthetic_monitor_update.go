@@ -27,7 +27,6 @@ func (me *HTTPSyntheticMonitorUpdate) MarshalJSON() ([]byte, error) {
 		AnomalyDetection     *AnomalyDetection  `json:"anomalyDetection,omitempty"`
 		Locations            []string           `json:"locations"`
 		Tags                 TagsWithSourceInfo `json:"tags"`
-		ManagementZones      []string           `json:"managementZones,omitempty"`
 		ManuallyAssignedApps []string           `json:"manuallyAssignedApps"`
 		Script               *http.Script       `json:"script,omitempty"`
 	}{
@@ -39,7 +38,6 @@ func (me *HTTPSyntheticMonitorUpdate) MarshalJSON() ([]byte, error) {
 		me.AnomalyDetection,
 		me.Locations,
 		me.GetTags(),
-		me.ManagementZones,
 		me.ManuallyAssignedApps,
 		me.Script,
 	})
