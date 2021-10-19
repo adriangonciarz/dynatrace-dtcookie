@@ -64,9 +64,13 @@ func (me *Device) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if me.Mobile != nil && *me.Mobile {
 		result["mobile"] = me.Mobile
+	} else {
+		result["mobile"] = false
 	}
 	if me.TouchEnabled != nil && *me.TouchEnabled {
 		result["touch_enabled"] = me.TouchEnabled
+	} else {
+		result["touch_enabled"] = false
 	}
 	if me.Width != nil {
 		result["width"] = *me.Width

@@ -60,15 +60,9 @@ func (me *OutageHandlingPolicy) Schema() map[string]*hcl.Schema {
 
 func (me *OutageHandlingPolicy) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
-	if me.GlobalOutage {
-		result["global_outage"] = me.GlobalOutage
-	}
-	if me.LocalOutage {
-		result["local_outage"] = me.LocalOutage
-	}
-	if me.RetryOnError {
-		result["retry_on_error"] = me.RetryOnError
-	}
+	result["global_outage"] = me.GlobalOutage
+	result["local_outage"] = me.LocalOutage
+	result["retry_on_error"] = me.RetryOnError
 	if me.LocalOutagePolicy != nil && (me.LocalOutagePolicy.AffectedLocations != nil || me.LocalOutagePolicy.ConsecutiveRuns != nil) {
 		if marshalled, err := me.LocalOutagePolicy.MarshalHCL(); err == nil {
 			result["local_outage_policy"] = []interface{}{marshalled}

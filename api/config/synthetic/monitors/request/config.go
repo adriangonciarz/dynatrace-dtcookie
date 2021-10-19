@@ -49,6 +49,8 @@ func (me *Config) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if me.FollowRedirects != nil && *me.FollowRedirects {
 		result["follow_redirects"] = *me.FollowRedirects
+	} else {
+		result["follow_redirects"] = false
 	}
 	if len(me.RequestHeaders) > 0 {
 		if marshalled, err := me.RequestHeaders.MarshalHCL(); err == nil {

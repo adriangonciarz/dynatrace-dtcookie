@@ -109,9 +109,7 @@ func (me *HTTPSyntheticMonitorUpdate) MarshalHCL() (map[string]interface{}, erro
 	if len(me.Locations) > 0 {
 		result["locations"] = me.Locations
 	}
-	if me.Enabled {
-		result["enabled"] = me.Enabled
-	}
+	result["enabled"] = me.Enabled
 	if len(me.ManuallyAssignedApps) > 0 {
 		result["manually_assigned_apps"] = me.ManuallyAssignedApps
 	}

@@ -84,12 +84,8 @@ func (me *Validation) MarshalHCL() (map[string]interface{}, error) {
 	if len(me.Match) > 0 {
 		result["match"] = me.Match
 	}
-	if me.IsRegex {
-		result["regex"] = me.IsRegex
-	}
-	if me.FailIfFound {
-		result["fail_if_found"] = me.FailIfFound
-	}
+	result["regex"] = me.IsRegex
+	result["fail_if_found"] = me.FailIfFound
 	if me.Target != nil {
 		if marshalled, err := me.Target.MarshalHCL(); err == nil {
 			result["target"] = []interface{}{marshalled}

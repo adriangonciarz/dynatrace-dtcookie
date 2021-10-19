@@ -34,9 +34,7 @@ func (me *Rule) Schema() map[string]*hcl.Schema {
 func (me *Rule) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	result["type"] = string(me.Type)
-	if me.PassIfFound {
-		result["pass_if_found"] = me.PassIfFound
-	}
+	result["pass_if_found"] = me.PassIfFound
 	result["value"] = me.Value
 	return result, nil
 }

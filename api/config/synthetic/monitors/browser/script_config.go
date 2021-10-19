@@ -96,14 +96,12 @@ func (me *ScriptConfig) Schema() map[string]*hcl.Schema {
 
 func (me *ScriptConfig) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
-	if me.DisableWebSecurity {
-		result["disable_web_security"] = me.DisableWebSecurity
-	}
-	if me.BypassCSP {
-		result["bypass_csp"] = me.BypassCSP
-	}
+	result["disable_web_security"] = me.DisableWebSecurity
+	result["bypass_csp"] = me.BypassCSP
 	if me.MonitorFrames != nil && me.MonitorFrames.Enabled {
 		result["monitor_frames"] = me.MonitorFrames.Enabled
+	} else {
+		result["monitor_frames"] = false
 	}
 	if me.UserAgent != nil {
 		result["user_agent"] = me.UserAgent

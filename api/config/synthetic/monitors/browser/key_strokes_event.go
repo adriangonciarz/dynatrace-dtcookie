@@ -81,12 +81,8 @@ func (me *KeyStrokesEvent) MarshalHCL() (map[string]interface{}, error) {
 		}
 	}
 	result["text"] = me.TextValue
-	if me.Masked {
-		result["masked"] = me.Masked
-	}
-	if me.SimulateBlurEvent {
-		result["simulate_blur_event"] = me.SimulateBlurEvent
-	}
+	result["masked"] = me.Masked
+	result["simulate_blur_event"] = me.SimulateBlurEvent
 	return result, nil
 }
 

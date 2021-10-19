@@ -27,9 +27,7 @@ func (me *LoadingTimeThresholdsPolicy) Schema() map[string]*hcl.Schema {
 
 func (me *LoadingTimeThresholdsPolicy) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
-	if me.Enabled {
-		result["enabled"] = me.Enabled
-	}
+	result["enabled"] = me.Enabled
 	if len(me.Thresholds) > 0 {
 		if marshalled, err := me.Thresholds.MarshalHCL(); err == nil {
 			result["thresholds"] = []interface{}{marshalled}
