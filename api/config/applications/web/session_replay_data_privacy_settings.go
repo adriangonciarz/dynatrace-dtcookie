@@ -1,8 +1,6 @@
 package web
 
 import (
-	"log"
-
 	"github.com/dtcookie/hcl"
 )
 
@@ -38,7 +36,6 @@ func (me *SessionReplayDataPrivacySettings) Schema() map[string]*hcl.Schema {
 }
 
 func (me *SessionReplayDataPrivacySettings) MarshalHCL() (map[string]interface{}, error) {
-	log.Println("me.URLExclusionRules", me.URLExclusionRules)
 	return hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"opt_in":                   me.OptIn,
 		"url_exclusion_rules":      me.URLExclusionRules,
