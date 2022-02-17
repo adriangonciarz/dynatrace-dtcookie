@@ -44,8 +44,8 @@ type UserActionAndSessionProperty struct {
 	Type                       PropertyType   `json:"type"`                                 // The data type of the property. Possible values are `DATE`, `DOUBLE`, `LONG`, `LONG_STRING` and `STRING`.
 	Origin                     PropertyOrigin `json:"origin"`                               // The origin of the property. Possible values are `JAVASCRIPT_API`, `META_DATA` and `SERVER_SIDE_REQUEST_ATTRIBUTE`.
 	Aggregation                *Aggregation   `json:"aggregation,omitempty"`                // The aggregation type of the property. \n\n  It defines how multiple values of the property are aggregated. Possible values are `AVERAGE`, `FIRST`, `LAST`, `MAXIMUM`, `MINIMUM` and `SUM`.
-	StoreAsUserActionProperty  bool           `json:"storeAsUserActionProperty,omitempty"`  // If `true`, the property is stored as a user action property
-	StoreAsSessionProperty     bool           `json:"storeAsSessionProperty,omitempty"`     // If `true`, the property is stored as a session property
+	StoreAsUserActionProperty  bool           `json:"storeAsUserActionProperty"`            // If `true`, the property is stored as a user action property
+	StoreAsSessionProperty     bool           `json:"storeAsSessionProperty"`               // If `true`, the property is stored as a session property
 	CleanupRule                *string        `json:"cleanupRule,omitempty"`                // The cleanup rule of the property. \n\nDefines how to extract the data you need from a string value. Specify the [regular expression](https://dt-url.net/k9e0iaq) for the data you need there
 	ServerSideRequestAttribute *string        `json:"serverSideRequestAttribute,omitempty"` // The ID of the request attribute. \n\nOnly applicable when the **origin** is set to `SERVER_SIDE_REQUEST_ATTRIBUTE`
 	UniqueID                   int32          `json:"uniqueId"`                             // Unique id among all userTags and properties of this application
