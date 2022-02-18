@@ -15,7 +15,7 @@ type MonitoringSettings struct {
 	InjectionMode                    InjectionMode                  `json:"injectionMode"`                              // Possible valures are `CODE_SNIPPET`, `CODE_SNIPPET_ASYNC`, `INLINE_CODE` and `JAVASCRIPT_TAG`
 	AddCrossOriginAnonymousAttribute *bool                          `json:"addCrossOriginAnonymousAttribute,omitempty"` // Add the cross origin = anonymous attribute to capture JavaScript error messages and W3C resource timings
 	ScriptTagCacheDurationInHours    *int32                         `json:"scriptTagCacheDurationInHours,omitempty"`    // Time duration for the cache settings
-	LibraryFileLocation              string                         `json:"libraryFileLocation"`                        // The location of your application’s custom JavaScript library file. \n\n If nothing specified the root directory of your web server is used. \n\n **Required** for auto-injected applications, not supported by agentless applications. Maximum 512 characters.
+	LibraryFileLocation              *string                        `json:"libraryFileLocation,omitempty"`              // The location of your application’s custom JavaScript library file. \n\n If nothing specified the root directory of your web server is used. \n\n **Required** for auto-injected applications, not supported by agentless applications. Maximum 512 characters.
 	MonitoringDataPath               string                         `json:"monitoringDataPath"`                         // The location to send monitoring data from the JavaScript tag.\n\n Specify either a relative or an absolute URL. If you use an absolute URL, data will be sent using CORS. \n\n **Required** for auto-injected applications, optional for agentless applications. Maximum 512 characters.
 	CustomConfigurationProperties    string                         `json:"customConfigurationProperties"`              // Additional JavaScript tag properties that are specific to your application. To do this, type key=value pairs separated using a (|) symbol. Maximum 1000 characters.
 	ServerRequestPathID              string                         `json:"serverRequestPathId"`                        // Path to identify the server’s request ID. Maximum 150 characters.
@@ -152,7 +152,7 @@ func (me *MonitoringSettings) Schema() map[string]*hcl.Schema {
 }
 
 func (me *MonitoringSettings) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeAll(map[string]interface{}{
+	res, err := hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"fetch_requests":                       me.FetchRequests,
 		"xml_http_request":                     me.XmlHttpRequest,
 		"javascript_framework_support":         me.JavaScriptFrameworkSupport,
@@ -175,6 +175,20 @@ func (me *MonitoringSettings) MarshalHCL() (map[string]interface{}, error) {
 		"javascript_injection_rules":           me.JavaScriptInjectionRules,
 		"angular_package_name":                 me.AngularPackageName,
 	})
+	if err != nil {
+		return nil, err
+	}
+	if me.BrowserRestrictionSettings != nil {
+		if len(me.BrowserRestrictionSettings.BrowserRestrictions) == 0 {
+			delete(res, "browser_restriction_settings")
+		}
+	}
+	if me.IPAddressRestrictionSettings != nil {
+		if len(me.IPAddressRestrictionSettings.Restrictions) == 0 {
+			delete(res, "ip_address_restriction_settings")
+		}
+	}
+	return res, err
 }
 
 func (me *MonitoringSettings) UnmarshalHCL(decoder hcl.Decoder) error {

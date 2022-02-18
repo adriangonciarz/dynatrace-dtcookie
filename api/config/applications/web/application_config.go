@@ -1,6 +1,9 @@
 package web
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+	"github.com/dtcookie/opt"
+)
 
 // ApplicationConfig Configuration of a web application
 type ApplicationConfig struct {
@@ -208,6 +211,21 @@ func (me *ApplicationConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if me.MetaDataCaptureSettings == nil {
 		me.MetaDataCaptureSettings = MetaDataCaptureSettings{}
+	}
+	if me.MonitoringSettings != nil {
+		if me.MonitoringSettings.LibraryFileLocation == nil {
+			if me.Type == ApplicationTypes.ManuallyInjected {
+				me.MonitoringSettings.LibraryFileLocation = nil
+			}
+			if me.Type == ApplicationTypes.AutoInjected {
+				me.MonitoringSettings.LibraryFileLocation = opt.NewString("")
+			}
+		}
+		if me.MonitoringSettings.LibraryFileLocation != nil {
+			if me.Type == ApplicationTypes.ManuallyInjected {
+				me.MonitoringSettings.LibraryFileLocation = nil
+			}
+		}
 	}
 	return nil
 }
