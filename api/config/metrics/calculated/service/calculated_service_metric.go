@@ -12,6 +12,7 @@ import (
 type CalculatedServiceMetric struct {
 	EntityID            *string                     `json:"entityId,omitempty" hcl:"entity_id"` // Restricts the metric usage to the specified service. This field is mutually exclusive with the **managementZones** field.
 	Name                string                      `json:"name"`                               // The displayed name of the metric.
+	Description         *string                     `json:"description,omitempty"`              // Descriptor of a calculated service metric.
 	Unit                Unit                        `json:"unit"`                               // The unit of the metric.
 	DimensionDefinition *DimensionDefinition        `json:"dimensionDefinition,omitempty"`      // Parameters of a definition of a calculated service metric.
 	Enabled             bool                        `json:"enabled"`                            // The metric is enabled (`true`) or disabled (`false`).
@@ -35,6 +36,11 @@ func (me *CalculatedServiceMetric) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeString,
 			Required:    true,
 			Description: "The displayed name of the metric",
+		},
+		"description": {
+			Type:        hcl.TypeString,
+			Optional:    true,
+			Description: "The displayed description of the metric",
 		},
 		"unit": {
 			Type:        hcl.TypeString,
@@ -102,6 +108,7 @@ func (me *CalculatedServiceMetric) MarshalHCL() (map[string]interface{}, error) 
 	return properties.EncodeAll(map[string]interface{}{
 		"entity_id":            me.EntityID,
 		"name":                 me.Name,
+		"description":          me.Description,
 		"unit":                 me.Unit,
 		"enabled":              me.Enabled,
 		"metric_key":           me.TsmMetricKey,
@@ -118,6 +125,7 @@ func (me *CalculatedServiceMetric) UnmarshalHCL(decoder hcl.Decoder) error {
 	err := decoder.DecodeAll(map[string]interface{}{
 		"entity_id":            &me.EntityID,
 		"name":                 &me.Name,
+		"description":          &me.Description,
 		"unit":                 &me.Unit,
 		"enabled":              &me.Enabled,
 		"metric_key":           &me.TsmMetricKey,
@@ -142,6 +150,7 @@ func (me *CalculatedServiceMetric) MarshalJSON() ([]byte, error) {
 	if err := properties.MarshalAll(map[string]interface{}{
 		"entityId":            me.EntityID,
 		"name":                me.Name,
+		"description":         me.Description,
 		"unit":                me.Unit,
 		"enabled":             me.Enabled,
 		"tsmMetricKey":        me.TsmMetricKey,
@@ -165,6 +174,7 @@ func (me *CalculatedServiceMetric) UnmarshalJSON(data []byte) error {
 	err := properties.UnmarshalAll(map[string]interface{}{
 		"entityId":            &me.EntityID,
 		"name":                &me.Name,
+		"description":         &me.Description,
 		"unit":                &me.Unit,
 		"enabled":             &me.Enabled,
 		"tsmMetricKey":        &me.TsmMetricKey,
