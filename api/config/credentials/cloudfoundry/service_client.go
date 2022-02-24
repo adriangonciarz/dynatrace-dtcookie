@@ -4,12 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
-	"github.com/dtcookie/opt"
 )
 
 // ServiceClient TODO: documentation
@@ -33,12 +31,7 @@ func (cs *ServiceClient) Create(config *CloudFoundryCredentials) (*api.EntitySho
 	var err error
 	var bytes []byte
 
-	if len(opt.String(config.ID)) > 0 {
-		return nil, errors.New("you must not provide an ID within the configuration payload upon creation")
-	}
-
-	if bytes, err = cs.client.POST("/cloudfoundry/credentials", config, 201); err != nil {
-		log.Fatal(err)
+	if bytes, err = cs.client.POST("/cloudFoundry/credentials", config, 201); err != nil {
 		return nil, err
 	}
 	var stub api.EntityShortRepresentation
@@ -49,11 +42,8 @@ func (cs *ServiceClient) Create(config *CloudFoundryCredentials) (*api.EntitySho
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(config *CloudFoundryCredentials) error {
-	if len(opt.String(config.ID)) == 0 {
-		return errors.New("the configuration doesn't contain an ID")
-	}
-	if _, err := cs.client.PUT(fmt.Sprintf("/cloudfoundry/credentials/%s", opt.String(config.ID)), config, 204); err != nil {
+func (cs *ServiceClient) Update(id string, config *CloudFoundryCredentials) error {
+	if _, err := cs.client.PUT(fmt.Sprintf("/cloudFoundry/credentials/%s", id), config, 204); err != nil {
 		return err
 	}
 	return nil
@@ -64,7 +54,7 @@ func (cs *ServiceClient) Delete(id string) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the configuration to delete")
 	}
-	if _, err := cs.client.DELETE(fmt.Sprintf("/cloudfoundry/credentials/%s", id), 204); err != nil {
+	if _, err := cs.client.DELETE(fmt.Sprintf("/cloudFoundry/credentials/%s", id), 204); err != nil {
 		return err
 	}
 	return nil
@@ -79,7 +69,7 @@ func (cs *ServiceClient) Get(id string) (*CloudFoundryCredentials, error) {
 	var err error
 	var bytes []byte
 
-	if bytes, err = cs.client.GET(fmt.Sprintf("/cloudfoundry/credentials/%s", id), 200); err != nil {
+	if bytes, err = cs.client.GET(fmt.Sprintf("/cloudFoundry/credentials/%s", id), 200); err != nil {
 		return nil, err
 	}
 	var autoTag CloudFoundryCredentials
@@ -94,7 +84,7 @@ func (cs *ServiceClient) ListAll() (*api.StubList, error) {
 	var err error
 	var bytes []byte
 
-	if bytes, err = cs.client.GET("/cloudfoundry/credentials", 200); err != nil {
+	if bytes, err = cs.client.GET("/cloudFoundry/credentials", 200); err != nil {
 		return nil, err
 	}
 	var stubList api.StubList
