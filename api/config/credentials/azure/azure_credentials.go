@@ -10,18 +10,19 @@ import (
 
 // AzureCredentials Configuration of Azure app-level credentials.
 type AzureCredentials struct {
-	ID                        *string                    `json:"id,omitempty"`                 // The Dynatrace entity ID of the Azure credentials configuration.
-	Label                     string                     `json:"label"`                        // The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed.
-	DirectoryID               string                     `json:"directoryId"`                  // The Directory ID (also referred to as Tenant ID)  The combination of Application ID and Directory ID must be unique.
-	AutoTagging               *bool                      `json:"autoTagging"`                  // The automatic capture of Azure tags is on (`true`) or off (`false`).
-	Metadata                  *api.ConfigurationMetadata `json:"metadata,omitempty"`           // Metadata useful for debugging
-	MonitorOnlyTagPairs       []*CloudTag                `json:"monitorOnlyTagPairs"`          // A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
-	Active                    *bool                      `json:"active,omitempty"`             // The monitoring is enabled (`true`) or disabled (`false`).  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
-	AppID                     string                     `json:"appId"`                        // The Application ID (also referred to as Client ID)  The combination of Application ID and Directory ID must be unique.
-	Key                       *string                    `json:"key,omitempty"`                // The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
-	MonitorOnlyTaggedEntities *bool                      `json:"monitorOnlyTaggedEntities"`    // Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
-	SupportingServices        []*AzureSupportingService  `json:"supportingServices,omitempty"` // A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.
-	Unknowns                  map[string]json.RawMessage `json:"-"`
+	ID                           *string                    `json:"id,omitempty"`                 // The Dynatrace entity ID of the Azure credentials configuration.
+	Label                        string                     `json:"label"`                        // The unique name of the Azure credentials configuration.  Allowed characters are letters, numbers, and spaces. Also the special characters `.+-_` are allowed.
+	DirectoryID                  string                     `json:"directoryId"`                  // The Directory ID (also referred to as Tenant ID)  The combination of Application ID and Directory ID must be unique.
+	AutoTagging                  *bool                      `json:"autoTagging"`                  // The automatic capture of Azure tags is on (`true`) or off (`false`).
+	Metadata                     *api.ConfigurationMetadata `json:"metadata,omitempty"`           // Metadata useful for debugging
+	MonitorOnlyTagPairs          []*CloudTag                `json:"monitorOnlyTagPairs"`          // A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
+	MonitorOnlyExcludingTagPairs []*CloudTag                `json:"monitorOnlyExcludingTagPairs"` // A list of Azure tags to be excluded from monitoring.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.
+	Active                       *bool                      `json:"active,omitempty"`             // The monitoring is enabled (`true`) or disabled (`false`).  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.
+	AppID                        string                     `json:"appId"`                        // The Application ID (also referred to as Client ID)  The combination of Application ID and Directory ID must be unique.
+	Key                          *string                    `json:"key,omitempty"`                // The secret key associated with the Application ID.  For security reasons, GET requests return this field as `null`.   Submit your key on creation or update of the configuration. If the field is omitted during an update, the old value remains unaffected.
+	MonitorOnlyTaggedEntities    *bool                      `json:"monitorOnlyTaggedEntities"`    // Monitor only resources that have specified Azure tags (`true`) or all resources (`false`).
+	SupportingServices           []*AzureSupportingService  `json:"supportingServices,omitempty"` // A list of Azure supporting services to be monitored. For each service there's a sublist of its metrics and the metrics' dimensions that should be monitored. All of these elements (services, metrics, dimensions) must have corresponding static definitions on the server.
+	Unknowns                     map[string]json.RawMessage `json:"-"`
 }
 
 func (ac *AzureCredentials) Schema() map[string]*hcl.Schema {
@@ -48,9 +49,18 @@ func (ac *AzureCredentials) Schema() map[string]*hcl.Schema {
 		},
 		"monitor_only_tag_pairs": {
 			Type:        hcl.TypeList,
-			Description: "A list of Azure tags to be monitored.  You can specify up to 10 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`",
+			Description: "A list of Azure tags to be monitored.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`",
 			Optional:    true,
-			MaxItems:    10,
+			MaxItems:    20,
+			Elem: &hcl.Resource{
+				Schema: new(CloudTag).Schema(),
+			},
+		},
+		"monitor_only_excluding_tag_pairs": {
+			Type:        hcl.TypeList,
+			Description: "A list of Azure tags to be excluded from monitoring.  You can specify up to 20 tags. A resource tagged with *any* of the specified tags is monitored.  Only applicable when the **monitorOnlyTaggedEntities** parameter is set to `true`.",
+			Optional:    true,
+			MaxItems:    20,
 			Elem: &hcl.Resource{
 				Schema: new(CloudTag).Schema(),
 			},
@@ -140,6 +150,20 @@ func (ac *AzureCredentials) MarshalJSON() ([]byte, error) {
 		m["monitorOnlyTagPairs"] = rawMessage
 	}
 
+	if ac.MonitorOnlyExcludingTagPairs != nil {
+		rawMessage, err := json.Marshal(ac.MonitorOnlyExcludingTagPairs)
+		if err != nil {
+			return nil, err
+		}
+		m["monitorOnlyExcludingTagPairs"] = rawMessage
+	} else {
+		rawMessage, err := json.Marshal([]*CloudTag{})
+		if err != nil {
+			return nil, err
+		}
+		m["monitorOnlyExcludingTagPairs"] = rawMessage
+	}
+
 	if rawMessage, err := json.Marshal(opt.Bool(ac.Active)); err == nil {
 		m["active"] = rawMessage
 	} else {
@@ -209,6 +233,12 @@ func (ac *AzureCredentials) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
+	if v, found := m["monitorOnlyExcludingTagPairs"]; found {
+		if err := json.Unmarshal(v, &ac.MonitorOnlyExcludingTagPairs); err != nil {
+			return err
+		}
+	}
+
 	if v, found := m["active"]; found {
 		if err := json.Unmarshal(v, &ac.Active); err != nil {
 			return err
@@ -240,6 +270,7 @@ func (ac *AzureCredentials) UnmarshalJSON(data []byte) error {
 	delete(m, "autoTagging")
 	delete(m, "metadata")
 	delete(m, "monitorOnlyTagPairs")
+	delete(m, "monitorOnlyExcludingTagPairs")
 	delete(m, "active")
 	delete(m, "appId")
 	delete(m, "key")
@@ -277,6 +308,17 @@ func (ac *AzureCredentials) MarshalHCL() (map[string]interface{}, error) {
 		}
 		result["monitor_only_tag_pairs"] = entries
 	}
+	if ac.MonitorOnlyExcludingTagPairs != nil {
+		entries := []interface{}{}
+		for _, entry := range ac.MonitorOnlyExcludingTagPairs {
+			if marshalled, err := entry.MarshalHCL(); err == nil {
+				entries = append(entries, marshalled)
+			} else {
+				return nil, err
+			}
+		}
+		result["monitor_only_excluding_tag_pairs"] = entries
+	}
 	result["active"] = opt.Bool(ac.Active)
 	result["app_id"] = ac.AppID
 	if ac.Key != nil {
@@ -310,6 +352,7 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(ac.Unknowns, "directory_id")
 		delete(ac.Unknowns, "auto_tagging")
 		delete(ac.Unknowns, "monitor_only_tag_pairs")
+		delete(ac.Unknowns, "monitorOnlyExcludingTagPairs")
 		delete(ac.Unknowns, "active")
 		delete(ac.Unknowns, "app_id")
 		delete(ac.Unknowns, "key")
@@ -336,6 +379,16 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 				return err
 			}
 			ac.MonitorOnlyTagPairs = append(ac.MonitorOnlyTagPairs, entry)
+		}
+	}
+	if result, ok := decoder.GetOk("monitor_only_excluding_tag_pairs.#"); ok {
+		ac.MonitorOnlyExcludingTagPairs = []*CloudTag{}
+		for idx := 0; idx < result.(int); idx++ {
+			entry := new(CloudTag)
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "monitor_only_excluding_tag_pairs", idx)); err != nil {
+				return err
+			}
+			ac.MonitorOnlyExcludingTagPairs = append(ac.MonitorOnlyExcludingTagPairs, entry)
 		}
 	}
 	if value, ok := decoder.GetOk("active"); ok {
