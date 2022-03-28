@@ -27,6 +27,7 @@ type Tile struct {
 	Markdown                  *string                            `json:"markdown"`                            // The markdown-formatted content of the tile
 	ExcludeMaintenanceWindows *bool                              `json:"excludeMaintenanceWindows,omitempty"` // Include (`false') or exclude (`true`) maintenance windows from availability calculations
 	ChartVisible              *bool                              `json:"chartVisible,omitempty"`
+	NameSize                  *NameSize                          `json:"nameSize,omitempty"` // The size of the tile name. Possible values are `small`, `medium` and `large`.
 
 	Unknowns map[string]json.RawMessage `json:"-"`
 }
@@ -37,6 +38,11 @@ func (me *Tile) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeString,
 			Description: "the name of the tile",
 			Required:    true,
+		},
+		"name_size": {
+			Type:        hcl.TypeString,
+			Description: "The size of the tile name. Possible values are `small`, `medium` and `large`.",
+			Optional:    true,
 		},
 		"tile_type": {
 			Type:        hcl.TypeString,
@@ -161,6 +167,9 @@ func (me *Tile) MarshalHCL() (map[string]interface{}, error) {
 	}
 	result["name"] = me.Name
 	result["tile_type"] = string(me.TileType)
+	if me.NameSize != nil && len(string(*me.NameSize)) > 0 {
+		result["name_size"] = string(*me.NameSize)
+	}
 	if me.Configured != nil {
 		result["configured"] = opt.Bool(me.Configured)
 	}
@@ -252,6 +261,7 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(me.Unknowns, "markdown")
 		delete(me.Unknowns, "exclude_maintenance_windows")
 		delete(me.Unknowns, "chart_visible")
+		delete(me.Unknowns, "name_size")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -261,6 +271,12 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("tile_type"); ok {
 		me.TileType = TileType(value.(string))
+	}
+	if value, ok := decoder.GetOk("name_size"); ok {
+		var nameSize = value.(string)
+		if len(nameSize) > 0 {
+			me.NameSize = NameSize(nameSize).Ref()
+		}
 	}
 	if _, value := decoder.GetChange("configured"); value != nil {
 		me.Configured = opt.NewBool(value.(bool))
@@ -333,6 +349,15 @@ func (me *Tile) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 		m["name"] = rawMessage
+	}
+	{
+		if me.NameSize != nil && len(string(*me.NameSize)) > 0 {
+			rawMessage, err := json.Marshal(string(*me.NameSize))
+			if err != nil {
+				return nil, err
+			}
+			m["nameSize"] = rawMessage
+		}
 	}
 	{
 		rawMessage, err := json.Marshal(me.TileType)
@@ -470,6 +495,15 @@ func (me *Tile) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
+	if v, found := m["nameSize"]; found {
+		nameSize := ""
+		if err := json.Unmarshal(v, &nameSize); err != nil {
+			return err
+		}
+		if len(nameSize) > 0 {
+			me.NameSize = NameSize(nameSize).Ref()
+		}
+	}
 	if v, found := m["configured"]; found {
 		if err := json.Unmarshal(v, &me.Configured); err != nil {
 			return err
@@ -565,6 +599,7 @@ func (me *Tile) UnmarshalJSON(data []byte) error {
 	delete(m, "markdown")
 	delete(m, "excludeMaintenanceWindows")
 	delete(m, "chartVisible")
+	delete(m, "nameSize")
 
 	if len(m) > 0 {
 		me.Unknowns = m
@@ -594,4 +629,22 @@ var UserSessionQueryTileTypes = struct {
 	"PIE_CHART",
 	"SINGLE_VALUE",
 	"TABLE",
+}
+
+// NameSize has no documentation
+type NameSize string
+
+func (me NameSize) Ref() *NameSize {
+	return &me
+}
+
+// NameSizes offers the known enum values
+var NameSizes = struct {
+	Small  NameSize
+	Medium NameSize
+	Large  NameSize
+}{
+	"small",
+	"medium",
+	"large",
 }
