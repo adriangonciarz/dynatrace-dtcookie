@@ -94,7 +94,7 @@ func (kc *KubernetesCredentials) Schema() map[string]*hcl.Schema {
 		},
 		"events_field_selectors": {
 			Type:        hcl.TypeList,
-			Description: "The check of SSL certificates is enabled (`true`) or disabled (`false`) for the Kubernetes cluster.  If not set on creation, the `true` value is used.  If the field is omitted during an update, the old value remains unaffected.",
+			Description: "Kubernetes event filters based on field-selectors. If set to `null` on creation, no events field selectors are subscribed. If set to `null` on update, no change of stored events field selectors is applied. Set an empty list to clear all events field selectors.",
 			Optional:    true,
 			Elem: &hcl.Resource{
 				Schema: new(KubernetesEventPattern).Schema(),
