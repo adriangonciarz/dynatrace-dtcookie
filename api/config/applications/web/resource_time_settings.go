@@ -31,12 +31,12 @@ func (me *ResourceTimingSettings) Schema() map[string]*hcl.Schema {
 		"resource_timing_capture_type": {
 			Type:        hcl.TypeString,
 			Description: "Defines how detailed resource timings are captured.\n\nOnly effective if **w3cResourceTimings** or **nonW3cResourceTimings** is enabled. Possible values are `CAPTURE_ALL_SUMMARIES`, `CAPTURE_FULL_DETAILS` and `CAPTURE_LIMITED_SUMMARIES`",
-			Required:    true,
+			Optional:    true,
 		},
 		"resource_timings_domain_limit": {
 			Type:        hcl.TypeInt,
 			Description: "Limits the number of domains for which W3C resource timings are captured.\n\nOnly effective if **resourceTimingCaptureType** is `CAPTURE_LIMITED_SUMMARIES`. Valid values range from 0 to 50.",
-			Required:    true,
+			Optional:    true,
 		},
 	}
 }
