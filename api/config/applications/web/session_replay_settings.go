@@ -40,19 +40,33 @@ func (me *SessionReplaySettings) Schema() map[string]*hcl.Schema {
 }
 
 func (me *SessionReplaySettings) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeAll(map[string]interface{}{
+	res, err := hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"enabled":                                me.Enabled,
 		"cost_control_percentage":                me.CostControlPercentage,
 		"enable_css_resource_capturing":          me.EnableCSSResourceCapturing,
 		"css_resource_capturing_exclusion_rules": me.CSSResourceCapturingExclusionRules,
 	})
+	if err != nil {
+		return nil, err
+	}
+	if len(me.CSSResourceCapturingExclusionRules) == 0 {
+		me.CSSResourceCapturingExclusionRules = nil
+	}
+	return res, nil
 }
 
 func (me *SessionReplaySettings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]interface{}{
+	err := decoder.DecodeAll(map[string]interface{}{
 		"enabled":                                &me.Enabled,
 		"cost_control_percentage":                &me.CostControlPercentage,
 		"enable_css_resource_capturing":          &me.EnableCSSResourceCapturing,
 		"css_resource_capturing_exclusion_rules": &me.CSSResourceCapturingExclusionRules,
 	})
+	if err != nil {
+		return err
+	}
+	if me.CSSResourceCapturingExclusionRules == nil {
+		me.CSSResourceCapturingExclusionRules = []string{}
+	}
+	return nil
 }
