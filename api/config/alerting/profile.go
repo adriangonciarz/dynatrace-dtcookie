@@ -102,8 +102,15 @@ func (me *Profile) MarshalHCL() (map[string]interface{}, error) {
 		result["rules"] = entries
 	}
 	if me.EventTypeFilters != nil {
+		filters := append([]*EventTypeFilter{}, me.EventTypeFilters...)
+		sort.Slice(filters, func(i, j int) bool {
+			d1, _ := json.Marshal(filters[i])
+			d2, _ := json.Marshal(filters[j])
+			cmp := strings.Compare(string(d1), string(d2))
+			return (cmp == -1)
+		})
 		entries := []interface{}{}
-		for _, entry := range me.EventTypeFilters {
+		for _, entry := range filters {
 			if marshalled, err := entry.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
