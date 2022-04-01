@@ -10,7 +10,7 @@ func (me *UserActionAndSessionProperties) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Description: "User action and session properties settings",
 			Optional:    true,
-			MaxItems:    1,
+			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(UserActionAndSessionProperty).Schema()},
 		},
 	}
