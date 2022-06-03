@@ -127,7 +127,8 @@ func (cs *ServiceClient) Create(keyRequest *KeyRequest) (string, error) {
 		"value": map[string][]string{
 			"keyRequestNames": keyRequest.Names,
 		},
-		"scope": "SERVICE-FBD5DB17596B3215",
+		// "scope": "SERVICE-FBD5DB17596B3215",
+		"scope": keyRequest.ServiceID,
 	}
 
 	post := cs.client.NewPOST("/settings/objects/", []interface{}{&payLoad}).Expect(200)
