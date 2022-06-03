@@ -52,7 +52,7 @@ func (me *ApplicationErrorRules) Schema() map[string]*hcl.Schema {
 }
 
 func (me *ApplicationErrorRules) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeAll(map[string]interface{}{
+	p, e := hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"web_application_id":         me.WebApplicationID,
 		"ignore_js_errors_apdex":     me.IgnoreJavaScriptErrorsInApdexCalculation,
 		"ignore_http_errors_apdex":   me.IgnoreHttpErrorsInApdexCalculation,
@@ -60,6 +60,7 @@ func (me *ApplicationErrorRules) MarshalHCL() (map[string]interface{}, error) {
 		"http_errors":                me.HTTPErrors,
 		"custom_errors":              me.CustomErrors,
 	})
+	return p, e
 }
 
 func (me *ApplicationErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {

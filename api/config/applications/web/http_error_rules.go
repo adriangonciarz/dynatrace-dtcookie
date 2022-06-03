@@ -1,6 +1,8 @@
 package web
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+)
 
 type HTTPErrorRules []*HTTPErrorRule
 
@@ -30,6 +32,13 @@ func (me HTTPErrorRules) MarshalHCL() (map[string]interface{}, error) {
 		result["rule"] = entries
 	}
 	return result, nil
+}
+
+func (me *HTTPErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := decoder.DecodeSlice("rule", me); err != nil {
+		return err
+	}
+	return nil
 }
 
 // HTTPErrorRule represents configuration of the HTTP error in the web application

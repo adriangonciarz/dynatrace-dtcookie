@@ -32,6 +32,13 @@ func (me CustomErrorRules) MarshalHCL() (map[string]interface{}, error) {
 	return result, nil
 }
 
+func (me *CustomErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := decoder.DecodeSlice("rule", me); err != nil {
+		return err
+	}
+	return nil
+}
+
 // CustomErrorRule represents configuration of the custom error in the web application
 type CustomErrorRule struct {
 	KeyPattern     *string                      `json:"keyPattern,omitempty"`   // The key of the error to look for
