@@ -2,6 +2,7 @@ package autotags
 
 import (
 	"encoding/json"
+	"sort"
 
 	"github.com/dtcookie/dynatrace/api/config/entityruleengine"
 	"github.com/dtcookie/hcl"
@@ -16,6 +17,7 @@ type Rule struct {
 	PropagationTypes []PropagationType             `json:"propagationTypes,omitempty"` // How to apply the tag to underlying entities:  * `SERVICE_TO_PROCESS_GROUP_LIKE`: Apply to underlying process groups of matching services.  * `SERVICE_TO_HOST_LIKE`: Apply to underlying hosts of matching services.  * `PROCESS_GROUP_TO_HOST`: Apply to underlying hosts of matching process groups.  * `PROCESS_GROUP_TO_SERVICE`: Apply to all services provided by the process groups.  * `HOST_TO_PROCESS_GROUP_INSTANCE`: Apply to processes running on matching hosts.  *  `AZURE_TO_PG`: Apply to process groups connected to matching Azure entities.  * `AZURE_TO_SERVICE`: Apply to services provided by matching Azure entities.
 	Conditions       []*entityruleengine.Condition `json:"conditions"`                 // A list of matching rules for the auto-tag.  The tag applies only when **all** conditions are fulfilled.
 	ValueFormat      *string                       `json:"valueFormat,omitempty"`      // The value of the auto-tag. If specified, the tag is used in the `name:valueFormat` format.  For example, you can extend the `Infrastructure` tag to `Infrastructure:Windows` and `Infrastructure:Linux`.  You can use the following placeholders here:  * `{AwsAutoScalingGroup:Name}`  * `{AwsAvailabilityZone:Name}`  * `{AwsElasticLoadBalancer:Name}`  * `{AwsRelationalDatabaseService:DBName}`  * `{AwsRelationalDatabaseService:Endpoint}`  * `{AwsRelationalDatabaseService:Engine}`  * `{AwsRelationalDatabaseService:InstanceClass}`  * `{AwsRelationalDatabaseService:Name}`  * `{AwsRelationalDatabaseService:Port}`  * `{AzureRegion:Name}`  * `{AzureScaleSet:Name}`  * `{AzureVm:Name}`  * `{CloudFoundryOrganization:Name}`  * `{CustomDevice:DetectedName}`  * `{CustomDevice:DnsName}`  * `{CustomDevice:IpAddress}`  * `{CustomDevice:Port}`  * `{DockerContainerGroupInstance:ContainerName}`  * `{DockerContainerGroupInstance:FullImageName}`  * `{DockerContainerGroupInstance:ImageVersion}`  * `{DockerContainerGroupInstance:StrippedImageName}`  * `{ESXIHost:HardwareModel}`  * `{ESXIHost:HardwareVendor}`  * `{ESXIHost:Name}`  * `{ESXIHost:ProductName}`  * `{ESXIHost:ProductVersion}`  * `{Ec2Instance:AmiId}`  * `{Ec2Instance:BeanstalkEnvironmentName}`  * `{Ec2Instance:InstanceId}`  * `{Ec2Instance:InstanceType}`  * `{Ec2Instance:LocalHostName}`  * `{Ec2Instance:Name}`  * `{Ec2Instance:PublicHostName}`  * `{Ec2Instance:SecurityGroup}`  * `{GoogleComputeInstance:Id}`  * `{GoogleComputeInstance:IpAddresses}`  * `{GoogleComputeInstance:MachineType}`  * `{GoogleComputeInstance:Name}`  * `{GoogleComputeInstance:ProjectId}`  * `{GoogleComputeInstance:Project}`  * `{Host:AWSNameTag}`  * `{Host:AixLogicalCpuCount}`  * `{Host:AzureHostName}`  * `{Host:AzureSiteName}`  * `{Host:BoshDeploymentId}`  * `{Host:BoshInstanceId}`  * `{Host:BoshInstanceName}`  * `{Host:BoshName}`  * `{Host:BoshStemcellVersion}`  * `{Host:CpuCores}`  * `{Host:DetectedName}`  * `{Host:Environment:AppName}`  * `{Host:Environment:BoshReleaseVersion}`  * `{Host:Environment:Environment}`  * `{Host:Environment:Link}`  * `{Host:Environment:Organization}`  * `{Host:Environment:Owner}`  * `{Host:Environment:Support}`  * `{Host:IpAddress}`  * `{Host:LogicalCpuCores}`  * `{Host:OneAgentCustomHostName}`  * `{Host:OperatingSystemVersion}`  * `{Host:PaasMemoryLimit}`  * `{HostGroup:Name}`  * `{KubernetesCluster:Name}`  * `{KubernetesNode:DetectedName}`  * `{OpenstackAvailabilityZone:Name}`  * `{OpenstackZone:Name}`  * `{OpenstackComputeNode:Name}`  * `{OpenstackProject:Name}`  * `{OpenstackVm:UnstanceType}`  * `{OpenstackVm:Name}`  * `{OpenstackVm:SecurityGroup}`  * `{ProcessGroup:AmazonECRImageAccountId}`  * `{ProcessGroup:AmazonECRImageRegion}`  * `{ProcessGroup:AmazonECSCluster}`  * `{ProcessGroup:AmazonECSContainerName}`  * `{ProcessGroup:AmazonECSFamily}`  * `{ProcessGroup:AmazonECSRevision}`  * `{ProcessGroup:AmazonLambdaFunctionName}`  * `{ProcessGroup:AmazonRegion}`  * `{ProcessGroup:ApacheConfigPath}`  * `{ProcessGroup:ApacheSparkMasterIpAddress}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AspDotNetCoreApplicationPath}`  * `{ProcessGroup:AzureHostName}`  * `{ProcessGroup:AzureSiteName}`  * `{ProcessGroup:CassandraClusterName}`  * `{ProcessGroup:CatalinaBase}`  * `{ProcessGroup:CatalinaHome}`  * `{ProcessGroup:CloudFoundryAppId}`  * `{ProcessGroup:CloudFoundryAppName}`  * `{ProcessGroup:CloudFoundryInstanceIndex}`  * `{ProcessGroup:CloudFoundrySpaceId}`  * `{ProcessGroup:CloudFoundrySpaceName}`  * `{ProcessGroup:ColdFusionJvmConfigFile}`  * `{ProcessGroup:ColdFusionServiceName}`  * `{ProcessGroup:CommandLineArgs}`  * `{ProcessGroup:DetectedName}`  * `{ProcessGroup:DotNetCommandPath}`  * `{ProcessGroup:DotNetCommand}`  * `{ProcessGroup:DotNetClusterId}`  * `{ProcessGroup:DotNetNodeId}`  * `{ProcessGroup:ElasticsearchClusterName}`  * `{ProcessGroup:ElasticsearchNodeName}`  * `{ProcessGroup:EquinoxConfigPath}`  * `{ProcessGroup:ExeName}`  * `{ProcessGroup:ExePath}`  * `{ProcessGroup:GlassFishDomainName}`  * `{ProcessGroup:GlassFishInstanceName}`  * `{ProcessGroup:GoogleAppEngineInstance}`  * `{ProcessGroup:GoogleAppEngineService}`  * `{ProcessGroup:GoogleCloudProject}`  * `{ProcessGroup:HybrisBinDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisConfigDirectory}`  * `{ProcessGroup:HybrisDataDirectory}`  * `{ProcessGroup:IBMCicsRegion}`  * `{ProcessGroup:IBMCtgName}`  * `{ProcessGroup:IBMImsConnectRegion}`  * `{ProcessGroup:IBMImsControlRegion}`  * `{ProcessGroup:IBMImsMessageProcessingRegion}`  * `{ProcessGroup:IBMImsSoapGwName}`  * `{ProcessGroup:IBMIntegrationNodeName}`  * `{ProcessGroup:IBMIntegrationServerName}`  * `{ProcessGroup:IISAppPool}`  * `{ProcessGroup:IISRoleName}`  * `{ProcessGroup:JbossHome}`  * `{ProcessGroup:JbossMode}`  * `{ProcessGroup:JbossServerName}`  * `{ProcessGroup:JavaJarFile}`  * `{ProcessGroup:JavaJarPath}`  * `{ProcessGroup:JavaMainCLass}`  * `{ProcessGroup:KubernetesBasePodName}`  * `{ProcessGroup:KubernetesContainerName}`  * `{ProcessGroup:KubernetesFullPodName}`  * `{ProcessGroup:KubernetesNamespace}`  * `{ProcessGroup:KubernetesPodUid}`  * `{ProcessGroup:MssqlInstanceName}`  * `{ProcessGroup:NodeJsAppBaseDirectory}`  * `{ProcessGroup:NodeJsAppName}`  * `{ProcessGroup:NodeJsScriptName}`  * `{ProcessGroup:OracleSid}`  * `{ProcessGroup:PHPScriptPath}`  * `{ProcessGroup:PHPWorkingDirectory}`  * `{ProcessGroup:Ports}`  * `{ProcessGroup:RubyAppRootPath}`  * `{ProcessGroup:RubyScriptPath}`  * `{ProcessGroup:SoftwareAGInstallRoot}`  * `{ProcessGroup:SoftwareAGProductPropertyName}`  * `{ProcessGroup:SpringBootAppName}`  * `{ProcessGroup:SpringBootProfileName}`  * `{ProcessGroup:SpringBootStartupClass}`  * `{ProcessGroup:TIBCOBusinessWorksAppNodeName}`  * `{ProcessGroup:TIBCOBusinessWorksAppSpaceName}`  * `{ProcessGroup:TIBCOBusinessWorksCeAppName}`  * `{ProcessGroup:TIBCOBusinessWorksCeVersion}`  * `{ProcessGroup:TIBCOBusinessWorksDomainName}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFilePath}`  * `{ProcessGroup:TIBCOBusinessWorksEnginePropertyFile}`  * `{ProcessGroup:TIBCOBusinessWorksHome}`  * `{ProcessGroup:VarnishInstanceName}`  * `{ProcessGroup:WebLogicClusterName}`  * `{ProcessGroup:WebLogicDomainName}`  * `{ProcessGroup:WebLogicHome}`  * `{ProcessGroup:WebLogicName}`  * `{ProcessGroup:WebSphereCellName}`  * `{ProcessGroup:WebSphereClusterName}`  * `{ProcessGroup:WebSphereNodeName}`  * `{ProcessGroup:WebSphereServerName}`  * `{ProcessGroup:ActorSystem}`  * `{Service:STGServerName}`  * `{Service:DatabaseHostName}`  * `{Service:DatabaseName}`  * `{Service:DatabaseVendor}`  * `{Service:DetectedName}`  * `{Service:EndpointPath}`  * `{Service:EndpointPathGatewayUrl}`  * `{Service:IIBApplicationName}`  * `{Service:MessageListenerClassName}`  * `{Service:Port}`  * `{Service:PublicDomainName}`  * `{Service:RemoteEndpoint}`  * `{Service:RemoteName}`  * `{Service:WebApplicationId}`  * `{Service:WebContextRoot}`  * `{Service:WebServerName}`  * `{Service:WebServiceNamespace}`  * `{Service:WebServiceName}`  * `{VmwareDatacenter:Name}`  * `{VmwareVm:Name}`
+	Normalization    *string                       `json:"normalization,omitempty"`    // Changes applied to the value after applying the value format. Default is LEAVE_TEXT_AS_IS
 	Unknowns         map[string]json.RawMessage    `json:"-"`
 }
 
@@ -25,6 +27,11 @@ func (me *Rule) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeString,
 			Description: "The type of Dynatrace entities the management zone can be applied to",
 			Required:    true,
+		},
+		"normalization": {
+			Type:        hcl.TypeString,
+			Description: "Changes applied to the value after applying the value format. Possible values are `LEAVE_TEXT_AS_IS`, `TO_LOWER_CASE` and `TO_UPPER_CASE`. Default is `LEAVE_TEXT_AS_IS`",
+			Optional:    true,
 		},
 		"enabled": {
 			Type:        hcl.TypeBool,
@@ -79,8 +86,17 @@ func (me *Rule) MarshalHCL() (map[string]interface{}, error) {
 		result["propagation_types"] = entries
 	}
 	if len(me.Conditions) > 0 {
-		entries := []interface{}{}
+		conditionJSONs := []string{}
 		for _, entry := range me.Conditions {
+			entryBytes, _ := json.Marshal(entry)
+			conditionJSONs = append(conditionJSONs, string(entryBytes))
+		}
+		sort.Strings(conditionJSONs)
+
+		entries := []interface{}{}
+		for _, conditionJSON := range conditionJSONs {
+			entry := entityruleengine.Condition{}
+			json.Unmarshal([]byte(conditionJSON), &entry)
 			if marshalled, err := entry.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
@@ -91,6 +107,9 @@ func (me *Rule) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if me.ValueFormat != nil {
 		result["value_format"] = *me.ValueFormat
+	}
+	if me.Normalization != nil {
+		result["normalization"] = *me.Normalization
 	}
 	return result, nil
 }
@@ -108,6 +127,7 @@ func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(me.Unknowns, "propagation_types")
 		delete(me.Unknowns, "conditions")
 		delete(me.Unknowns, "value_format")
+		delete(me.Unknowns, "normalization")
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
 		}
@@ -138,6 +158,9 @@ func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("value_format"); ok {
 		me.ValueFormat = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("normalization"); ok {
+		me.Normalization = opt.NewString(value.(string))
 	}
 	return nil
 }
@@ -184,6 +207,13 @@ func (me *Rule) MarshalJSON() ([]byte, error) {
 		}
 		m["valueFormat"] = rawMessage
 	}
+	if me.Normalization != nil {
+		rawMessage, err := json.Marshal(me.Normalization)
+		if err != nil {
+			return nil, err
+		}
+		m["normalization"] = rawMessage
+	}
 
 	return json.Marshal(m)
 }
@@ -218,11 +248,17 @@ func (me *Rule) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	}
+	if v, found := m["normalization"]; found {
+		if err := json.Unmarshal(v, &me.Normalization); err != nil {
+			return err
+		}
+	}
 	delete(m, "enabled")
 	delete(m, "type")
 	delete(m, "propagationTypes")
 	delete(m, "conditions")
 	delete(m, "valueFormat")
+	delete(m, "normalization")
 	if len(m) > 0 {
 		me.Unknowns = m
 	}

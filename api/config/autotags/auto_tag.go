@@ -2,6 +2,7 @@ package autotags
 
 import (
 	"encoding/json"
+	"sort"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/hcl"
@@ -72,8 +73,16 @@ func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 	}
 	result["name"] = me.Name
 	if me.Rules != nil {
-		entries := []interface{}{}
+		ruleJSONs := []string{}
 		for _, entry := range me.Rules {
+			entryBytes, _ := json.Marshal(entry)
+			ruleJSONs = append(ruleJSONs, string(entryBytes))
+		}
+		sort.Strings(ruleJSONs)
+		entries := []interface{}{}
+		for _, ruleJSON := range ruleJSONs {
+			entry := Rule{}
+			json.Unmarshal([]byte(ruleJSON), &entry)
 			if marshalled, err := entry.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
@@ -83,8 +92,17 @@ func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 		result["rules"] = entries
 	}
 	if me.EntitySelectorBasedRules != nil {
-		entries := []interface{}{}
+		ruleJSONs := []string{}
 		for _, entry := range me.EntitySelectorBasedRules {
+			entryBytes, _ := json.Marshal(entry)
+			ruleJSONs = append(ruleJSONs, string(entryBytes))
+		}
+		sort.Strings(ruleJSONs)
+
+		entries := []interface{}{}
+		for _, ruleJSON := range ruleJSONs {
+			entry := EntitySelectorBasedRule{}
+			json.Unmarshal([]byte(ruleJSON), &entry)
 			if marshalled, err := entry.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
