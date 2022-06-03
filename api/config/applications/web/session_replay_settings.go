@@ -33,8 +33,8 @@ func (me *SessionReplaySettings) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Description: "A list of URLs to be excluded from CSS resource capturing",
 			Optional:    true,
-			// MinItems:    1,
-			Elem: &hcl.Schema{Type: hcl.TypeString},
+			MinItems:    1,
+			Elem:        &hcl.Schema{Type: hcl.TypeString},
 		},
 	}
 }
@@ -51,6 +51,8 @@ func (me *SessionReplaySettings) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if len(me.CSSResourceCapturingExclusionRules) == 0 {
 		me.CSSResourceCapturingExclusionRules = nil
+		res["css_resource_capturing_exclusion_rules"] = nil
+		delete(res, "css_resource_capturing_exclusion_rules")
 	}
 	return res, nil
 }
