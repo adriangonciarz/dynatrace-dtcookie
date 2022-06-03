@@ -33,7 +33,6 @@ func (me *SessionReplaySettings) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Description: "A list of URLs to be excluded from CSS resource capturing",
 			Optional:    true,
-			MinItems:    1,
 			Elem:        &hcl.Schema{Type: hcl.TypeString},
 		},
 	}
