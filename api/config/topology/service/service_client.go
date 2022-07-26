@@ -7,7 +7,7 @@ import (
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
 
-// ServiceClient TODO: documentation
+// ServiceClient holds REST API connection details
 type ServiceClient struct {
 	client *rest.Client
 }
@@ -23,7 +23,7 @@ func NewService(baseURL string, token string) *ServiceClient {
 	return &ServiceClient{client: client}
 }
 
-// List TODO: documentation
+// List function retrieves the list of all available services in the environment
 func (cs *ServiceClient) List() (Services, error) {
 	var err error
 	var bytes []byte
