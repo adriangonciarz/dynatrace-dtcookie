@@ -2,6 +2,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"sort"
 
 	"github.com/dtcookie/dynatrace/api/config/entityruleengine"
 	"github.com/dtcookie/hcl"
@@ -52,6 +53,24 @@ func (mzr *Rule) Schema() map[string]*hcl.Schema {
 	}
 }
 
+func (mzr *Rule) SortConditions() {
+	if len(mzr.Conditions) > 0 {
+		conds := []*entityruleengine.Condition{}
+		condStrings := sort.StringSlice{}
+		for _, entry := range mzr.Conditions {
+			condBytes, _ := json.Marshal(entry)
+			condStrings = append(condStrings, string(condBytes))
+		}
+		condStrings.Sort()
+		for _, condString := range condStrings {
+			cond := entityruleengine.Condition{}
+			json.Unmarshal([]byte(condString), &cond)
+			conds = append(conds, &cond)
+		}
+		mzr.Conditions = conds
+	}
+}
+
 func (mzr *Rule) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
@@ -72,6 +91,7 @@ func (mzr *Rule) MarshalHCL() (map[string]interface{}, error) {
 		result["propagation_types"] = entries
 	}
 	if len(mzr.Conditions) > 0 {
+		mzr.SortConditions()
 		entries := []interface{}{}
 		for _, entry := range mzr.Conditions {
 			if marshalled, err := entry.MarshalHCL(); err == nil {
@@ -113,6 +133,7 @@ func (mzr *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 			mzr.PropagationTypes = append(mzr.PropagationTypes, PropagationType(propagationType))
 		}
 	}
+
 	if result, ok := decoder.GetOk("conditions.#"); ok {
 		mzr.Conditions = []*entityruleengine.Condition{}
 		for idx := 0; idx < result.(int); idx++ {
@@ -189,6 +210,7 @@ func (mzr *Rule) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(v, &mzr.Conditions); err != nil {
 			return err
 		}
+
 	}
 	delete(m, "enabled")
 	delete(m, "type")

@@ -2,6 +2,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"sort"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/hcl"
@@ -77,6 +78,25 @@ func (mz *ManagementZone) Schema() map[string]*hcl.Schema {
 	}
 }
 
+func (mz *ManagementZone) SortRules() {
+	if len(mz.Rules) > 0 {
+		conds := []*Rule{}
+		condStrings := sort.StringSlice{}
+		for _, entry := range mz.Rules {
+			entry.SortConditions()
+			condBytes, _ := json.Marshal(entry)
+			condStrings = append(condStrings, string(condBytes))
+		}
+		condStrings.Sort()
+		for _, condString := range condStrings {
+			cond := Rule{}
+			json.Unmarshal([]byte(condString), &cond)
+			conds = append(conds, &cond)
+		}
+		mz.Rules = conds
+	}
+}
+
 func (mz *ManagementZone) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
@@ -92,6 +112,7 @@ func (mz *ManagementZone) MarshalHCL() (map[string]interface{}, error) {
 		result["description"] = *mz.Description
 	}
 	if mz.Rules != nil {
+		mz.SortRules()
 		entries := []interface{}{}
 		for _, entry := range mz.Rules {
 			if marshalled, err := entry.MarshalHCL(); err == nil {
