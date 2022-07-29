@@ -17,7 +17,6 @@ type Service struct {
 // NewService TODO: documentation
 // "https://#######.live.dynatrace.com/api/config/v1", "###########"
 func NewService(baseURL string, token string) *Service {
-	rest.Verbose = false
 	credentials := credentials.New(token)
 	config := rest.Config{}
 	client := rest.NewClient(&config, baseURL, credentials)

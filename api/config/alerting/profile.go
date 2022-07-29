@@ -69,6 +69,25 @@ func (me *Profile) Schema() map[string]*hcl.Schema {
 	}
 }
 
+func (me *Profile) EnsurePredictableOrder() {
+	if len(me.Rules) > 0 {
+		conds := []*ProfileSeverityRule{}
+		condStrings := sort.StringSlice{}
+		for _, entry := range me.Rules {
+			entry.EnsurePredictableOrder()
+			condBytes, _ := json.Marshal(entry)
+			condStrings = append(condStrings, string(condBytes))
+		}
+		condStrings.Sort()
+		for _, condString := range condStrings {
+			cond := ProfileSeverityRule{}
+			json.Unmarshal([]byte(condString), &cond)
+			conds = append(conds, &cond)
+		}
+		me.Rules = conds
+	}
+}
+
 func (me *Profile) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
@@ -84,15 +103,9 @@ func (me *Profile) MarshalHCL() (map[string]interface{}, error) {
 		result["mz_id"] = me.MzID
 	}
 	if me.Rules != nil {
-		rules := append([]*ProfileSeverityRule{}, me.Rules...)
-		sort.Slice(rules, func(i, j int) bool {
-			d1, _ := json.Marshal(rules[i])
-			d2, _ := json.Marshal(rules[j])
-			cmp := strings.Compare(string(d1), string(d2))
-			return (cmp == -1)
-		})
+		me.EnsurePredictableOrder()
 		entries := []interface{}{}
-		for _, entry := range rules {
+		for _, entry := range me.Rules {
 			if marshalled, err := entry.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {

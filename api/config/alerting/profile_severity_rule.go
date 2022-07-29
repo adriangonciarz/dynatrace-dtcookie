@@ -15,6 +15,12 @@ type ProfileSeverityRule struct {
 	Unknowns       map[string]json.RawMessage `json:"-"`
 }
 
+func (me *ProfileSeverityRule) EnsurePredictableOrder() {
+	if me.TagFilter != nil {
+		me.TagFilter.EnsurePredictableOrder()
+	}
+}
+
 func (me *ProfileSeverityRule) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"severity_level": {

@@ -2,6 +2,7 @@ package alerting
 
 import (
 	"encoding/json"
+	"sort"
 
 	"github.com/dtcookie/dynatrace/api/config/common"
 	"github.com/dtcookie/hcl"
@@ -35,6 +36,24 @@ func (me *ProfileTagFilter) Schema() map[string]*hcl.Schema {
 			Description: "allows for configuring properties that are not explicitly supported by the current version of this provider",
 			Optional:    true,
 		},
+	}
+}
+
+func (me *ProfileTagFilter) EnsurePredictableOrder() {
+	if len(me.TagFilters) > 0 {
+		conds := []*common.TagFilter{}
+		condStrings := sort.StringSlice{}
+		for _, entry := range me.TagFilters {
+			condBytes, _ := json.Marshal(entry)
+			condStrings = append(condStrings, string(condBytes))
+		}
+		condStrings.Sort()
+		for _, condString := range condStrings {
+			cond := common.TagFilter{}
+			json.Unmarshal([]byte(condString), &cond)
+			conds = append(conds, &cond)
+		}
+		me.TagFilters = conds
 	}
 }
 
