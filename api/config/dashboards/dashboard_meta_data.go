@@ -10,16 +10,17 @@ import (
 
 // DashboardMetadata contains parameters of a dashboard
 type DashboardMetadata struct {
-	Name            string                     `json:"name"`                     // the name of the dashboard
-	Shared          *bool                      `json:"shared,omitempty"`         // the dashboard is shared (`true`) or private (`false`)
-	Owner           *string                    `json:"owner,omitempty"`          // the owner of the dashboard
-	SharingDetails  *SharingInfo               `json:"sharingDetails,omitempty"` // represents sharing configuration of a dashboard
-	Filter          *DashboardFilter           `json:"dashboardFilter,omitempty"`
-	Tags            []string                   `json:"tags,omitempty"`            // a set of tags assigned to the dashboard
-	Preset          *bool                      `json:"preset,omitempty"`          // the dashboard is a preset (`true`)
-	ValidFilterKeys []string                   `json:"validFilterKeys,omitempty"` // a set of all possible global dashboard filters that can be applied to dashboard
-	DynamicFilters  *DynamicFilters            `json:"dynamicFilters,omitempty"`  // Dashboard filter configuration of a dashboard
-	Unknowns        map[string]json.RawMessage `json:"-"`
+	Name                string                     `json:"name"`                     // the name of the dashboard
+	Shared              *bool                      `json:"shared,omitempty"`         // the dashboard is shared (`true`) or private (`false`)
+	Owner               *string                    `json:"owner,omitempty"`          // the owner of the dashboard
+	SharingDetails      *SharingInfo               `json:"sharingDetails,omitempty"` // represents sharing configuration of a dashboard
+	Filter              *DashboardFilter           `json:"dashboardFilter,omitempty"`
+	Tags                []string                   `json:"tags,omitempty"`                // a set of tags assigned to the dashboard
+	Preset              *bool                      `json:"preset,omitempty"`              // the dashboard is a preset (`true`)
+	ValidFilterKeys     []string                   `json:"validFilterKeys,omitempty"`     // a set of all possible global dashboard filters that can be applied to dashboard
+	DynamicFilters      *DynamicFilters            `json:"dynamicFilters,omitempty"`      // Dashboard filter configuration of a dashboard
+	HasConsistentColors *bool                      `json:"hasConsistentColors,omitempty"` // the dashboard is a preset (`true`)
+	Unknowns            map[string]json.RawMessage `json:"-"`
 }
 
 func (me *DashboardMetadata) Schema() map[string]*hcl.Schema {
@@ -32,6 +33,11 @@ func (me *DashboardMetadata) Schema() map[string]*hcl.Schema {
 		"shared": {
 			Type:        hcl.TypeBool,
 			Description: "the dashboard is shared (`true`) or private (`false`)",
+			Optional:    true,
+		},
+		"consistent_colors": {
+			Type:        hcl.TypeBool,
+			Description: "The tile uses consistent colors when rendering its content",
 			Optional:    true,
 		},
 		"owner": {
@@ -96,6 +102,9 @@ func (me *DashboardMetadata) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
+		delete(me.Unknowns, "hasConsistentColors")
+	}
+	if len(me.Unknowns) > 0 {
 		data, err := json.Marshal(me.Unknowns)
 		if err != nil {
 			return nil, err
@@ -106,6 +115,9 @@ func (me *DashboardMetadata) MarshalHCL() (map[string]interface{}, error) {
 	if me.Shared != nil {
 		result["shared"] = opt.Bool(me.Shared)
 	}
+	if me.HasConsistentColors != nil {
+		result["consistent_colors"] = opt.Bool(me.HasConsistentColors)
+	}
 	if me.Owner != nil {
 		result["owner"] = opt.String(me.Owner)
 	}
@@ -113,7 +125,7 @@ func (me *DashboardMetadata) MarshalHCL() (map[string]interface{}, error) {
 		result["tags"] = me.Tags
 	}
 	if len(me.ValidFilterKeys) > 0 {
-		result["valid_filter_keys"] = me.Tags
+		result["valid_filter_keys"] = me.ValidFilterKeys
 	}
 	if me.SharingDetails != nil {
 		if marshalled, err := me.SharingDetails.MarshalHCL(); err == nil {
