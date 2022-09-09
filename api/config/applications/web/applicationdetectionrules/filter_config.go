@@ -20,12 +20,12 @@ func (me *FilterConfig) Schema() map[string]*hcl.Schema {
 		"application_match_type": {
 			Type:        hcl.TypeString,
 			Required:    true,
-			Description: "The operator used for matching the application detection rule",
+			Description: "The operator used for matching the application detection rule, possible values are `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`, `MATCHES`",
 		},
 		"application_match_target": {
 			Type:        hcl.TypeString,
 			Required:    true,
-			Description: "Where to look for the pattern value - domain or URL",
+			Description: "Where to look for the pattern value, possible values are `DOMAIN` or `URL`",
 		},
 	}
 }
