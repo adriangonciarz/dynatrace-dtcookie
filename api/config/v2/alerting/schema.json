@@ -1,0 +1,664 @@
+{
+    "dynatrace": "1",
+    "schemaId": "builtin:alerting.profile",
+    "displayName": "Problem alerting profiles",
+    "description": "Alerting profiles enable you to set up fine-grained alert-filtering rules that are based on the severity, customer impact, associated tags, and/or duration of detected problems. Alerting profiles enable you to control exactly which conditions result in problem notifications and which don't. This includes all problem-push notifications that are sent via the Dynatrace mobile app and displayed in the Dynatrace web UI. Alerting profiles can also be used to set up filtered problem-notification integrations with 3rd party messaging systems like Slack, VictorOps, and PagerDuty.",
+    "documentation": "",
+    "schemaGroups": [
+      "group:alerting"
+    ],
+    "version": "7.0.6",
+    "multiObject": true,
+    "ordered": false,
+    "maxObjects": 1000,
+    "allowedScopes": [
+      "environment"
+    ],
+    "enums": {
+      "EventType": {
+        "displayName": "EventType",
+        "description": "",
+        "documentation": "",
+        "items": [
+          {
+            "value": "ESXI_VM_IMPACT_HOST_CPU_SATURATION",
+            "displayName": "ESXi VM impact Host CPU saturation"
+          },
+          {
+            "value": "ESXI_VM_IMPACT_HOST_MEMORY_SATURATION",
+            "displayName": "ESXi VM impact Host memory saturation"
+          },
+          {
+            "value": "ESXI_HOST_NETWORK_PROBLEMS",
+            "displayName": "ESXi network problems"
+          },
+          {
+            "value": "ESXI_HOST_DISK_SLOW",
+            "displayName": "ESXi slow disk"
+          },
+          {
+            "value": "EBS_VOLUME_HIGH_LATENCY",
+            "displayName": "Elastic Block Storage has high latency."
+          },
+          {
+            "value": "DCRUM_APP_PERFORMANCE_DEGRADATION",
+            "displayName": "Enterprise application performance degradation"
+          },
+          {
+            "value": "DCRUM_APP_LOW_AVAILABILITY",
+            "displayName": "Enterprise application unavailable"
+          },
+          {
+            "value": "DATABASE_CONNECTION_FAILURE",
+            "displayName": "Failed database connects"
+          },
+          {
+            "value": "SERVICE_ERROR_RATE_INCREASED",
+            "displayName": "Failure rate increase"
+          },
+          {
+            "value": "RDS_HIGH_LATENCY",
+            "displayName": "High latency"
+          },
+          {
+            "value": "OSI_NIC_UTILIZATION_HIGH",
+            "displayName": "High network utilization"
+          },
+          {
+            "value": "OSI_NIC_ERRORS_HIGH",
+            "displayName": "High number of network errors"
+          },
+          {
+            "value": "OSI_NIC_DROPPED_PACKETS_HIGH",
+            "displayName": "High rate of dropped packets"
+          },
+          {
+            "value": "OSI_GRACEFULLY_SHUTDOWN",
+            "displayName": "Host gracefully shutdown"
+          },
+          {
+            "value": "OSI_UNEXPECTEDLY_UNAVAILABLE",
+            "displayName": "Host or monitoring unavailable"
+          },
+          {
+            "value": "HOST_OF_SERVICE_UNAVAILABLE",
+            "displayName": "Host unavailable"
+          },
+          {
+            "value": "ESXI_HOST_DISK_QUEUE_SLOW",
+            "displayName": "I/O commands queued"
+          },
+          {
+            "value": "APPLICATION_ERROR_RATE_INCREASED",
+            "displayName": "JavaScript error rate increase"
+          },
+          {
+            "value": "AWS_LAMBDA_HIGH_ERROR_RATE",
+            "displayName": "Lambda high error rate"
+          },
+          {
+            "value": "PROCESS_HIGH_GC_ACTIVITY",
+            "displayName": "Long garbage-collection time"
+          },
+          {
+            "value": "ESXI_HOST_DATASTORE_LOW_DISK_SPACE",
+            "displayName": "Low datastore space"
+          },
+          {
+            "value": "OSI_LOW_DISK_SPACE",
+            "displayName": "Low disk space"
+          },
+          {
+            "value": "OSI_DISK_LOW_INODES",
+            "displayName": "Low number of inodes available"
+          },
+          {
+            "value": "RDS_LOW_STORAGE_SPACE",
+            "displayName": "Low storage space"
+          },
+          {
+            "value": "PROCESS_MEMORY_RESOURCE_EXHAUSTED",
+            "displayName": "Memory resources exhausted"
+          },
+          {
+            "value": "OSI_HIGH_MEMORY",
+            "displayName": "Memory saturation"
+          },
+          {
+            "value": "MOBILE_APP_CRASH_RATE_INCREASED",
+            "displayName": "Mobile app crash rate increase"
+          },
+          {
+            "value": "MOBILE_APPLICATION_ERROR_RATE_INCREASED",
+            "displayName": "Mobile app error rate increase"
+          },
+          {
+            "value": "MOBILE_APPLICATION_SLOWDOWN",
+            "displayName": "Mobile app slow user actions"
+          },
+          {
+            "value": "MOBILE_APPLICATION_UNEXPECTED_LOW_LOAD",
+            "displayName": "Mobile app unexpected drop in usage"
+          },
+          {
+            "value": "MOBILE_APPLICATION_UNEXPECTED_HIGH_LOAD",
+            "displayName": "Mobile app unexpected high usage"
+          },
+          {
+            "value": "MONITORING_UNAVAILABLE",
+            "displayName": "Monitoring unavailable"
+          },
+          {
+            "value": "PROCESS_NA_HIGH_LOSS_RATE",
+            "displayName": "Network problem"
+          },
+          {
+            "value": "ESXI_HOST_OVERLOADED_STORAGE",
+            "displayName": "Overloaded storage"
+          },
+          {
+            "value": "PROCESS_CRASHED",
+            "displayName": "Process crashed"
+          },
+          {
+            "value": "PG_LOW_INSTANCE_COUNT",
+            "displayName": "Process group low instance count"
+          },
+          {
+            "value": "PGI_UNAVAILABLE",
+            "displayName": "Process unavailable"
+          },
+          {
+            "value": "RDS_HIGH_CPU",
+            "displayName": "RDS CPU saturation"
+          },
+          {
+            "value": "RDS_LOW_MEMORY",
+            "displayName": "RDS memory saturation"
+          },
+          {
+            "value": "RDS_OF_SERVICE_UNAVAILABLE",
+            "displayName": "Relational database service unavailable"
+          },
+          {
+            "value": "SERVICE_SLOWDOWN",
+            "displayName": "Response time degradation"
+          },
+          {
+            "value": "RDS_RESTART_SEQUENCE",
+            "displayName": "Restart sequence"
+          },
+          {
+            "value": "PGI_OF_SERVICE_UNAVAILABLE",
+            "displayName": "Service process unavailable"
+          },
+          {
+            "value": "OSI_SLOW_DISK",
+            "displayName": "Slow disk"
+          },
+          {
+            "value": "SYNTHETIC_NODE_OUTAGE",
+            "displayName": "Synthetic ActiveGate outage"
+          },
+          {
+            "value": "SYNTHETIC_PRIVATE_LOCATION_OUTAGE",
+            "displayName": "Synthetic private location outage"
+          },
+          {
+            "value": "PROCESS_THREADS_RESOURCE_EXHAUSTED",
+            "displayName": "Threads resources exhausted"
+          },
+          {
+            "value": "SERVICE_UNEXPECTED_HIGH_LOAD",
+            "displayName": "Unexpected high load"
+          },
+          {
+            "value": "APPLICATION_UNEXPECTED_HIGH_LOAD",
+            "displayName": "Unexpected high traffic"
+          },
+          {
+            "value": "SERVICE_UNEXPECTED_LOW_LOAD",
+            "displayName": "Unexpected low load"
+          },
+          {
+            "value": "APPLICATION_UNEXPECTED_LOW_LOAD",
+            "displayName": "Unexpected low traffic"
+          },
+          {
+            "value": "APPLICATION_SLOWDOWN",
+            "displayName": "User action duration degradation"
+          },
+          {
+            "value": "SYNTHETIC_GLOBAL_OUTAGE",
+            "displayName": "Browser monitor global outage"
+          },
+          {
+            "value": "SYNTHETIC_LOCAL_OUTAGE",
+            "displayName": "Browser monitor local outage"
+          },
+          {
+            "value": "SYNTHETIC_TEST_LOCATION_SLOWDOWN",
+            "displayName": "Browser monitor performance threshold violation"
+          },
+          {
+            "value": "HTTP_CHECK_GLOBAL_OUTAGE",
+            "displayName": "HTTP monitor global outage"
+          },
+          {
+            "value": "HTTP_CHECK_LOCAL_OUTAGE",
+            "displayName": "HTTP monitor local outage"
+          },
+          {
+            "value": "HTTP_CHECK_TEST_LOCATION_SLOWDOWN",
+            "displayName": "HTTP monitor performance threshold violation"
+          },
+          {
+            "value": "EXTERNAL_SYNTHETIC_TEST_OUTAGE",
+            "displayName": "Third party monitor outage"
+          },
+          {
+            "value": "EXTERNAL_SYNTHETIC_TEST_SLOWDOWN",
+            "displayName": "Third party monitor slowdown"
+          }
+        ],
+        "type": "enum"
+      }
+    },
+    "types": {
+      "AlertingProfileSeverityRule": {
+        "version": "0",
+        "versionInfo": "",
+        "displayName": "AlertingProfileSeverityRule",
+        "summaryPattern": "{severityLevel} alert (After {delayInMinutes} mins; {tagFilterIncludeMode} {tagFilter})",
+        "description": "",
+        "documentation": "",
+        "properties": {
+          "severityLevel": {
+            "displayName": "Problem severity level",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/enums/SeverityLevel"
+            },
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": "AVAILABILITY"
+          },
+          "delayInMinutes": {
+            "displayName": "Problem send delay in minutes",
+            "description": "Send a notification if a problem remains open longer than X minutes.",
+            "documentation": "",
+            "type": "integer",
+            "nullable": false,
+            "constraints": [
+              {
+                "type": "RANGE",
+                "maximum": 10000,
+                "minimum": 0
+              }
+            ],
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": 0
+          },
+          "tagFilterIncludeMode": {
+            "displayName": "Filter problems by tag",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/enums/TagFilterIncludeMode"
+            },
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": "NONE"
+          },
+          "tagFilter": {
+            "displayName": "Tags",
+            "description": "",
+            "documentation": "",
+            "type": "set",
+            "items": {
+              "displayName": "",
+              "description": "",
+              "documentation": "",
+              "type": "text",
+              "subType": "tag",
+              "constraints": [
+                {
+                  "type": "LENGTH",
+                  "maxLength": 500,
+                  "minLength": 1
+                }
+              ]
+            },
+            "nullable": false,
+            "precondition": {
+              "type": "IN",
+              "property": "tagFilterIncludeMode",
+              "expectedValues": [
+                "INCLUDE_ANY",
+                "INCLUDE_ALL"
+              ]
+            },
+            "metadata": {
+              "addItemButton": "Add tag"
+            },
+            "minObjects": 1,
+            "maxObjects": 100,
+            "modificationPolicy": "DEFAULT"
+          }
+        },
+        "type": "object"
+      },
+      "PredefinedEventFilter": {
+        "version": "0",
+        "versionInfo": "",
+        "displayName": "PredefinedEventFilter",
+        "summaryPattern": "{negate, select, true {Not c} other {C}}ontains events of type ''{eventType}''",
+        "description": "",
+        "documentation": "",
+        "properties": {
+          "eventType": {
+            "displayName": "Filter problems by a Dynatrace event type",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/enums/EventType"
+            },
+            "nullable": false,
+            "metadata": {
+              "useCombobox": "enabled"
+            },
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": "OSI_HIGH_CPU"
+          },
+          "negate": {
+            "displayName": "Negate",
+            "description": "",
+            "documentation": "",
+            "type": "boolean",
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": false
+          }
+        },
+        "type": "object"
+      },
+      "TextFilter": {
+        "version": "0",
+        "versionInfo": "",
+        "displayName": "TextFilter",
+        "summaryPattern": "{negate, select, true {not } other {}}{operator} ''{value}''",
+        "description": "",
+        "documentation": "",
+        "properties": {
+          "operator": {
+            "displayName": "Operator of the comparison",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/enums/ComparisonOperator"
+            },
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": "CONTAINS"
+          },
+          "value": {
+            "displayName": "Value",
+            "description": "",
+            "documentation": "",
+            "type": "text",
+            "nullable": false,
+            "constraints": [
+              {
+                "type": "LENGTH",
+                "maxLength": 1000,
+                "minLength": 1
+              }
+            ],
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": ""
+          },
+          "negate": {
+            "displayName": "Negate",
+            "description": "",
+            "documentation": "",
+            "type": "boolean",
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": false
+          },
+          "enabled": {
+            "displayName": "Enabled",
+            "description": "",
+            "documentation": "",
+            "type": "boolean",
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": true
+          },
+          "caseSensitive": {
+            "displayName": "Case sensitive",
+            "description": "",
+            "documentation": "",
+            "type": "boolean",
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": false
+          }
+        },
+        "constraints": [
+          {
+            "type": "CUSTOM_VALIDATOR_REF",
+            "customMessage": "Value must be a valid regular expression",
+            "customValidatorId": "alerting-profile-text-filter-regex-validator"
+          }
+        ],
+        "type": "object"
+      },
+      "CustomEventFilter": {
+        "version": "0",
+        "versionInfo": "",
+        "displayName": "CustomEventFilter",
+        "summaryPattern": "{titleFilter|valueSet, select, true {Title {titleFilter} } other {}}{titleFilter|valueSet, select, true {{descriptionFilter|valueSet, select, true {**OR** } other {}}} other {}}{descriptionFilter|valueSet, select, true {Description {descriptionFilter}} other {}}",
+        "description": "",
+        "documentation": "",
+        "properties": {
+          "titleFilter": {
+            "displayName": "Title filter",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/types/TextFilter"
+            },
+            "nullable": true,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+          },
+          "descriptionFilter": {
+            "displayName": "Description filter",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/types/TextFilter"
+            },
+            "nullable": true,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+          }
+        },
+        "constraints": [
+          {
+            "type": "PROPERTY_COUNT_RANGE",
+            "customMessage": "Define at least one of the filters",
+            "minimumPropertyCount": 1,
+            "properties": [
+              "titleFilter",
+              "descriptionFilter"
+            ]
+          }
+        ],
+        "type": "object"
+      },
+      "AlertingProfileEventFilter": {
+        "version": "0",
+        "versionInfo": "",
+        "displayName": "AlertingProfileEventFilter",
+        "summaryPattern": "{type}: {predefinedFilter}{customFilter}",
+        "description": "",
+        "documentation": "",
+        "properties": {
+          "type": {
+            "displayName": "Filter problems by any event of source",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/enums/AlertingProfileEventFilterType"
+            },
+            "nullable": false,
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT",
+            "default": "PREDEFINED"
+          },
+          "predefinedFilter": {
+            "displayName": "",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/types/PredefinedEventFilter"
+            },
+            "nullable": false,
+            "precondition": {
+              "type": "EQUALS",
+              "property": "type",
+              "expectedValue": "PREDEFINED"
+            },
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+          },
+          "customFilter": {
+            "displayName": "",
+            "description": "",
+            "documentation": "",
+            "type": {
+              "$ref": "#/types/CustomEventFilter"
+            },
+            "nullable": false,
+            "precondition": {
+              "type": "EQUALS",
+              "property": "type",
+              "expectedValue": "CUSTOM"
+            },
+            "maxObjects": 1,
+            "modificationPolicy": "DEFAULT"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "properties": {
+      "name": {
+        "displayName": "Name",
+        "description": "",
+        "documentation": "",
+        "type": "text",
+        "nullable": false,
+        "constraints": [
+          {
+            "type": "LENGTH",
+            "maxLength": 100,
+            "minLength": 1
+          }
+        ],
+        "maxObjects": 1,
+        "modificationPolicy": "DEFAULT",
+        "default": ""
+      },
+      "managementZone": {
+        "displayName": "Management zone",
+        "description": "Define management zone filter for profile",
+        "documentation": "",
+        "type": "text",
+        "subType": "config",
+        "referencedType": "ManagementZone",
+        "nullable": true,
+        "constraints": [
+          {
+            "type": "PATTERN",
+            "pattern": "^-?\\d{1,19}$"
+          },
+          {
+            "type": "LENGTH",
+            "maxLength": 500,
+            "minLength": 1
+          }
+        ],
+        "metadata": {
+          "useCombobox": "enabled"
+        },
+        "maxObjects": 1,
+        "modificationPolicy": "DEFAULT"
+      },
+      "severityRules": {
+        "displayName": "Severity rules",
+        "description": "Define severity rules for profile. A maximum of 100 severity rules is allowed.",
+        "documentation": "",
+        "type": "set",
+        "items": {
+          "displayName": "",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/types/AlertingProfileSeverityRule"
+          }
+        },
+        "nullable": false,
+        "metadata": {
+          "addItemButton": "Add severity rule"
+        },
+        "minObjects": 0,
+        "maxObjects": 100,
+        "modificationPolicy": "DEFAULT"
+      },
+      "eventFilters": {
+        "displayName": "Event filters",
+        "description": "Define event filters for profile. A maximum of 100 event filters is allowed.",
+        "documentation": "",
+        "type": "set",
+        "items": {
+          "displayName": "",
+          "description": "",
+          "documentation": "",
+          "type": {
+            "$ref": "#/types/AlertingProfileEventFilter"
+          }
+        },
+        "nullable": false,
+        "metadata": {
+          "addItemButton": "Add event filter"
+        },
+        "minObjects": 0,
+        "maxObjects": 100,
+        "modificationPolicy": "DEFAULT"
+      }
+    },
+    "constraints": [
+      {
+        "type": "CUSTOM_VALIDATOR_REF",
+        "customMessage": "Management zone should be selected",
+        "customValidatorId": "alerting-profile-mz-validator"
+      }
+    ],
+    "metadata": {
+      "addItemButton": "Add alerting profile"
+    }
+  }
