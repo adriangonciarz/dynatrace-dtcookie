@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"sort"
 
+	v2common "github.com/dtcookie/dynatrace/api/config/v2/common"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
@@ -79,42 +80,6 @@ func (cs *ServiceClient) Get(ID string) (*KeyRequest, error) {
 	return &KeyRequest{ServiceID: response.Scope, Names: result}, nil
 }
 
-type SettingsObjectResponse struct {
-	Code     int    `json:"code"`
-	ObjectID string `json:"objectId"`
-}
-
-type SettingsObjectErrorResponse struct {
-	InvalidValue map[string]interface{} `json:"invalidValue,omitempty"` // The value of the setting. \n\n It defines the actual values of settings' parameters. \n\nThe actual content depends on the object's schema.
-	Error        *Error                 `json:"error,omitempty"`        // Error details
-	Code         *int32                 `json:"code,omitempty"`         // The HTTP status code for the object
-}
-
-type Error struct {
-	ConstraintViolations []*ConstraintViolation `json:"constraintViolations,omitempty"` // A list of constraint violations
-	Message              string                 `json:"message,omitempty"`              // The error message
-	Code                 int32                  `json:"code,omitempty"`                 // The HTTP status code
-}
-
-type ConstraintViolation struct {
-	ParmeterLocation *ParameterLocation `json:"parameterLocation,omitempty"`
-	Location         *string            `json:"location,omitempty"`
-	Message          *string            `json:"message,omitempty"`
-	Path             *string            `json:"path,omitempty"`
-}
-
-type ParameterLocation string
-
-var ParameterLocations = struct {
-	Path        ParameterLocation
-	PayloadBody ParameterLocation
-	Query       ParameterLocation
-}{
-	Path:        ParameterLocation("PATH"),
-	PayloadBody: ParameterLocation("PAYLOAD_BODY"),
-	Query:       ParameterLocation("QUERY"),
-}
-
 func (cs *ServiceClient) Update(keyRequest *KeyRequest) error {
 	_, err := cs.Create(keyRequest)
 	return err
@@ -133,13 +98,13 @@ func (cs *ServiceClient) Create(keyRequest *KeyRequest) (string, error) {
 
 	post := cs.client.NewPOST("/settings/objects/", []interface{}{&payLoad}).Expect(200)
 	if data, err := post.Send(); err == nil {
-		var sor []SettingsObjectResponse
+		var sor []v2common.SettingsObjectResponse
 		if err := json.Unmarshal(data, &sor); err != nil {
 			return "", err
 		}
 		return sor[0].ObjectID, nil
 	} else if data != nil {
-		var soer []SettingsObjectErrorResponse
+		var soer []v2common.SettingsObjectErrorResponse
 		if err := json.Unmarshal(data, &soer); err == nil {
 			od, _ := json.Marshal(soer[0])
 			return "", errors.New(string(od))
