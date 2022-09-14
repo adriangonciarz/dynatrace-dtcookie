@@ -5,11 +5,19 @@ import (
 	"errors"
 	"fmt"
 
+	v2common "github.com/dtcookie/dynatrace/api/config/v2/common"
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
 
 const schemaVersion = "0.0.4"
+
+type SettingsObject struct {
+	SchemaVersion string         `json:"schemaVersion"`
+	SchemaID      string         `json:"schemaId"`
+	Scope         string         `json:"scope"`
+	Value         *SpanAttribute `json:"value"`
+}
 
 // ServiceClient TODO: documentation
 type ServiceClient struct {
@@ -29,22 +37,22 @@ func NewService(baseURL string, token string) *ServiceClient {
 
 // Create TODO: documentation
 func (cs *ServiceClient) Create(item *SpanAttribute) (string, error) {
-	payload := SettingsObjectCreate{
+	payload := v2common.SettingsObjectCreate{
 		Value:         item,
 		SchemaID:      "builtin:span-attribute",
 		SchemaVersion: schemaVersion,
 		Scope:         "environment",
 	}
 
-	post := cs.client.NewPOST("/settings/objects/", []*SettingsObjectCreate{&payload}).Expect(200)
+	post := cs.client.NewPOST("/settings/objects/", []*v2common.SettingsObjectCreate{&payload}).Expect(200)
 	if data, err := post.Send(); err == nil {
-		var sor []SettingsObjectResponse
+		var sor []v2common.SettingsObjectResponse
 		if err := json.Unmarshal(data, &sor); err != nil {
 			return "", err
 		}
 		return sor[0].ObjectID, nil
 	} else if data != nil {
-		var soer []SettingsObjectErrorResponse
+		var soer []v2common.SettingsObjectErrorResponse
 		if err := json.Unmarshal(data, &soer); err == nil {
 			od, _ := json.Marshal(soer[0])
 			return "", errors.New(string(od))
@@ -57,7 +65,7 @@ func (cs *ServiceClient) Create(item *SpanAttribute) (string, error) {
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(id string, item *SpanAttribute) error {
-	payload := SettingsObjectUpdate{
+	payload := v2common.SettingsObjectUpdate{
 		Value:         item,
 		SchemaVersion: schemaVersion,
 	}
@@ -107,7 +115,7 @@ func (cs *ServiceClient) List() ([]string, error) {
 	if bytes, err = cs.client.GET("/settings/objects?schemaIds=builtin%3Aspan-attribute&scopes=environment&fields=objectId&pageSize=500", 200); err != nil {
 		return nil, err
 	}
-	var sol SettingsObjectList
+	var sol v2common.SettingsObjectList
 	if err = json.Unmarshal(bytes, &sol); err != nil {
 		return nil, err
 	}
@@ -117,67 +125,4 @@ func (cs *ServiceClient) List() ([]string, error) {
 	}
 
 	return ids, nil
-}
-
-type SettingsObjectList struct {
-	Items []*SettingsObjectListItem `json:"items"`
-}
-
-type SettingsObjectListItem struct {
-	ObjectID string `json:"objectId"`
-}
-
-type SettingsObject struct {
-	SchemaVersion string         `json:"schemaVersion"`
-	SchemaID      string         `json:"schemaId"`
-	Scope         string         `json:"scope"`
-	Value         *SpanAttribute `json:"value"`
-}
-
-type SettingsObjectUpdate struct {
-	SchemaVersion string      `json:"schemaVersion"`
-	Value         interface{} `json:"value"`
-}
-
-type SettingsObjectCreate struct {
-	SchemaVersion string      `json:"schemaVersion"`
-	SchemaID      string      `json:"schemaId"`
-	Scope         string      `json:"scope"`
-	Value         interface{} `json:"value"`
-}
-
-type SettingsObjectResponse struct {
-	ObjectID string `json:"objectId"` // The ID of the settings object
-	Code     int32  // The HTTP status code for the object
-}
-
-type SettingsObjectErrorResponse struct {
-	InvalidValue map[string]interface{} `json:"invalidValue,omitempty"` // The value of the setting. \n\n It defines the actual values of settings' parameters. \n\nThe actual content depends on the object's schema.
-	Error        *Error                 `json:"error,omitempty"`        // Error details
-	Code         *int32                 `json:"code,omitempty"`         // The HTTP status code for the object
-}
-
-type Error struct {
-	ConstraintViolations []*ConstraintViolation `json:"constraintViolations,omitempty"` // A list of constraint violations
-	Message              string                 `json:"message,omitempty"`              // The error message
-	Code                 int32                  `json:"code,omitempty"`                 // The HTTP status code
-}
-
-type ConstraintViolation struct {
-	ParmeterLocation *ParameterLocation `json:"parameterLocation,omitempty"`
-	Location         *string            `json:"location,omitempty"`
-	Message          *string            `json:"message,omitempty"`
-	Path             *string            `json:"path,omitempty"`
-}
-
-type ParameterLocation string
-
-var ParameterLocations = struct {
-	Path        ParameterLocation
-	PayloadBody ParameterLocation
-	Query       ParameterLocation
-}{
-	Path:        ParameterLocation("PATH"),
-	PayloadBody: ParameterLocation("PAYLOAD_BODY"),
-	Query:       ParameterLocation("QUERY"),
 }
