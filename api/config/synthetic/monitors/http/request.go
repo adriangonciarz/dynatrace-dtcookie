@@ -24,6 +24,7 @@ type Request struct {
 	Description    *string              `json:"description,omitempty"`   // A short description of the event to appear in the web UI
 	URL            string               `json:"url"`                     // The URL to check
 	Method         string               `json:"method"`                  // The HTTP method of the request
+	Authentication *Authentication      `json:"authentication"`          // Authentication options for this request
 	RequestBody    *string              `json:"requestBody,omitempty"`   // The body of the HTTP request—you need to escape all JSON characters. \n\n Is set to null if the request method is GET, HEAD, or OPTIONS.
 	Validation     *validation.Settings `json:"validation,omitempty"`    // Validation helps you verify that your HTTP monitor loads the expected content
 	Configuration  *request.Config      `json:"configuration,omitempty"` // The setup of the monitor
@@ -70,6 +71,13 @@ func (me *Request) Schema() map[string]*hcl.Schema {
 			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(validation.Settings).Schema()},
 		},
+		"authentication": {
+			Type:        hcl.TypeList,
+			Description: "Authentication options for this request",
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &hcl.Resource{Schema: new(Authentication).Schema()},
+		},
 		"configuration": {
 			Type:        hcl.TypeList,
 			Description: "The setup of the monitor",
@@ -99,6 +107,13 @@ func (me *Request) MarshalHCL() (map[string]interface{}, error) {
 	if me.Validation != nil {
 		if marshalled, err := me.Validation.MarshalHCL(); err == nil {
 			result["validation"] = []interface{}{marshalled}
+		} else {
+			return nil, err
+		}
+	}
+	if me.Authentication != nil {
+		if marshalled, err := me.Authentication.MarshalHCL(); err == nil {
+			result["authentication"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
@@ -135,6 +150,12 @@ func (me *Request) UnmarshalHCL(decoder hcl.Decoder) error {
 	if result, ok := decoder.GetOk("validation.#"); ok && result.(int) == 1 {
 		me.Validation = new(validation.Settings)
 		if err := me.Validation.UnmarshalHCL(hcl.NewDecoder(decoder, "validation", 0)); err != nil {
+			return err
+		}
+	}
+	if result, ok := decoder.GetOk("authentication.#"); ok && result.(int) == 1 {
+		me.Authentication = new(Authentication)
+		if err := me.Authentication.UnmarshalHCL(hcl.NewDecoder(decoder, "authentication", 0)); err != nil {
 			return err
 		}
 	}
