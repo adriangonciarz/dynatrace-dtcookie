@@ -19,7 +19,7 @@ func (me *CustomEventFilter) Schema() map[string]*hcl.Schema {
 			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(TextFilter).Schema()},
 		},
-		"custom": {
+		"title": {
 			Type:        hcl.TypeList,
 			Description: "Configuration of a matching filter",
 			Optional:    true,

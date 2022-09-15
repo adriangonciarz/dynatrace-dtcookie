@@ -34,7 +34,7 @@ func (me *TextFilter) Schema() map[string]*hcl.Schema {
 			Description: "The value to compare to",
 			Required:    true,
 		},
-		"case_insensitive": {
+		"case_sensitive": {
 			Type:        hcl.TypeBool,
 			Description: "The condition is case sensitive (`false`) or case insensitive (`true`).   If not set, then `false` is used, making the condition case sensitive",
 			Optional:    true,
@@ -44,11 +44,11 @@ func (me *TextFilter) Schema() map[string]*hcl.Schema {
 
 func (me *TextFilter) MarshalHCL() (map[string]interface{}, error) {
 	return map[string]interface{}{
-		"enabled":          me.Enabled,
-		"negate":           me.Negate,
-		"operator":         string(me.Operator),
-		"value":            me.Value,
-		"case_insensitive": !me.CaseSensitive,
+		"enabled":        me.Enabled,
+		"negate":         me.Negate,
+		"operator":       string(me.Operator),
+		"value":          me.Value,
+		"case_sensitive": me.CaseSensitive,
 	}, nil
 }
 
@@ -59,8 +59,8 @@ func (me *TextFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 	if _, value := decoder.GetChange("negate"); value != nil {
 		me.Negate = value.(bool)
 	}
-	if _, value := decoder.GetChange("case_insensitive"); value != nil {
-		me.CaseSensitive = !(value.(bool))
+	if _, value := decoder.GetChange("case_sensitive"); value != nil {
+		me.CaseSensitive = (value.(bool))
 	}
 	if value, ok := decoder.GetOk("operator"); ok {
 		me.Operator = Operator(value.(string))

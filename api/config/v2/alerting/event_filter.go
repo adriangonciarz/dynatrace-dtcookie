@@ -8,7 +8,7 @@ type EventFilters []*EventFilter
 
 func (me *EventFilters) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"event_filter": {
+		"filter": {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
@@ -19,11 +19,11 @@ func (me *EventFilters) Schema() map[string]*hcl.Schema {
 }
 
 func (me EventFilters) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeSlice("event_filter", me)
+	return hcl.Properties{}.EncodeSlice("filter", me)
 }
 
 func (me *EventFilters) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := decoder.DecodeSlice("event_filter", me); err != nil {
+	if err := decoder.DecodeSlice("filter", me); err != nil {
 		return err
 	}
 	return nil
@@ -42,6 +42,7 @@ func (me *EventFilter) Schema() map[string]*hcl.Schema {
 			Description: "Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies",
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(CustomEventFilter).Schema()},
 		},
 		"predefined": {
@@ -49,6 +50,7 @@ func (me *EventFilter) Schema() map[string]*hcl.Schema {
 			Description: "Configuration of a custom event filter. Filters custom events by title or description. If both specified, the AND logic applies",
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(PredefinedEventFilter).Schema()},
 		},
 	}

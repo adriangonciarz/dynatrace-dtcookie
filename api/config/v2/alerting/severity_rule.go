@@ -1,8 +1,6 @@
 package alerting
 
 import (
-	"log"
-
 	"github.com/dtcookie/hcl"
 )
 
@@ -62,7 +60,6 @@ func (me *SeverityRule) Schema() map[string]*hcl.Schema {
 }
 
 func (me *SeverityRule) MarshalHCL() (map[string]interface{}, error) {
-	log.Println("SeverityRule", "MarshalHCL")
 	result := map[string]interface{}{}
 
 	result["delay_in_minutes"] = int(me.DelayInMinutes)
@@ -76,7 +73,6 @@ func (me *SeverityRule) MarshalHCL() (map[string]interface{}, error) {
 }
 
 func (me *SeverityRule) UnmarshalHCL(decoder hcl.Decoder) error {
-	log.Println("SeverityRule", "UnmarshalHCL")
 	if value, ok := decoder.GetOk("severity_level"); ok {
 		me.SeverityLevel = SeverityLevel(value.(string))
 	}
