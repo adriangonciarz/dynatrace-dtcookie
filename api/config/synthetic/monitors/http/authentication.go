@@ -56,7 +56,7 @@ func (me *Authentication) MarshalHCL() (map[string]interface{}, error) {
 	result["type"] = string(me.Type)
 	result["credentials"] = me.Credentials
 	if me.RealmName != nil {
-		result["realm_name"] = me.RealmName
+		result["realm_name"] = *me.RealmName
 	}
 	if me.KdcIP != nil {
 		result["kdc_ip"] = *me.KdcIP
