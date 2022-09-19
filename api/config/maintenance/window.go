@@ -120,7 +120,7 @@ func (me *Window) MarshalHCL() (map[string]interface{}, error) {
 	if !me.Enabled {
 		result["enabled"] = me.Enabled
 	}
-	if me.Scope != nil {
+	if me.Scope != nil && !me.Scope.IsEmpty() {
 		if marshalled, err := me.Scope.MarshalHCL(); err == nil {
 			result["scope"] = []interface{}{marshalled}
 		} else {
@@ -209,8 +209,10 @@ func (me *Window) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("schedule", me.Schedule); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("scope", me.Scope); err != nil {
-		return nil, err
+	if me.Scope != nil && !me.Scope.IsEmpty() {
+		if err := m.Marshal("scope", me.Scope); err != nil {
+			return nil, err
+		}
 	}
 	if err := m.Marshal("suppression", me.Suppression); err != nil {
 		return nil, err

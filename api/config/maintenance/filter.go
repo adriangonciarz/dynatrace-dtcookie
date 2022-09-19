@@ -165,6 +165,10 @@ func (me *Filter) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("tags", me.Tags); err != nil {
 		return nil, err
 	}
+	// REST API doesn't accept omitting tags or specifying nil
+	if me.Tags == nil {
+		m["tags"] = []byte("[]")
+	}
 	return json.Marshal(m)
 }
 

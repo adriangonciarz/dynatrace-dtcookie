@@ -8,8 +8,9 @@ import (
 )
 
 // Scope The scope of the maintenance window.
-//  The scope restricts the alert/problem detection suppression to certain Dynatrace entities. It can contain a list of entities and/or matching rules for dynamic formation of the scope.
-//  If no scope is specified, the alert/problem detection suppression applies to the entire environment.
+//
+//	The scope restricts the alert/problem detection suppression to certain Dynatrace entities. It can contain a list of entities and/or matching rules for dynamic formation of the scope.
+//	If no scope is specified, the alert/problem detection suppression applies to the entire environment.
 type Scope struct {
 	Entities []string                   `json:"entities"` // A list of Dynatrace entities (for example, hosts or services) to be included in the scope.  Allowed values are Dynatrace entity IDs.
 	Matches  []*Filter                  `json:"matches"`  // A list of matching rules for dynamic scope formation.  If several rules are set, the OR logic applies.
@@ -39,6 +40,10 @@ func (me *Scope) Schema() map[string]*hcl.Schema {
 			Optional:    true,
 		},
 	}
+}
+
+func (me *Scope) IsEmpty() bool {
+	return len(me.Entities) == 0 && len(me.Matches) == 0
 }
 
 func (me *Scope) MarshalHCL() (map[string]interface{}, error) {
