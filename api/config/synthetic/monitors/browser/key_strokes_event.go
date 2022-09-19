@@ -74,7 +74,7 @@ func (me *KeyStrokesEvent) MarshalHCL() (map[string]interface{}, error) {
 		}
 	}
 	if len(me.Validate) > 0 {
-		if marshalled, err := me.Wait.MarshalHCL(); err == nil {
+		if marshalled, err := me.Validate.MarshalHCL(); err == nil {
 			result["validate"] = []interface{}{marshalled}
 		} else {
 			return nil, err
