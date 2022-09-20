@@ -51,8 +51,7 @@ func (cs *ServiceClient) Update(config *AWSCredentialsConfig) error {
 	if len(opt.String(config.ID)) == 0 {
 		return errors.New("the configuration doesn't contain an ID")
 	}
-	var localConfig AWSCredentialsConfig
-	localConfig = *config
+	localConfig := *config
 	localConfig.ID = nil
 	if _, err := cs.client.PUT(fmt.Sprintf("/aws/credentials/%s", opt.String(config.ID)), &localConfig, 204); err != nil {
 		return err
@@ -69,6 +68,24 @@ func (cs *ServiceClient) Delete(id string) error {
 		return err
 	}
 	return nil
+}
+
+func (cs *ServiceClient) GetIAMExternalID() (string, error) {
+	var err error
+	var bytes []byte
+
+	if bytes, err = cs.client.GET("/aws/iamExternalId", 200); err != nil {
+		return "", err
+	}
+	var payload = struct {
+		Token string `json:"token"`
+	}{
+		Token: "",
+	}
+	if err = json.Unmarshal(bytes, &payload); err != nil {
+		return "", err
+	}
+	return payload.Token, nil
 }
 
 // Get TODO: documentation
