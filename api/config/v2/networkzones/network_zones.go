@@ -12,6 +12,7 @@ func (me *NetworkZones) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"enabled": {
 			Type:        hcl.TypeBool,
+			Required:    true,
 			Description: "Network Zones are enabled (`true`) or disabled (`false`)",
 		},
 	}
