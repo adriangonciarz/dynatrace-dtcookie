@@ -4,12 +4,50 @@ import "github.com/dtcookie/hcl"
 
 type KeyStrokesEvent struct {
 	EventBase
-	TextValue         string         `json:"textValue"`          // The text to enter
-	Masked            bool           `json:"masked"`             // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
-	SimulateBlurEvent bool           `json:"simulateBlurEvent"`  // Defines whether to blur the text field when it loses focus.\nSet to `true` to trigger the blur the `textValue`
-	Wait              *WaitCondition `json:"wait,omitempty"`     // The wait condition for the event—defines how long Dynatrace should wait before the next action is executed
-	Validate          Validations    `json:"validate,omitempty"` // The validation rule for the event—helps you verify that your browser monitor loads the expected page content or page element
-	Target            *Target        `json:"target,omitempty"`   // The tab on which the page should open
+	TextValue         string         `json:"textValue"`            // The text to enter
+	Masked            bool           `json:"masked"`               // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+	SimulateBlurEvent bool           `json:"simulateBlurEvent"`    // Defines whether to blur the text field when it loses focus.\nSet to `true` to trigger the blur the `textValue`
+	Wait              *WaitCondition `json:"wait,omitempty"`       // The wait condition for the event—defines how long Dynatrace should wait before the next action is executed
+	Validate          Validations    `json:"validate,omitempty"`   // The validation rule for the event—helps you verify that your browser monitor loads the expected page content or page element
+	Target            *Target        `json:"target,omitempty"`     // The tab on which the page should open
+	Credential        *Credential    `json:"credential,omitempty"` // Credentials for this event
+}
+
+type Credential struct {
+	ID    string
+	Field string
+}
+
+func (me *Credential) Schema() map[string]*hcl.Schema {
+	return map[string]*hcl.Schema{
+		"vault_id": {
+			Type:        hcl.TypeString,
+			Description: "The ID of the credential within the Credentials Vault",
+			Required:    true,
+		},
+		"field": {
+			Type:        hcl.TypeString,
+			Description: "Either `username` or `password`",
+			Required:    true,
+		},
+	}
+}
+
+func (me *Credential) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"vault_id": me.ID,
+		"field":    me.Field,
+	}, nil
+}
+
+func (me *Credential) UnmarshalHCL(decoder hcl.Decoder) error {
+	if err := decoder.Decode("vault_id", &me.ID); err != nil {
+		return err
+	}
+	if err := decoder.Decode("field", &me.Field); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (me *KeyStrokesEvent) GetType() EventType {
@@ -18,6 +56,13 @@ func (me *KeyStrokesEvent) GetType() EventType {
 
 func (me *KeyStrokesEvent) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
+		"credential": {
+			Type:        hcl.TypeList,
+			Description: "Credentials for this event",
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &hcl.Resource{Schema: new(Credential).Schema()},
+		},
 		"text": {
 			Type:        hcl.TypeString,
 			Description: "The text to enter",
@@ -62,6 +107,13 @@ func (me *KeyStrokesEvent) MarshalHCL() (map[string]interface{}, error) {
 	if me.Target != nil {
 		if marshalled, err := me.Target.MarshalHCL(); err == nil {
 			result["target"] = []interface{}{marshalled}
+		} else {
+			return nil, err
+		}
+	}
+	if me.Credential != nil {
+		if marshalled, err := me.Credential.MarshalHCL(); err == nil {
+			result["credential"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
