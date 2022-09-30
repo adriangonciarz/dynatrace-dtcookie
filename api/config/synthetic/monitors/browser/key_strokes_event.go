@@ -4,8 +4,8 @@ import "github.com/dtcookie/hcl"
 
 type KeyStrokesEvent struct {
 	EventBase
-	TextValue         string         `json:"textValue"`            // The text to enter
-	Masked            bool           `json:"masked"`               // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+	TextValue         string         `json:"textValue,omitempty"`  // The text to enter
+	Masked            bool           `json:"masked,omitempty"`     // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
 	SimulateBlurEvent bool           `json:"simulateBlurEvent"`    // Defines whether to blur the text field when it loses focus.\nSet to `true` to trigger the blur the `textValue`
 	Wait              *WaitCondition `json:"wait,omitempty"`       // The wait condition for the event—defines how long Dynatrace should wait before the next action is executed
 	Validate          Validations    `json:"validate,omitempty"`   // The validation rule for the event—helps you verify that your browser monitor loads the expected page content or page element
@@ -65,12 +65,12 @@ func (me *KeyStrokesEvent) Schema() map[string]*hcl.Schema {
 		},
 		"text": {
 			Type:        hcl.TypeString,
-			Description: "The text to enter",
-			Required:    true,
+			Description: "The text to enter. Must not be specified if `credentials` from the vault are being used",
+			Optional:    true,
 		},
 		"masked": {
 			Type:        hcl.TypeBool,
-			Description: "Indicates whether the `textValue` is encrypted (`true`) or not (`false`)",
+			Description: "Indicates whether the `textValue` is encrypted (`true`) or not (`false`). Must not be specified if `credentials` from the vault are being used",
 			Optional:    true,
 		},
 		"simulate_blur_event": {
