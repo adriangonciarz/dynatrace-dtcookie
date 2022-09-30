@@ -14,8 +14,8 @@ type KeyStrokesEvent struct {
 }
 
 type Credential struct {
-	ID    string
-	Field string
+	ID    string `json:"id"`
+	Field string `json:"field"`
 }
 
 func (me *Credential) Schema() map[string]*hcl.Schema {
@@ -150,6 +150,9 @@ func (me *KeyStrokesEvent) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("wait", &me.Wait); err != nil {
+		return err
+	}
+	if err := decoder.Decode("credential", &me.Credential); err != nil {
 		return err
 	}
 	if err := decoder.Decode("validate", &me.Validate); err != nil {
