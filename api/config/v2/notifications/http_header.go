@@ -107,7 +107,9 @@ func (me *HTTPHeader) Schema() map[string]*hcl.Schema {
 func (me *HTTPHeader) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	result["name"] = me.Name
-	result["value"] = me.Value
+	if me.Value != nil {
+		result["value"] = me.Value
+	}
 	// Must not serialize secret values
 	// REST API only offers them in scrambled form
 	// result["secret_value"] = me.SecretValue
