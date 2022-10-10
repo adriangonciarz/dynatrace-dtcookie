@@ -49,7 +49,7 @@ func (me *Slack) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Slack) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Slack) MarshalHCL() (map[string]interface{}, error) {
 	// The url field MUST NOT get serialized into HCL here
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored url here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State

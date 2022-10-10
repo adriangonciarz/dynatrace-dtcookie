@@ -69,7 +69,7 @@ func (me *WebHook) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *WebHook) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *WebHook) MarshalHCL() (map[string]interface{}, error) {
 	return hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"name":    me.Name,
 		"active":  me.Enabled,

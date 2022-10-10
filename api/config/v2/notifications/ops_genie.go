@@ -51,7 +51,7 @@ func (me *OpsGenie) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *OpsGenie) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *OpsGenie) MarshalHCL() (map[string]interface{}, error) {
 	// The api_key field MUST NOT get serialized into HCL here
 	// The Dynatrace Settings 2.0 API delivers a scrambled version of any previously stored api_key here
 	// Evaluation at this point would lead to that scrambled version to make it into the Terraform State

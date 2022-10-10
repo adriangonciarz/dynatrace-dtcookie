@@ -71,7 +71,7 @@ func (me *Email) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Email) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Email) MarshalHCL() (map[string]interface{}, error) {
 	return hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"name":    me.Name,
 		"active":  me.Enabled,
