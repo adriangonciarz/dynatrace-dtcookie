@@ -47,7 +47,17 @@ func (me *Notification) MarshalHCL() (map[string]interface{}, error) {
 		if config == nil {
 			return nil, fmt.Errorf("notification type is `%v` but the corresponding configuration is missing", me.Type)
 		}
-		return config.MarshalHCL()
+		result, err := config.MarshalHCL()
+		if err != nil {
+			return nil, err
+		}
+		if me.Enabled {
+			result["enabled"] = me.Enabled
+		}
+		result["name"] = me.Name
+		result["profile"] = me.ProfileID
+		result["enabled"] = me.Enabled
+		return result, nil
 	}
 	return nil, fmt.Errorf("notification type `%v` not supported", me.Type)
 }
