@@ -1,5 +1,12 @@
 package notifications
 
+import (
+	"errors"
+	"fmt"
+
+	"github.com/dtcookie/hcl"
+)
+
 type Notification struct {
 	Enabled   bool   `json:"enabled"`
 	Name      string `json:"displayName"`
@@ -17,6 +24,32 @@ type Notification struct {
 	XMatters     *XMatters     `json:"xMattersNotification,omitempty"`
 	Trello       *Trello       `json:"trelloNotification,omitempty"`
 	ServiceNow   *ServiceNow   `json:"serviceNowNotification,omitempty"`
+}
+
+func (me *Notification) MarshalHCL() (map[string]interface{}, error) {
+	m := map[Type]hcl.Marshaler{
+		Types.AnsibleTower: me.AnsibleTower,
+		Types.Email:        me.Email,
+		Types.Slack:        me.Slack,
+		Types.Jira:         me.Jira,
+		Types.OpsGenie:     me.OpsGenie,
+		Types.PagerDuty:    me.PagerDuty,
+		Types.VictorOps:    me.VictorOps,
+		Types.WebHook:      me.WebHook,
+		Types.XMatters:     me.XMatters,
+		Types.Trello:       me.Trello,
+		Types.ServiceNow:   me.ServiceNow,
+	}
+	if len(me.Type) == 0 {
+		return nil, errors.New("no notification type set")
+	}
+	if config, ok := m[me.Type]; ok {
+		if config == nil {
+			return nil, fmt.Errorf("notification type is `%v` but the corresponding configuration is missing", me.Type)
+		}
+		return config.MarshalHCL()
+	}
+	return nil, fmt.Errorf("notification type `%v` not supported", me.Type)
 }
 
 type Type string
