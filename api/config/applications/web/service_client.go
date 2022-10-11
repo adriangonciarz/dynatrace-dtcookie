@@ -39,12 +39,21 @@ func (cs *ServiceClient) Create(applicationConfig *ApplicationConfig) (*api.Enti
 	if err = json.Unmarshal(bytes, &stub); err != nil {
 		return nil, err
 	}
+	// It takes a couple of seconds until the cluster REALLY knows about the application
+	// Furthermore, even if the application can get queried via REST it's not guaranteed
+	// that its name is getting delivered properly.
+	//
+	// This retry loop does its best to ensure predictable results for subsequent REST calls
+	// for the currently created application
 	for i := 0; i < 40; i++ {
-		if _, err = cs.Get(stub.ID); err == nil {
-			break
+		if appConfig, err := cs.Get(stub.ID); err == nil {
+			if appConfig.Name == applicationConfig.Name {
+				break
+			}
 		}
 		time.Sleep(time.Second * 3)
 	}
+	// Key User Actions are actually a separate REST Endpoint
 	if len(applicationConfig.KeyUserActions) > 0 {
 		for _, keyUserAction := range applicationConfig.KeyUserActions {
 			if _, err = cs.client.POST(fmt.Sprintf("/applications/web/%s/keyUserActions", stub.ID), &keyUserAction, 201); err != nil {
