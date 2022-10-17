@@ -61,6 +61,41 @@ func (me *AutoTag) Schema() map[string]*hcl.Schema {
 	}
 }
 
+func (me *AutoTag) ensurePredictableOrder() {
+	if len(me.Rules) > 0 {
+		for _, rule := range me.Rules {
+			rule.ensurePredictableOrder()
+		}
+		ruleJSONs := make([]string, 0)
+		for _, entry := range me.Rules {
+			entryBytes, _ := json.Marshal(entry)
+			ruleJSONs = append(ruleJSONs, string(entryBytes))
+		}
+		me.Rules = make([]*Rule, 0)
+		sort.Strings(ruleJSONs)
+		for _, ruleJSON := range ruleJSONs {
+			rule := new(Rule)
+			json.Unmarshal([]byte(ruleJSON), rule)
+			me.Rules = append(me.Rules, rule)
+		}
+	}
+	if len(me.EntitySelectorBasedRules) > 0 {
+		ruleJSONs := make([]string, 0)
+		for _, entry := range me.EntitySelectorBasedRules {
+			entryBytes, _ := json.Marshal(entry)
+			ruleJSONs = append(ruleJSONs, string(entryBytes))
+		}
+		sort.Strings(ruleJSONs)
+
+		me.EntitySelectorBasedRules = make([]*EntitySelectorBasedRule, 0)
+		for _, ruleJSON := range ruleJSONs {
+			rule := new(EntitySelectorBasedRule)
+			json.Unmarshal([]byte(ruleJSON), rule)
+			me.EntitySelectorBasedRules = append(me.EntitySelectorBasedRules, rule)
+		}
+	}
+}
+
 func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
@@ -72,44 +107,32 @@ func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 		result["unknowns"] = string(data)
 	}
 	result["name"] = me.Name
-	if me.Rules != nil {
-		ruleJSONs := []string{}
-		for _, entry := range me.Rules {
-			entryBytes, _ := json.Marshal(entry)
-			ruleJSONs = append(ruleJSONs, string(entryBytes))
-		}
-		sort.Strings(ruleJSONs)
-		entries := []interface{}{}
-		for _, ruleJSON := range ruleJSONs {
-			entry := Rule{}
-			json.Unmarshal([]byte(ruleJSON), &entry)
-			if marshalled, err := entry.MarshalHCL(); err == nil {
+	me.ensurePredictableOrder()
+	if len(me.Rules) > 0 {
+		entries := make([]interface{}, 0)
+		for _, rule := range me.Rules {
+			if marshalled, err := rule.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
 				return nil, err
 			}
 		}
 		result["rules"] = entries
+	} else {
+		result["rules"] = nil
 	}
 	if me.EntitySelectorBasedRules != nil {
-		ruleJSONs := []string{}
-		for _, entry := range me.EntitySelectorBasedRules {
-			entryBytes, _ := json.Marshal(entry)
-			ruleJSONs = append(ruleJSONs, string(entryBytes))
-		}
-		sort.Strings(ruleJSONs)
-
-		entries := []interface{}{}
-		for _, ruleJSON := range ruleJSONs {
-			entry := EntitySelectorBasedRule{}
-			json.Unmarshal([]byte(ruleJSON), &entry)
-			if marshalled, err := entry.MarshalHCL(); err == nil {
+		entries := make([]interface{}, 0)
+		for _, rule := range me.EntitySelectorBasedRules {
+			if marshalled, err := rule.MarshalHCL(); err == nil {
 				entries = append(entries, marshalled)
 			} else {
 				return nil, err
 			}
 		}
 		result["entity_selector_based_rule"] = entries
+	} else {
+		result["entity_selector_based_rule"] = nil
 	}
 	return result, nil
 }
