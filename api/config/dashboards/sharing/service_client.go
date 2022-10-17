@@ -1,12 +1,15 @@
 package sharing
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // ServiceClient TODO: documentation
@@ -26,16 +29,20 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 // Create TODO: documentation
-func (cs *ServiceClient) Create(settings *DashboardSharing) (string, error) {
-	if err := cs.Update(settings); err != nil {
+func (cs *ServiceClient) Create(ctx context.Context, settings *DashboardSharing) (string, error) {
+	if err := cs.Update(ctx, settings); err != nil {
 		return "", err
 	}
-	// return settings.DashboardID + "-sharing", nil
-	return settings.DashboardID, nil
+	return settings.DashboardID + "-sharing", nil
 }
 
 // Update TODO: documentation
-func (cs *ServiceClient) Update(settings *DashboardSharing) error {
+func (cs *ServiceClient) Update(ctx context.Context, settings *DashboardSharing) error {
+	debugFlag := os.Getenv("TF_LOG_PROVIDER_DYNATRACE")
+	if strings.ToUpper(debugFlag) == "DEBUG" {
+		data, _ := json.Marshal(settings)
+		tflog.Debug(ctx, fmt.Sprintf("\nPUT /dashboards/%s/shareSettings\n    %s\n", settings.DashboardID, string(data)))
+	}
 	_, err := cs.client.PUT(fmt.Sprintf("/dashboards/%s/shareSettings", settings.DashboardID), settings, 201)
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
@@ -44,7 +51,7 @@ func (cs *ServiceClient) Update(settings *DashboardSharing) error {
 }
 
 // Delete TODO: documentation
-func (cs *ServiceClient) Delete(id string) error {
+func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	settings := DashboardSharing{
 		DashboardID: id,
 		Enabled:     false,
@@ -60,12 +67,12 @@ func (cs *ServiceClient) Delete(id string) error {
 			URLs:              map[string]string{},
 		},
 	}
-	return cs.Update(&settings)
+	return cs.Update(ctx, &settings)
 }
 
 // Get TODO: documentation
-func (cs *ServiceClient) Get(id string) (*DashboardSharing, error) {
-	// id = strings.TrimSuffix(id, "-sharing")
+func (cs *ServiceClient) Get(ctx context.Context, id string) (*DashboardSharing, error) {
+	id = strings.TrimSuffix(id, "-sharing")
 
 	var err error
 	var bytes []byte

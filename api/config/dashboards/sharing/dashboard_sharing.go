@@ -1,7 +1,10 @@
 package sharing
 
 import (
+	"fmt"
+
 	"github.com/dtcookie/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // DashboardSharing represents sharing configuration of the dashboard
@@ -51,41 +54,80 @@ func (me *DashboardSharing) Schema() map[string]*hcl.Schema {
 
 // MarshalHCL has no documentation
 func (me *DashboardSharing) MarshalHCL() (map[string]interface{}, error) {
-	var err error
-	props := hcl.Properties{}
-	if props, err = props.EncodeAll(map[string]interface{}{
-		"dashboard_id": me.DashboardID,
-		"enabled":      me.Enabled,
-		"preset":       me.Preset,
-		"permissions":  me.Permissions,
-	}); err != nil {
-		return nil, err
-	}
-
-	if me.PublicAccess != nil && !me.PublicAccess.IsEmpty() {
-		if err = props.Encode("public", me.PublicAccess); err != nil {
+	m := map[string]interface{}{}
+	m["dashboard_id"] = me.DashboardID
+	m["enabled"] = me.Enabled
+	m["preset"] = me.Preset
+	if me.Permissions != nil {
+		if marshalled, err := me.Permissions.MarshalHCL(); err != nil {
 			return nil, err
+		} else {
+			m["permissions"] = []interface{}{marshalled}
 		}
 	}
-
-	return props, nil
+	if me.PublicAccess != nil && !me.PublicAccess.IsEmpty() {
+		if marshalled, err := me.PublicAccess.MarshalHCL(); err != nil {
+			return nil, err
+		} else {
+			m["public"] = []interface{}{marshalled}
+		}
+	}
+	return m, nil
 }
 
 // UnmarshalHCL has no documentation
 func (me *DashboardSharing) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := decoder.DecodeAll(map[string]interface{}{
-		"dashboard_id": &me.DashboardID,
-		"enabled":      &me.Enabled,
-		"preset":       &me.Preset,
-		"permissions":  &me.Permissions,
-		"public":       &me.PublicAccess,
-	}); err != nil {
-		return err
+	if value, ok := decoder.GetOk("dashboard_id"); ok {
+		me.DashboardID = value.(string)
 	}
-	if me.PublicAccess == nil {
-		me.PublicAccess = &AnonymousAccess{
-			ManagementZoneIDs: []string{},
-			URLs:              map[string]string{},
+	if value, ok := decoder.GetOk("enabled"); ok {
+		me.Enabled = value.(bool)
+	} else {
+		me.Enabled = false
+	}
+	if value, ok := decoder.GetOk("preset"); ok {
+		me.Preset = value.(bool)
+	} else {
+		me.Preset = false
+	}
+	if value, ok := decoder.GetOk("permissions.#"); ok {
+		count := value.(int)
+		if count != 0 {
+			if value, ok := decoder.GetOk("permissions.0.permission.#"); ok {
+				count := value.(int)
+				if count != 0 {
+					me.Permissions = SharePermissions{}
+					if value, ok := decoder.GetOk("permissions.0.permission"); ok {
+						permissionSet := value.(*schema.Set)
+						for _, permissionRes := range permissionSet.List() {
+							hash := permissionSet.F(permissionRes)
+							permission := new(SharePermission)
+							if err := permission.UnmarshalHCL(hcl.NewDecoder(decoder, fmt.Sprintf("permissions.0.permission.%d", hash))); err != nil {
+								return err
+							} else {
+								me.Permissions = append(me.Permissions, permission)
+							}
+						}
+					}
+				}
+			}
+		}
+	} else {
+		me.Permissions = nil
+	}
+	if len(me.Permissions) == 0 {
+		me.Permissions = nil
+	}
+	me.PublicAccess = &AnonymousAccess{
+		ManagementZoneIDs: []string{},
+		URLs:              map[string]string{},
+	}
+	if value, ok := decoder.GetOk("public.#"); ok {
+		count := value.(int)
+		if count != 0 {
+			anonAccess := &AnonymousAccess{}
+			anonAccess.UnmarshalHCL(hcl.NewDecoder(decoder, "public.0"))
+			me.PublicAccess = anonAccess
 		}
 	}
 	return nil
