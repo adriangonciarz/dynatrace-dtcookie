@@ -2,10 +2,11 @@ package autotags
 
 import (
 	"encoding/json"
-	"sort"
+	"strconv"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // AutoTag Configuration of an auto-tag. It defines the conditions of tag usage and the tag value.
@@ -36,7 +37,7 @@ func (me *AutoTag) Schema() map[string]*hcl.Schema {
 			},
 		},
 		"rules": {
-			Type:        hcl.TypeList,
+			Type:        hcl.TypeSet,
 			Description: "A list of rules for management zone usage.  Each rule is evaluated independently of all other rules",
 			Optional:    true,
 			MinItems:    1,
@@ -45,7 +46,7 @@ func (me *AutoTag) Schema() map[string]*hcl.Schema {
 			},
 		},
 		"entity_selector_based_rule": {
-			Type:        hcl.TypeList,
+			Type:        hcl.TypeSet,
 			Description: "A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
@@ -61,41 +62,6 @@ func (me *AutoTag) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *AutoTag) ensurePredictableOrder() {
-	if len(me.Rules) > 0 {
-		for _, rule := range me.Rules {
-			rule.ensurePredictableOrder()
-		}
-		ruleJSONs := make([]string, 0)
-		for _, entry := range me.Rules {
-			entryBytes, _ := json.Marshal(entry)
-			ruleJSONs = append(ruleJSONs, string(entryBytes))
-		}
-		me.Rules = make([]*Rule, 0)
-		sort.Strings(ruleJSONs)
-		for _, ruleJSON := range ruleJSONs {
-			rule := new(Rule)
-			json.Unmarshal([]byte(ruleJSON), rule)
-			me.Rules = append(me.Rules, rule)
-		}
-	}
-	if len(me.EntitySelectorBasedRules) > 0 {
-		ruleJSONs := make([]string, 0)
-		for _, entry := range me.EntitySelectorBasedRules {
-			entryBytes, _ := json.Marshal(entry)
-			ruleJSONs = append(ruleJSONs, string(entryBytes))
-		}
-		sort.Strings(ruleJSONs)
-
-		me.EntitySelectorBasedRules = make([]*EntitySelectorBasedRule, 0)
-		for _, ruleJSON := range ruleJSONs {
-			rule := new(EntitySelectorBasedRule)
-			json.Unmarshal([]byte(ruleJSON), rule)
-			me.EntitySelectorBasedRules = append(me.EntitySelectorBasedRules, rule)
-		}
-	}
-}
-
 func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
@@ -107,7 +73,6 @@ func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 		result["unknowns"] = string(data)
 	}
 	result["name"] = me.Name
-	me.ensurePredictableOrder()
 	if len(me.Rules) > 0 {
 		entries := make([]interface{}, 0)
 		for _, rule := range me.Rules {
@@ -137,6 +102,37 @@ func (me *AutoTag) MarshalHCL() (map[string]interface{}, error) {
 	return result, nil
 }
 
+func makeHash(v interface{}) int {
+	data, _ := json.Marshal(v)
+	return schema.HashString(string(data))
+}
+
+func HashRule(v interface{}) int {
+	m := map[string]interface{}{}
+	for key, value := range v.(map[string]interface{}) {
+		if key == "conditions" {
+			conditionMap := map[string]interface{}{}
+			conditionSet := value.(*schema.Set)
+			for _, condition := range conditionSet.List() {
+				hash := conditionSet.F(condition)
+				conditionMap[strconv.Itoa(hash)] = condition
+			}
+			m["conditions"] = conditionMap
+		} else {
+			m[key] = value
+		}
+	}
+	return makeHash(m)
+}
+
+func HashEntitySelectorBasedRule(v interface{}) int {
+	m := map[string]interface{}{}
+	for key, value := range v.(map[string]interface{}) {
+		m[key] = value
+	}
+	return makeHash(m)
+}
+
 func (me *AutoTag) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("unknowns"); ok {
 		if err := json.Unmarshal([]byte(value.(string)), me); err != nil {
@@ -156,21 +152,25 @@ func (me *AutoTag) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
 	}
-	if result, ok := decoder.GetOk("rules.#"); ok {
-		me.Rules = []*Rule{}
-		for idx := 0; idx < result.(int); idx++ {
+	if value, ok := decoder.GetOk("rules"); ok {
+		ruleSet := value.(*schema.Set)
+
+		for _, ruleMap := range ruleSet.List() {
+			hash := ruleSet.F(ruleMap)
 			entry := new(Rule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "rules", idx)); err != nil {
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "rules", hash)); err != nil {
 				return err
 			}
 			me.Rules = append(me.Rules, entry)
 		}
 	}
-	if result, ok := decoder.GetOk("entity_selector_based_rule.#"); ok {
-		me.EntitySelectorBasedRules = []*EntitySelectorBasedRule{}
-		for idx := 0; idx < result.(int); idx++ {
+	if value, ok := decoder.GetOk("entity_selector_based_rule"); ok {
+		ruleSet := value.(*schema.Set)
+
+		for _, ruleMap := range ruleSet.List() {
+			hash := ruleSet.F(ruleMap)
 			entry := new(EntitySelectorBasedRule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "entity_selector_based_rule", idx)); err != nil {
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "entity_selector_based_rule", hash)); err != nil {
 				return err
 			}
 			me.EntitySelectorBasedRules = append(me.EntitySelectorBasedRules, entry)
