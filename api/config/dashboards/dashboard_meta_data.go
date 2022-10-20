@@ -16,7 +16,7 @@ type DashboardMetadata struct {
 	SharingDetails      *SharingInfo               `json:"sharingDetails,omitempty"` // represents sharing configuration of a dashboard
 	Filter              *DashboardFilter           `json:"dashboardFilter,omitempty"`
 	Tags                []string                   `json:"tags,omitempty"`                // a set of tags assigned to the dashboard
-	Preset              *bool                      `json:"preset,omitempty"`              // the dashboard is a preset (`true`)
+	Preset              bool                       `json:"preset"`                        // the dashboard is a preset (`true`)
 	ValidFilterKeys     []string                   `json:"validFilterKeys,omitempty"`     // a set of all possible global dashboard filters that can be applied to dashboard
 	DynamicFilters      *DynamicFilters            `json:"dynamicFilters,omitempty"`      // Dashboard filter configuration of a dashboard
 	HasConsistentColors *bool                      `json:"hasConsistentColors,omitempty"` // the dashboard is a preset (`true`)
@@ -78,12 +78,11 @@ func (me *DashboardMetadata) Schema() map[string]*hcl.Schema {
 			Optional:    true,
 			Elem:        &hcl.Schema{Type: hcl.TypeString},
 		},
-		// PRESET IS READONLY
-		// "preset": {
-		// 	Type:        hcl.TypeBool,
-		// 	Description: "the dashboard is a preset (`true`)",
-		// 	Optional:    true,
-		// },
+		"preset": {
+			Type:        hcl.TypeBool,
+			Description: "the dashboard is a preset (`true`) or not (`false`). Default is `false`.",
+			Optional:    true,
+		},
 		"valid_filter_keys": {
 			Type:        hcl.TypeSet,
 			Description: "a set of all possible global dashboard filters that can be applied to dashboard",
@@ -115,6 +114,7 @@ func (me *DashboardMetadata) MarshalHCL() (map[string]interface{}, error) {
 	if me.Shared != nil {
 		result["shared"] = opt.Bool(me.Shared)
 	}
+	result["preset"] = me.Preset
 	if me.HasConsistentColors != nil {
 		result["consistent_colors"] = opt.Bool(me.HasConsistentColors)
 	}
@@ -174,8 +174,11 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
 	}
-	if _, value := decoder.GetChange("shared"); value != nil {
+	if value, ok := decoder.GetOk("shared"); ok {
 		me.Shared = opt.NewBool(value.(bool))
+	}
+	if value, ok := decoder.GetOk("preset"); ok {
+		me.Preset = value.(bool)
 	}
 	if value, ok := decoder.GetOk("owner"); ok {
 		me.Owner = opt.NewString(value.(string))
@@ -200,7 +203,7 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	me.Tags = decoder.GetStringSet("tags")
 	if _, value := decoder.GetChange("preset"); value != nil {
-		me.Preset = opt.NewBool(value.(bool))
+		me.Preset = value.(bool)
 	}
 	me.ValidFilterKeys = decoder.GetStringSet("valid_filter_keys")
 	return nil
