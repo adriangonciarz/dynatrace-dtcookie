@@ -156,7 +156,7 @@ func (me *MethodReference) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("modifiers"); ok {
 		me.Modifiers = []Modifier{}
-		for _, e := range value.([]interface{}) {
+		for _, e := range value.(hcl.Set).List() {
 			me.Modifiers = append(me.Modifiers, Modifier(e.(string)))
 		}
 	}
@@ -247,7 +247,8 @@ var Visibilitys = struct {
 }
 
 // FileNameMatcher The operator of the comparison.
-//  If not set, `EQUALS` is used.
+//
+//	If not set, `EQUALS` is used.
 type FileNameMatcher string
 
 func (me FileNameMatcher) Ref() *FileNameMatcher {
