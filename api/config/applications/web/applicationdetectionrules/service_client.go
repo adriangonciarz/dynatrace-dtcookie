@@ -84,3 +84,18 @@ func (cs *Service) List() (*api.StubList, error) {
 	}
 	return &stubList, nil
 }
+
+func (cs *Service) GET(id string) (interface{}, error) {
+	return cs.Get(id)
+}
+
+func (cs *Service) LIST() ([]string, error) {
+	ids := []string{}
+	var err error
+	if stubList, err := cs.List(); err == nil {
+		for _, stub := range stubList.Values {
+			ids = append(ids, stub.ID)
+		}
+	}
+	return ids, err
+}

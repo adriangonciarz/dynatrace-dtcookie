@@ -38,3 +38,7 @@ func (cs *ApplicationClient) List() (Applications, error) {
 
 	return applicationList, nil
 }
+
+func (cs *ApplicationClient) LIST() (interface{}, error) {
+	return cs.List()
+}

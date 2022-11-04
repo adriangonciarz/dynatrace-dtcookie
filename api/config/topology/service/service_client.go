@@ -38,3 +38,7 @@ func (cs *ServiceClient) List() (Services, error) {
 
 	return serviceList, nil
 }
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	return cs.List()
+}

@@ -86,3 +86,7 @@ func (cs *ServiceClient) Get(ctx context.Context, id string) (*DashboardSharing,
 	}
 	return &settings, nil
 }
+
+func (cs *ServiceClient) GET(ctx context.Context, id string) (interface{}, error) {
+	return cs.Get(ctx, id)
+}

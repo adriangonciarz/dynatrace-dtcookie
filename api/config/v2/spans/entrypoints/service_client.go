@@ -124,3 +124,11 @@ func (cs *ServiceClient) List() ([]string, error) {
 
 	return ids, nil
 }
+
+func (cs *ServiceClient) GET(id string) (interface{}, error) {
+	return cs.Get(id)
+}
+
+func (cs *ServiceClient) LIST() ([]string, error) {
+	return cs.List()
+}

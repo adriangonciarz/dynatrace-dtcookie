@@ -53,3 +53,7 @@ func (cs *Service) Get() (*AnomalyDetection, error) {
 	}
 	return &response, nil
 }
+
+func (cs *Service) GET() (interface{}, error) {
+	return cs.Get()
+}

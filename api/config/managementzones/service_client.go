@@ -101,3 +101,22 @@ func (cs *ServiceClient) ListAll() ([]*api.EntityShortRepresentation, error) {
 	}
 	return stubList.Values, nil
 }
+
+func (cs *ServiceClient) GET(id string) (interface{}, error) {
+	return cs.Get(id, false)
+}
+
+func (cs *ServiceClient) LIST() ([]string, error) {
+	ids := []string{}
+	var err error
+	if stubList, err := cs.ListAll(); err == nil {
+		for _, stub := range stubList {
+			ids = append(ids, stub.ID)
+		}
+	}
+	return ids, err
+}
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	return cs.ListAll()
+}

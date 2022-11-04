@@ -125,3 +125,7 @@ func (cs *ServiceClient) Delete(id string) error {
 	}
 	return nil
 }
+
+func (cs *ServiceClient) LIST(serviceID string) (string, interface{}, error) {
+	return cs.List(serviceID)
+}

@@ -44,7 +44,6 @@ func (me *ApplicationDetectionRule) MarshalHCL() (map[string]interface{}, error)
 	properties := hcl.Properties{}
 
 	return properties.EncodeAll(map[string]interface{}{
-		"id":                     me.ID,
 		"name":                   me.Name,
 		"order":                  me.Order,
 		"application_identifier": me.ApplicationIdentifier,
@@ -54,7 +53,6 @@ func (me *ApplicationDetectionRule) MarshalHCL() (map[string]interface{}, error)
 
 func (me *ApplicationDetectionRule) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]interface{}{
-		"id":                     &me.ID,
 		"name":                   &me.Name,
 		"order":                  &me.Order,
 		"application_identifier": &me.ApplicationIdentifier,

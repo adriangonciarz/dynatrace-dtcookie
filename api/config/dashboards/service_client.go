@@ -115,3 +115,20 @@ func (cs *ServiceClient) List(owner string, tags ...string) (*DashboardList, err
 	}
 	return &dashboardList, nil
 }
+
+func (cs *ServiceClient) GET(id string) (interface{}, error) {
+	config, err := cs.Get(id)
+	config.ConfigurationMetadata = nil
+	return config, err
+}
+
+func (cs *ServiceClient) LIST() ([]string, error) {
+	ids := []string{}
+	var err error
+	if dashboardList, err := cs.ListAll(); err == nil {
+		for _, dashboard := range dashboardList.Dashboards {
+			ids = append(ids, dashboard.ID)
+		}
+	}
+	return ids, err
+}

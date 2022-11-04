@@ -13,6 +13,7 @@ import (
 type CustomService struct {
 	ID                  *string                    `json:"id,omitempty"`                  // The ID of the custom service (UUID)
 	Name                string                     `json:"name"`                          // The name of the custom service, displayed in the UI
+	Technology          Technology                 `json:"-"`                             // The technology of the custom service
 	Order               *string                    `json:"order,omitempty"`               // The order string. Sorting custom services alphabetically by their order string determines their relative ordering. Typically this is managed by Dynatrace internally and will not be present in GET responses
 	Enabled             bool                       `json:"enabled"`                       // Custom service enabled/disabled
 	Rules               []*DetectionRule           `json:"rules,omitempty"`               // The list of rules defining the custom service
@@ -91,6 +92,7 @@ func (me *CustomService) MarshalHCL() (map[string]interface{}, error) {
 	// if me.Order != nil {
 	// 	result["order"] = *me.Order
 	// }
+	result["technology"] = string(me.Technology)
 	result["enabled"] = me.Enabled
 	if len(me.Rules) > 0 {
 		entries := []interface{}{}
@@ -154,6 +156,9 @@ func (me *CustomService) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.QueueEntryPoint = adapter.GetBool("queue_entry_point")
 	if value := adapter.GetString("queue_entry_point_type"); value != nil && len(*value) > 0 {
 		me.QueueEntryPointType = QueueEntryPointType(*value).Ref()
+	}
+	if value := adapter.GetString("technology"); value != nil && len(*value) > 0 {
+		me.Technology = Technology(*value)
 	}
 	me.ProcessGroups = decoder.GetStringSet("process_groups")
 	return nil
