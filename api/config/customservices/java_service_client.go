@@ -27,7 +27,6 @@ func (cs *JavaServiceClient) Delete(id string, technology Technology) error {
 func (cs *JavaServiceClient) Get(id string, includeProcessGroupReferences bool) (*CustomService, error) {
 	var err error
 	if customService, err := cs.client.Get(id, Technologies.Java, includeProcessGroupReferences); err == nil {
-		customService.Technology = Technologies.Java
 		return customService, nil
 	}
 	return nil, err

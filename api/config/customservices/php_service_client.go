@@ -27,7 +27,6 @@ func (cs *PHPServiceClient) Delete(id string, technology Technology) error {
 func (cs *PHPServiceClient) Get(id string, includeProcessGroupReferences bool) (*CustomService, error) {
 	var err error
 	if customService, err := cs.client.Get(id, Technologies.PHP, includeProcessGroupReferences); err == nil {
-		customService.Technology = Technologies.PHP
 		return customService, nil
 	}
 	return nil, err

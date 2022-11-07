@@ -68,6 +68,7 @@ func (cs *ServiceClient) Get(id string, technology Technology, includeProcessGro
 	if err = json.Unmarshal(bytes, &customService); err != nil {
 		return nil, err
 	}
+	customService.Technology = technology
 	return &customService, nil
 }
 
