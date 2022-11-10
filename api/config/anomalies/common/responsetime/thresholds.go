@@ -10,7 +10,8 @@ import (
 )
 
 // Thresholds Fixed thresholds for response time degradation detection.
-//  Required if **detectionMode** is `DETECT_USING_FIXED_THRESHOLDS`. Not applicable otherwise.
+//
+//	Required if **detectionMode** is `DETECT_USING_FIXED_THRESHOLDS`. Not applicable otherwise.
 type Thresholds struct {
 	LoadThreshold       load.Threshold             `json:"loadThreshold"`                            // Minimal service load to detect response time degradation.   Response time degradation of services with smaller load won't trigger alerts.
 	Sensitivity         common.Sensitivity         `json:"sensitivity"`                              // Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers an alert.
@@ -49,7 +50,7 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
