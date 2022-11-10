@@ -90,7 +90,7 @@ func (me *AnomalyDetection) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *AnomalyDetection) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	loadDetection := &load.Detection{
@@ -98,7 +98,7 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 		Spikes: me.LoadSpike,
 	}
 	if !loadDetection.IsEmpty() {
-		if marshalled, err := loadDetection.MarshalHCL(hcl.NewDecoder(decoder, "load", 0)); err == nil {
+		if marshalled, err := loadDetection.MarshalHCL(); err == nil {
 			result["load"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -106,21 +106,21 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 	}
 
 	if me.ResponseTimeDegradation != nil && string(me.ResponseTimeDegradation.DetectionMode) != string(detection.Modes.DontDetect) {
-		if marshalled, err := me.ResponseTimeDegradation.MarshalHCL(hcl.NewDecoder(decoder, "response_time", 0)); err == nil {
+		if marshalled, err := me.ResponseTimeDegradation.MarshalHCL(); err == nil {
 			result["response_time"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.FailureRateIncrease != nil && string(me.FailureRateIncrease.DetectionMode) != string(detection.Modes.DontDetect) {
-		if marshalled, err := me.FailureRateIncrease.MarshalHCL(hcl.NewDecoder(decoder, "failure_rate", 0)); err == nil {
+		if marshalled, err := me.FailureRateIncrease.MarshalHCL(); err == nil {
 			result["failure_rate"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.DatabaseConnectionFailureCount != nil && me.DatabaseConnectionFailureCount.Enabled {
-		if marshalled, err := me.DatabaseConnectionFailureCount.MarshalHCL(hcl.NewDecoder(decoder, "db_connect_failures", 0)); err == nil {
+		if marshalled, err := me.DatabaseConnectionFailureCount.MarshalHCL(); err == nil {
 			result["db_connect_failures"] = []interface{}{marshalled}
 		} else {
 			return nil, err
