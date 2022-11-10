@@ -9,7 +9,8 @@ import (
 )
 
 // Thresholds Fixed thresholds for failure rate increase detection.
-//  Required if **detectionMode** is `DETECT_USING_FIXED_THRESHOLDS`. Not applicable otherwise.
+//
+//	Required if **detectionMode** is `DETECT_USING_FIXED_THRESHOLDS`. Not applicable otherwise.
 type Thresholds struct {
 	Sensitivity common.Sensitivity         `json:"sensitivity"` // Sensitivity of the threshold.  With `low` sensitivity, high statistical confidence is used. Brief violations (for example, due to a surge in load) won't trigger alerts.  With `high` sensitivity, no statistical confidence is used. Each violation triggers alert.
 	Threshold   int32                      `json:"threshold"`   // Failure rate during any 5-minute period to trigger an alert, %.
@@ -36,7 +37,7 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {

@@ -38,13 +38,13 @@ func (me *Detection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, er
 	result := map[string]interface{}{}
 
 	if me.AutomaticDetection != nil {
-		if marshalled, err := me.AutomaticDetection.MarshalHCL(hcl.NewDecoder(decoder, "auto", 0)); err == nil {
+		if marshalled, err := me.AutomaticDetection.MarshalHCL(); err == nil {
 			result["auto"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	} else if me.Thresholds != nil {
-		if marshalled, err := me.Thresholds.MarshalHCL(hcl.NewDecoder(decoder, "thresholds", 0)); err == nil {
+		if marshalled, err := me.Thresholds.MarshalHCL(); err == nil {
 			result["thresholds"] = []interface{}{marshalled}
 		} else {
 			return nil, err
