@@ -17,11 +17,10 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["write_and_read_time"] = int(me.WriteAndReadTime)
-	return result, nil
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"write_and_read_time": int(me.WriteAndReadTime),
+	}, nil
 }
 
 func (me *Thresholds) UnmarshalHCL(decoder hcl.Decoder) error {

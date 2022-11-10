@@ -5,7 +5,8 @@ import (
 )
 
 // Thresholds Custom thresholds for high memory usage. If not set then the automatic mode is used.
-//  **Both** conditions must be met to trigger an alert.
+//
+//	**Both** conditions must be met to trigger an alert.
 type Thresholds struct {
 	UsedMemoryPercentageWindows    int32 `json:"usedMemoryPercentageWindows"`    // Memory usage is higher than *X*% on Windows.
 	UsedMemoryPercentageNonWindows int32 `json:"usedMemoryPercentageNonWindows"` // Memory usage is higher than *X*% on Linux.
@@ -33,7 +34,7 @@ func (me *osThresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *osThresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *osThresholds) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	result["usage"] = int(me.UsedMemoryPercentage)
@@ -72,11 +73,11 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	thrs := &osThresholds{UsedMemoryPercentage: me.UsedMemoryPercentageNonWindows, PageFaultsPerSecond: me.PageFaultsPerSecondNonWindows}
-	if marshalled, err := thrs.MarshalHCL(hcl.NewDecoder(decoder, "linux", 0)); err == nil {
+	if marshalled, err := thrs.MarshalHCL(); err == nil {
 		result["linux"] = []interface{}{marshalled}
 	} else {
 		return nil, err
@@ -85,7 +86,7 @@ func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, e
 		UsedMemoryPercentage: me.UsedMemoryPercentageWindows,
 		PageFaultsPerSecond:  me.PageFaultsPerSecondWindows,
 	}
-	if marshalled, err := thrs.MarshalHCL(hcl.NewDecoder(decoder, "windows", 0)); err == nil {
+	if marshalled, err := thrs.MarshalHCL(); err == nil {
 		result["windows"] = []interface{}{marshalled}
 	} else {
 		return nil, err

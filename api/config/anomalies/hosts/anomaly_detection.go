@@ -95,17 +95,17 @@ func (me *AnomalyDetection) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *AnomalyDetection) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	if me.HighMemoryDetection != nil && me.HighMemoryDetection.Enabled {
-		if marshalled, err := me.HighMemoryDetection.MarshalHCL(hcl.NewDecoder(decoder, "memory", 0)); err == nil {
+		if marshalled, err := me.HighMemoryDetection.MarshalHCL(); err == nil {
 			result["memory"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.HighCPUSaturationDetection != nil && me.HighCPUSaturationDetection.Enabled {
-		if marshalled, err := me.HighCPUSaturationDetection.MarshalHCL(hcl.NewDecoder(decoder, "cpu_saturation", 0)); err == nil {
+		if marshalled, err := me.HighCPUSaturationDetection.MarshalHCL(); err == nil {
 			result["cpu"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -113,14 +113,14 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 	}
 
 	if me.HighGcActivityDetection != nil && me.HighGcActivityDetection.Enabled {
-		if marshalled, err := me.HighGcActivityDetection.MarshalHCL(hcl.NewDecoder(decoder, "gc", 0)); err == nil {
+		if marshalled, err := me.HighGcActivityDetection.MarshalHCL(); err == nil {
 			result["gc"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.ConnectionLostDetection != nil && me.ConnectionLostDetection.Enabled {
-		if marshalled, err := me.ConnectionLostDetection.MarshalHCL(hcl.NewDecoder(decoder, "connections", 0)); err == nil {
+		if marshalled, err := me.ConnectionLostDetection.MarshalHCL(); err == nil {
 			result["connections"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -131,7 +131,7 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 		OutOfThreadsDetection: me.OutOfThreadsDetection,
 	}
 	if jdc.IsConfigured() {
-		if marshalled, err := jdc.MarshalHCL(hcl.NewDecoder(decoder, "java", 0)); err == nil {
+		if marshalled, err := jdc.MarshalHCL(); err == nil {
 			result["java"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -145,7 +145,7 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 		NetworkErrorsDetection:             me.NetworkErrorsDetection,
 	}
 	if ndc.IsConfigured() {
-		if marshalled, err := ndc.MarshalHCL(hcl.NewDecoder(decoder, "network", 0)); err == nil {
+		if marshalled, err := ndc.MarshalHCL(); err == nil {
 			result["network"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -157,7 +157,7 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 		Inodes: me.DiskLowInodesDetection,
 	}
 	if ddc.IsConfigured() {
-		if marshalled, err := ddc.MarshalHCL(hcl.NewDecoder(decoder, "disks", 0)); err == nil {
+		if marshalled, err := ddc.MarshalHCL(); err == nil {
 			result["disks"] = []interface{}{marshalled}
 		} else {
 			return nil, err

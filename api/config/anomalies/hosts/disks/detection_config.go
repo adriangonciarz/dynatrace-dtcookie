@@ -52,25 +52,25 @@ func (me *DetectionConfig) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *DetectionConfig) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *DetectionConfig) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if me.Space != nil {
-		if marshalled, err := me.Space.MarshalHCL(hcl.NewDecoder(decoder, "space", 0)); err == nil {
+		if marshalled, err := me.Space.MarshalHCL(); err == nil {
 			result["space"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.Speed != nil {
-		if marshalled, err := me.Speed.MarshalHCL(hcl.NewDecoder(decoder, "speed", 0)); err == nil {
+		if marshalled, err := me.Speed.MarshalHCL(); err == nil {
 			result["speed"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.Inodes != nil {
-		if marshalled, err := me.Inodes.MarshalHCL(hcl.NewDecoder(decoder, "inodes", 0)); err == nil {
+		if marshalled, err := me.Inodes.MarshalHCL(); err == nil {
 			result["inodes"] = []interface{}{marshalled}
 		} else {
 			return nil, err

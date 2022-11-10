@@ -24,12 +24,11 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["dropped_packets"] = int(me.DroppedPacketsPercentage)
-	result["total_packets_rate"] = int(me.TotalPacketsRate)
-	return result, nil
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"dropped_packets":    int(me.DroppedPacketsPercentage),
+		"total_packets_rate": int(me.TotalPacketsRate),
+	}, nil
 }
 
 func (me *Thresholds) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -24,12 +24,11 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["retransmission_rate"] = int(me.RetransmissionRatePercentage)
-	result["retransmitted_packets"] = int(me.RetransmittedPacketsNumberPerMinute)
-	return result, nil
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"retransmission_rate":   int(me.RetransmissionRatePercentage),
+		"retransmitted_packets": int(me.RetransmittedPacketsNumberPerMinute),
+	}, nil
 }
 
 func (me *Thresholds) UnmarshalHCL(decoder hcl.Decoder) error {

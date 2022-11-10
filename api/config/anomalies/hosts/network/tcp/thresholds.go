@@ -24,12 +24,11 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["new_connection_failures"] = int(me.NewConnectionFailuresPercentage)
-	result["failed_connections"] = int(me.FailedConnectionsNumberPerMinute)
-	return result, nil
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"new_connection_failures": int(me.NewConnectionFailuresPercentage),
+		"failed_connections":      int(me.FailedConnectionsNumberPerMinute),
+	}, nil
 }
 
 func (me *Thresholds) UnmarshalHCL(decoder hcl.Decoder) error {

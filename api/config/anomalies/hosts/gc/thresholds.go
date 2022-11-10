@@ -24,12 +24,11 @@ func (me *Thresholds) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Thresholds) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["time_percentage"] = int(me.GcSuspensionPercentage)
-	result["suspension_percentage"] = int(me.GcTimePercentage)
-	return result, nil
+func (me *Thresholds) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"time_percentage":       int(me.GcSuspensionPercentage),
+		"suspension_percentage": int(me.GcTimePercentage),
+	}, nil
 }
 
 func (me *Thresholds) UnmarshalHCL(decoder hcl.Decoder) error {

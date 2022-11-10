@@ -26,12 +26,11 @@ func (me *LostDetectionConfig) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *LostDetectionConfig) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-
-	result["enabled"] = me.Enabled
-	result["enabled_on_graceful_shutdowns"] = me.EnabledOnGracefulShutdowns
-	return result, nil
+func (me *LostDetectionConfig) MarshalHCL() (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"enabled":                       me.Enabled,
+		"enabled_on_graceful_shutdowns": me.EnabledOnGracefulShutdowns,
+	}, nil
 }
 
 func (me *LostDetectionConfig) UnmarshalHCL(decoder hcl.Decoder) error {
