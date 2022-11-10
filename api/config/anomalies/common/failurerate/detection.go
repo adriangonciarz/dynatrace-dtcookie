@@ -34,7 +34,7 @@ func (me *Detection) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Detection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Detection) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if me.AutomaticDetection != nil {
