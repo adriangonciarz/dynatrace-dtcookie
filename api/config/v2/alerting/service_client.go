@@ -94,6 +94,8 @@ func (cs *ServiceClient) Get(id string) (*Profile, error) {
 	if err = json.Unmarshal(bytes, &settingsObject); err != nil {
 		return nil, err
 	}
+	settingsObject.Value.ID = id
+
 	return settingsObject.Value, nil
 }
 
@@ -123,6 +125,24 @@ func (cs *ServiceClient) GET(id string) (interface{}, error) {
 
 func (cs *ServiceClient) LIST() ([]string, error) {
 	return cs.List()
+}
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	var ids []string
+	var err error
+	if ids, err = cs.List(); err != nil {
+		return nil, err
+	}
+
+	var profile *Profile
+	var profiles []*Profile
+	for _, id := range ids {
+		if profile, err = cs.Get(id); err != nil {
+			return nil, err
+		}
+		profiles = append(profiles, profile)
+	}
+	return profiles, err
 }
 
 type SettingsObjectList struct {
