@@ -20,7 +20,7 @@ func (me TagFilters) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me TagFilters) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me TagFilters) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	tagFilters := TagFilters{}
