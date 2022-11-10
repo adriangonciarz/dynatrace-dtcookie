@@ -1,7 +1,7 @@
 github.com/dtcookie/dynatrace/api/config v1.0.9 h1:e5aAPfxopzWdGgtmkhs98FItvAEJx4WaNfczxQngTDo=
 github.com/dtcookie/dynatrace/api/config v1.0.9/go.mod h1:RHFE4M5D748B89v2TFTUcmlLSF/k95GAd0SBBYM1VDo=
-github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.7 h1:oupPBdJBerNPOxRE93nyh2z490rUnesOmNBake8IYvI=
-github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.7/go.mod h1:vOIAqfP5H0Yx6auT7z2nHe3iL0UVxkLzoj1IlWge1Cc=
+github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.11 h1:vPfk5eT4lzKtnU4eYBYgnlQTpJG2ftZyjFSnC48LO9s=
+github.com/dtcookie/dynatrace/api/config/anomalies/common v1.0.11/go.mod h1:vOIAqfP5H0Yx6auT7z2nHe3iL0UVxkLzoj1IlWge1Cc=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/hcl v0.0.13 h1:ia4xn2BL5E6nmC6TXUvRKEAr8m6G//GvL1A9MZ9IMRs=

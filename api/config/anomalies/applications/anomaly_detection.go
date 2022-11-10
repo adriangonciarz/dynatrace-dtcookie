@@ -75,7 +75,7 @@ func (me *AnomalyDetection) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *AnomalyDetection) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	trafficDetection := &traffic.Detection{
@@ -83,21 +83,21 @@ func (me *AnomalyDetection) MarshalHCL(decoder hcl.Decoder) (map[string]interfac
 		Spikes: me.TrafficSpike,
 	}
 	if !trafficDetection.IsEmpty() {
-		if marshalled, err := trafficDetection.MarshalHCL(hcl.NewDecoder(decoder, "traffic", 0)); err == nil {
+		if marshalled, err := trafficDetection.MarshalHCL(); err == nil {
 			result["traffic"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.ResponseTimeDegradation != nil {
-		if marshalled, err := me.ResponseTimeDegradation.MarshalHCL(hcl.NewDecoder(decoder, "response_time", 0)); err == nil {
+		if marshalled, err := me.ResponseTimeDegradation.MarshalHCL(); err == nil {
 			result["response_time"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.FailureRateIncrease != nil {
-		if marshalled, err := me.FailureRateIncrease.MarshalHCL(hcl.NewDecoder(decoder, "failure_rate", 0)); err == nil {
+		if marshalled, err := me.FailureRateIncrease.MarshalHCL(); err == nil {
 			result["failure_rate"] = []interface{}{marshalled}
 		} else {
 			return nil, err

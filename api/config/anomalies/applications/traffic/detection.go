@@ -44,18 +44,18 @@ func (me *Detection) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Detection) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Detection) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if me.Drops != nil && me.Drops.Enabled {
-		if marshalled, err := me.Drops.MarshalHCL(hcl.NewDecoder(decoder, "drops", 0)); err == nil {
+		if marshalled, err := me.Drops.MarshalHCL(); err == nil {
 			result["drops"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.Spikes != nil && me.Spikes.Enabled {
-		if marshalled, err := me.Spikes.MarshalHCL(hcl.NewDecoder(decoder, "spikes", 0)); err == nil {
+		if marshalled, err := me.Spikes.MarshalHCL(); err == nil {
 			result["spikes"] = []interface{}{marshalled}
 		} else {
 			return nil, err
