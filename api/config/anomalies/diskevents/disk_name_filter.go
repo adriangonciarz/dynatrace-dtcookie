@@ -26,8 +26,8 @@ func (me *DiskNameFilter) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *DiskNameFilter) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
-	return decoder.MarshalAll(map[string]interface{}{
+func (me *DiskNameFilter) MarshalHCL() (map[string]interface{}, error) {
+	return hcl.Properties{}.EncodeAll(map[string]interface{}{
 		"operator": me.Operator,
 		"value":    me.Value,
 	})
