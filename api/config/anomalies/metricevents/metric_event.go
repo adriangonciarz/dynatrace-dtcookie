@@ -118,7 +118,7 @@ func (me *MetricEvent) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *MetricEvent) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *MetricEvent) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
@@ -153,14 +153,14 @@ func (me *MetricEvent) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, 
 		result["severity"] = string(*me.Severity)
 	}
 	if me.MetricDimensions != nil {
-		if marshalled, err := me.MetricDimensions.MarshalHCL(hcl.NewDecoder(decoder, "dimensions", 0)); err == nil {
+		if marshalled, err := me.MetricDimensions.MarshalHCL(); err == nil {
 			result["dimensions"] = []interface{}{marshalled}
 		} else {
 			return nil, err
 		}
 	}
 	if me.AlertingScope != nil {
-		if marshalled, err := me.AlertingScope.MarshalHCL(hcl.NewDecoder(decoder, "scopes", 0)); err == nil {
+		if marshalled, err := me.AlertingScope.MarshalHCL(); err == nil {
 			result["scopes"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -168,7 +168,7 @@ func (me *MetricEvent) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, 
 	}
 	if me.MonitoringStrategy != nil {
 		wrapper := &strategy.Wrapper{Strategy: me.MonitoringStrategy}
-		if marshalled, err := wrapper.MarshalHCL(hcl.NewDecoder(decoder, "strategy", 0)); err == nil {
+		if marshalled, err := wrapper.MarshalHCL(); err == nil {
 			result["strategy"] = []interface{}{marshalled}
 		} else {
 			return nil, err
@@ -312,7 +312,8 @@ func (me *MetricEvent) UnmarshalJSON(data []byte) error {
 }
 
 // AggregationType How the metric data points are aggregated for the evaluation.
-//  The timeseries must support this aggregation.
+//
+//	The timeseries must support this aggregation.
 type AggregationType string
 
 func (me AggregationType) Ref() *AggregationType {

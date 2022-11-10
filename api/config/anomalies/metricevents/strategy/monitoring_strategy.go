@@ -41,7 +41,7 @@ func (me *BaseMonitoringStrategy) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *BaseMonitoringStrategy) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *BaseMonitoringStrategy) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {

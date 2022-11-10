@@ -34,7 +34,7 @@ func (me *CustomDeviceGroupName) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *CustomDeviceGroupName) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *CustomDeviceGroupName) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
@@ -45,7 +45,7 @@ func (me *CustomDeviceGroupName) MarshalHCL(decoder hcl.Decoder) (map[string]int
 		result["unknowns"] = string(data)
 	}
 	if me.NameFilter != nil {
-		if marshalled, err := me.NameFilter.MarshalHCL(hcl.NewDecoder(decoder, "filter", 0)); err == nil {
+		if marshalled, err := me.NameFilter.MarshalHCL(); err == nil {
 			result["filter"] = []interface{}{marshalled}
 		} else {
 			return nil, err

@@ -32,7 +32,7 @@ func (me *EntityID) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *EntityID) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *EntityID) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {

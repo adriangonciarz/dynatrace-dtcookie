@@ -36,25 +36,25 @@ func (me *Wrapper) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Wrapper) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Wrapper) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if me.Strategy != nil {
 		switch strategy := me.Strategy.(type) {
 		case *Auto:
-			if marshalled, err := strategy.MarshalHCL(hcl.NewDecoder(decoder, "auto", 0)); err == nil {
+			if marshalled, err := strategy.MarshalHCL(); err == nil {
 				result["auto"] = []interface{}{marshalled}
 			} else {
 				return nil, err
 			}
 		case *Static:
-			if marshalled, err := strategy.MarshalHCL(hcl.NewDecoder(decoder, "static", 0)); err == nil {
+			if marshalled, err := strategy.MarshalHCL(); err == nil {
 				result["static"] = []interface{}{marshalled}
 			} else {
 				return nil, err
 			}
 		case *BaseMonitoringStrategy:
-			if marshalled, err := strategy.MarshalHCL(hcl.NewDecoder(decoder, "generic", 0)); err == nil {
+			if marshalled, err := strategy.MarshalHCL(); err == nil {
 				result["generic"] = []interface{}{marshalled}
 			} else {
 				return nil, err

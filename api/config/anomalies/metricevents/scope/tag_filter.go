@@ -35,7 +35,7 @@ func (me *TagFilter) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *TagFilter) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *TagFilter) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {

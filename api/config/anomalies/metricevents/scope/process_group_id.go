@@ -32,7 +32,7 @@ func (me *ProcessGroupID) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *ProcessGroupID) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *ProcessGroupID) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {

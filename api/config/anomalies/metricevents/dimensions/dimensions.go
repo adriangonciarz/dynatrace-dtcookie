@@ -31,7 +31,7 @@ func (me Dimensions) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me Dimensions) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me Dimensions) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	Entitys := []interface{}{}
@@ -40,19 +40,19 @@ func (me Dimensions) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, er
 	for _, dimension := range me {
 		switch dim := dimension.(type) {
 		case *Entity:
-			if marshalled, err := dim.MarshalHCL(hcl.NewDecoder(decoder, "entity", len(Entitys))); err == nil {
+			if marshalled, err := dim.MarshalHCL(); err == nil {
 				Entitys = append(Entitys, marshalled)
 			} else {
 				return nil, err
 			}
 		case *String:
-			if marshalled, err := dim.MarshalHCL(hcl.NewDecoder(decoder, "string", len(Strings))); err == nil {
+			if marshalled, err := dim.MarshalHCL(); err == nil {
 				Strings = append(Strings, marshalled)
 			} else {
 				return nil, err
 			}
 		case *BaseDimension:
-			if marshalled, err := dim.MarshalHCL(hcl.NewDecoder(decoder, "dimension", len(baseDimensions))); err == nil {
+			if marshalled, err := dim.MarshalHCL(); err == nil {
 				baseDimensions = append(baseDimensions, marshalled)
 			} else {
 				return nil, err

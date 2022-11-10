@@ -23,7 +23,7 @@ func (me *Filter) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Filter) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Filter) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	result["operator"] = string(me.Operator)
 	result["value"] = me.Value

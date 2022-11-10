@@ -40,7 +40,7 @@ func (me *String) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *String) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *String) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
@@ -54,7 +54,7 @@ func (me *String) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error
 		result["key"] = *me.Key
 	}
 	if me.TextFilter != nil {
-		if marshalled, err := me.TextFilter.MarshalHCL(hcl.NewDecoder(decoder, "filter", 0)); err == nil {
+		if marshalled, err := me.TextFilter.MarshalHCL(); err == nil {
 			result["filter"] = []interface{}{marshalled}
 		} else {
 			return nil, err

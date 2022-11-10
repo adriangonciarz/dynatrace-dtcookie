@@ -69,7 +69,7 @@ func (me *Static) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Static) MarshalHCL(decoder hcl.Decoder) (map[string]interface{}, error) {
+func (me *Static) MarshalHCL() (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 
 	if len(me.Unknowns) > 0 {
