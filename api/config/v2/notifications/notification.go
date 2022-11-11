@@ -51,12 +51,12 @@ func (me *Notification) MarshalHCL() (map[string]interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		if me.Enabled {
-			result["enabled"] = me.Enabled
-		}
+		// if me.Enabled {
+		// 	result["enabled"] = me.Enabled
+		// }
 		result["name"] = me.Name
 		result["profile"] = me.ProfileID
-		result["enabled"] = me.Enabled
+		result["active"] = me.Enabled
 		return result, nil
 	}
 	return nil, fmt.Errorf("notification type `%v` not supported", me.Type)
