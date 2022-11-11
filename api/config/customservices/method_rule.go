@@ -71,9 +71,9 @@ func (me *MethodRule) MarshalHCL() (map[string]interface{}, error) {
 		}
 		result["unknowns"] = string(data)
 	}
-	if me.ID != nil {
-		result["id"] = opt.String(me.ID)
-	}
+	// if me.ID != nil {
+	// 	result["id"] = opt.String(me.ID)
+	// }
 	result["name"] = me.MethodName
 	if me.ReturnType != nil {
 		result["returns"] = *me.ReturnType
@@ -114,7 +114,7 @@ func (me *MethodRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	adapter := hcl.Adapt(decoder)
-	me.ID = adapter.GetString("id")
+	// me.ID = adapter.GetString("id")
 	me.MethodName = opt.String(adapter.GetString("name"))
 	if value, ok := decoder.GetOk("arguments"); ok {
 		me.ArgumentTypes = []string{}

@@ -83,9 +83,9 @@ func (me *DetectionRule) MarshalHCL() (map[string]interface{}, error) {
 		}
 		result["unknowns"] = string(data)
 	}
-	if me.ID != nil {
-		result["id"] = opt.String(me.ID)
-	}
+	// if me.ID != nil {
+	// 	result["id"] = opt.String(me.ID)
+	// }
 	result["enabled"] = me.Enabled
 	if me.FileName != nil || me.FileNameMatcher != nil {
 		fileSection := &FileSection{
@@ -145,7 +145,7 @@ func (me *DetectionRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	adapter := hcl.Adapt(decoder)
-	me.ID = adapter.GetString("id")
+	// me.ID = adapter.GetString("id")
 	me.Enabled = opt.Bool(adapter.GetBool("enabled"))
 	if _, ok := decoder.GetOk("file.#"); ok {
 		fileSection := new(FileSection)
