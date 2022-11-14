@@ -92,10 +92,12 @@ func (me *DetectionRule) MarshalHCL() (map[string]interface{}, error) {
 			Name:  me.FileName,
 			Match: me.FileNameMatcher,
 		}
-		if marshalled, err := fileSection.MarshalHCL(); err == nil {
-			result["file"] = []interface{}{marshalled}
-		} else {
-			return nil, err
+		if !fileSection.IsEmpty() {
+			if marshalled, err := fileSection.MarshalHCL(); err == nil {
+				result["file"] = []interface{}{marshalled}
+			} else {
+				return nil, err
+			}
 		}
 	}
 	if me.ClassName != nil || me.ClassNameMatcher != nil {

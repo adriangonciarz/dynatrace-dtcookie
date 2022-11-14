@@ -154,6 +154,9 @@ func (me *CustomService) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	me.QueueEntryPoint = adapter.GetBool("queue_entry_point")
+	if me.QueueEntryPoint == nil {
+		me.QueueEntryPoint = opt.NewBool(false)
+	}
 	if value := adapter.GetString("queue_entry_point_type"); value != nil && len(*value) > 0 {
 		me.QueueEntryPointType = QueueEntryPointType(*value).Ref()
 	}
@@ -181,7 +184,7 @@ func (me *CustomService) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("rules", me.Rules); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("queueEntryPoint", me.QueueEntryPoint); err != nil {
+	if err := m.Marshal("queueEntryPoint", me.QueueEntryPoint != nil && *me.QueueEntryPoint); err != nil {
 		return nil, err
 	}
 	if err := m.Marshal("queueEntryPointType", me.QueueEntryPointType); err != nil {

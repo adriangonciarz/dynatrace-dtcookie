@@ -10,6 +10,16 @@ type FileSection struct {
 	Match *FileNameMatcher
 }
 
+func (me *FileSection) IsEmpty() bool {
+	if me.Name != nil && len(*me.Name) > 0 {
+		return false
+	}
+	if me.Match != nil && len(*me.Match) > 0 {
+		return false
+	}
+	return true
+}
+
 func (me *FileSection) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"name": {
