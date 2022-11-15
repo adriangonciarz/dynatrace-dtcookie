@@ -110,9 +110,9 @@ func (me *HTTPHeader) MarshalHCL() (map[string]interface{}, error) {
 	if me.Value != nil {
 		result["value"] = me.Value
 	}
-	// Must not serialize secret values
-	// REST API only offers them in scrambled form
-	// result["secret_value"] = me.SecretValue
+	if psecret(me.SecretValue) != nil {
+		result["secret_value"] = *me.SecretValue
+	}
 
 	return result, nil
 }

@@ -89,7 +89,7 @@ func (me *ServiceNow) MarshalHCL() (map[string]interface{}, error) {
 		"username":  me.Username,
 		"instance":  me.InstanceName,
 		"message":   me.Message,
-		// "password":  me.Password,
+		"password":  secret(me.Password),
 	})
 }
 

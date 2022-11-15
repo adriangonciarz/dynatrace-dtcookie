@@ -61,7 +61,7 @@ func (me *PagerDuty) MarshalHCL() (map[string]interface{}, error) {
 
 		"account": me.Account,
 		"service": me.ServiceName,
-		// "api_key":     me.APIKey,
+		"api_key": secret(me.APIKey),
 	})
 }
 

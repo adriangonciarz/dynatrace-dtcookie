@@ -1,6 +1,8 @@
 package notifications
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+)
 
 type Slack struct {
 	Enabled   bool   `json:"-"`
@@ -61,7 +63,7 @@ func (me *Slack) MarshalHCL() (map[string]interface{}, error) {
 
 		"message": me.Message,
 		"channel": me.Channel,
-		// "url":     me.URL,
+		"url":     usecret(me.URL),
 	})
 }
 

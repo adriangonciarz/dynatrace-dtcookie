@@ -63,7 +63,7 @@ func (me *OpsGenie) MarshalHCL() (map[string]interface{}, error) {
 
 		"domain":  me.Domain,
 		"message": me.Message,
-		// "api_key":     me.APIKey,
+		"api_key": psecret(me.APIKey),
 	})
 }
 

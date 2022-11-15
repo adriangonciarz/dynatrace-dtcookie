@@ -84,13 +84,13 @@ func (me *Trello) MarshalHCL() (map[string]interface{}, error) {
 		"active":  me.Enabled,
 		"profile": me.ProfileID,
 
-		"resolved_list_id": me.ResolvedListID,
-		"text":             me.Text,
-		"application_key":  me.ApplicationKey,
-		"board_id":         me.BoardID,
-		"description":      me.Description,
-		"list_id":          me.ListID,
-		// "authorization_token": me.AuthorizationToken,
+		"resolved_list_id":    me.ResolvedListID,
+		"text":                me.Text,
+		"application_key":     me.ApplicationKey,
+		"board_id":            me.BoardID,
+		"description":         me.Description,
+		"list_id":             me.ListID,
+		"authorization_token": secret(me.AuthorizationToken),
 	})
 }
 

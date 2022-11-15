@@ -90,7 +90,7 @@ func (me *Jira) MarshalHCL() (map[string]interface{}, error) {
 		"issue_type":  me.IssueType,
 		"summary":     me.Summary,
 		"description": me.Description,
-		// "api_token":        me.APIToken,
+		"api_token":   secret(me.APIToken),
 	})
 }
 

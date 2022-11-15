@@ -76,8 +76,8 @@ func (me *AnsibleTower) MarshalHCL() (map[string]interface{}, error) {
 		"insecure":         me.Insecure,
 		"custom_message":   me.CustomMessage,
 		"job_template_url": me.JobTemplateURL,
-		// "password":               me.Password,
-		"username": me.Username,
+		"password":         secret(me.Password),
+		"username":         me.Username,
 	})
 }
 

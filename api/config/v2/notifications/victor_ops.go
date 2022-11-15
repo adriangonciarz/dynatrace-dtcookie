@@ -61,7 +61,7 @@ func (me *VictorOps) MarshalHCL() (map[string]interface{}, error) {
 
 		"message":     me.Message,
 		"routing_key": me.RoutingKey,
-		// "api_key":     me.APIKey,
+		"api_key":     secret(me.APIKey),
 	})
 }
 
