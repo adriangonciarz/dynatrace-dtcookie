@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"strings"
+	"time"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/rest"
@@ -31,8 +34,25 @@ func (cs *ServiceClient) Create(config *CalculatedServiceMetric) (*api.EntityRef
 	var err error
 	var bytes []byte
 
-	if bytes, err = cs.client.POST("/calculatedMetrics/service", config, 201); err != nil {
-		return nil, err
+	retry := true
+	maxAttempts := 10
+	attempts := 0
+
+	for retry {
+		attempts = attempts + 1
+		if bytes, err = cs.client.POST("/calculatedMetrics/service", config, 201); err != nil {
+			if !strings.Contains(err.Error(), "Metric definition must specify a known request attribute") {
+				return nil, err
+			}
+			log.Println(".... request attribute is not fully known yet to cluster - retrying")
+			if attempts < maxAttempts {
+				time.Sleep(2 * time.Second)
+			} else {
+				log.Println(".... giving up")
+			}
+		} else {
+			retry = false
+		}
 	}
 	var stub api.EntityRef
 	if err = json.Unmarshal(bytes, &stub); err != nil {
