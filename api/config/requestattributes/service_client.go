@@ -116,3 +116,7 @@ func (cs *ServiceClient) LIST() ([]string, error) {
 	}
 	return ids, err
 }
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	return cs.ListAll()
+}
