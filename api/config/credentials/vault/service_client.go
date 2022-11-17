@@ -89,6 +89,14 @@ func (cs *ServiceClient) Get(id string) (*Credentials, error) {
 	return &credentials, nil
 }
 
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	credentialList, err := cs.ListAll()
+	if err != nil {
+		return nil, err
+	}
+	return credentialList, nil
+}
+
 // ListAll TODO: documentation
 func (cs *ServiceClient) ListAll() (*CredentialsList, error) {
 	var err error
