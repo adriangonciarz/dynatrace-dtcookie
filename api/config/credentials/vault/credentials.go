@@ -40,7 +40,7 @@ func (me *Credentials) Schema() map[string]*hcl.Schema {
 		"public": {
 			Type:          hcl.TypeBool,
 			Description:   "For certificate authentication specifies whether it's public certificate auth (`true`) or not (`false`).",
-			ConflictsWith: []string{"username", "password", "token"},
+			ConflictsWith: []string{"username", "token"},
 			Optional:      true,
 		},
 		"scope": {
