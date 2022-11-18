@@ -1,45 +1,23 @@
 package vault
 
 import (
-	"encoding/json"
-	"errors"
-
 	"github.com/dtcookie/hcl"
 	"github.com/dtcookie/opt"
 )
 
 type Credentials struct {
-	ID                *string            `json:"id,omitempty"`
-	Name              string             `json:"name"`                  // The name of the credentials set.
-	Description       *string            `json:"description,omitempty"` // A short description of the credentials set..
-	Type              CredentialsType    `json:"type"`
-	OwnerAccessOnly   bool               `json:"ownerAccessOnly"`             // The credentials set is available to every user (`false`) or to owner only (`true`).
-	Scope             Scope              `json:"scope"`                       // The scope of the credentials set
-	Token             *string            `json:"token,omitempty"`             // Token in the string format.
-	Password          *string            `json:"password,omitempty"`          // The password of the credential.
-	Username          *string            `json:"user,omitempty"`              // The username of the credentials set.
-	Certificate       *string            `json:"certificate,omitempty"`       // The certificate in the string format.
-	CertificateFormat *CertificateFormat `json:"certificateFormat,omitempty"` // The certificate format.
-	isPublic          bool               `json:"-"`
-}
-
-func (me *Credentials) GetType() CredentialsType {
-	if len(me.Type) > 0 {
-		return me.Type
-	}
-	if me.Username != nil {
-		return CredentialsTypes.UsernamePassword
-	}
-	if me.Token != nil {
-		return CredentialsTypes.Token
-	}
-	if me.Certificate != nil {
-		if me.isPublic {
-			return CredentialsTypes.PublicCertificate
-		}
-		return CredentialsTypes.Certificate
-	}
-	return CredentialsTypes.Unknown
+	ID                *string              `json:"id,omitempty"`
+	Name              string               `json:"name"`                        // The name of the credentials set.
+	Description       *string              `json:"description,omitempty"`       // A short description of the credentials set..
+	OwnerAccessOnly   bool                 `json:"ownerAccessOnly"`             // The credentials set is available to every user (`false`) or to owner only (`true`).
+	Scope             Scope                `json:"scope"`                       // The scope of the credentials set
+	Type              CredentialsType      `json:"type"`                        // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
+	Token             *string              `json:"token,omitempty"`             // Token in the string format.
+	Password          *string              `json:"password,omitempty"`          // The password of the credential (Base64 encoded).
+	Username          *string              `json:"user,omitempty"`              // The username of the credentials set.
+	Certificate       *string              `json:"certificate,omitempty"`       // The certificate in the string (Base64) format.
+	CertificateFormat *CertificateFormat   `json:"certificateFormat,omitempty"` // The certificate format.
+	ExternalVault     *ExternalVaultConfig `json:"externalVault,omitempty"`     // Configuration for external vault synchronization
 }
 
 func (me *Credentials) Schema() map[string]*hcl.Schema {
@@ -54,11 +32,6 @@ func (me *Credentials) Schema() map[string]*hcl.Schema {
 			Description: "A short description of the credentials set",
 			Optional:    true,
 		},
-		// "type": {
-		// 	Type:        hcl.TypeString,
-		// 	Description: "The type of the credentials set",
-		// 	Optional:    true,
-		// },
 		"owner_access_only": {
 			Type:        hcl.TypeBool,
 			Description: "The credentials set is available to every user (`false`) or to owner only (`true`)",
@@ -67,7 +40,7 @@ func (me *Credentials) Schema() map[string]*hcl.Schema {
 		"public": {
 			Type:          hcl.TypeBool,
 			Description:   "For certificate authentication specifies whether it's public certificate auth (`true`) or not (`false`).",
-			ConflictsWith: []string{"username", "token"},
+			ConflictsWith: []string{"username", "password", "token"},
 			Optional:      true,
 		},
 		"scope": {
@@ -111,77 +84,14 @@ func (me *Credentials) Schema() map[string]*hcl.Schema {
 			RequiredWith:  []string{"certificate"},
 			Optional:      true,
 		},
+		"external": {
+			Type:        hcl.TypeList,
+			Description: "External Vault Configuration",
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &hcl.Resource{Schema: new(ExternalVaultConfig).Schema()},
+		},
 	}
-}
-
-func (me *Credentials) MarshalJSON() ([]byte, error) {
-	if me.Username != nil {
-		creds := struct {
-			ID              *string         `json:"id,omitempty"`
-			Name            string          `json:"name"`
-			Description     *string         `json:"description,omitempty"`
-			Type            CredentialsType `json:"type"`
-			OwnerAccessOnly bool            `json:"ownerAccessOnly"`
-			Scope           Scope           `json:"scope"`
-			Password        string          `json:"password"`
-			Username        string          `json:"user"`
-		}{
-			me.ID,
-			me.Name,
-			me.Description,
-			CredentialsTypes.UsernamePassword,
-			me.OwnerAccessOnly,
-			me.Scope,
-			*me.Password,
-			*me.Username,
-		}
-		return json.Marshal(&creds)
-	}
-	if me.Token != nil {
-		creds := struct {
-			ID              *string         `json:"id,omitempty"`
-			Name            string          `json:"name"`
-			Description     *string         `json:"description,omitempty"`
-			Type            CredentialsType `json:"type"`
-			OwnerAccessOnly bool            `json:"ownerAccessOnly"`
-			Scope           Scope           `json:"scope"`
-			Token           string          `json:"token"`
-		}{
-			me.ID,
-			me.Name,
-			me.Description,
-			CredentialsTypes.Token,
-			me.OwnerAccessOnly,
-			me.Scope,
-			*me.Token,
-		}
-		return json.Marshal(&creds)
-	}
-	if me.Certificate != nil {
-		creds := struct {
-			ID                *string           `json:"id,omitempty"`
-			Name              string            `json:"name"`
-			Description       *string           `json:"description,omitempty"`
-			Type              CredentialsType   `json:"type"`
-			OwnerAccessOnly   bool              `json:"ownerAccessOnly"`
-			Scope             Scope             `json:"scope"`
-			Certificate       string            `json:"certificate"`
-			CertificateFormat CertificateFormat `json:"certificateFormat"`
-			Password          string            `json:"password"`
-		}{
-			me.ID,
-			me.Name,
-			me.Description,
-			me.GetType(),
-			me.OwnerAccessOnly,
-			me.Scope,
-			*me.Certificate,
-			*me.CertificateFormat,
-			*me.Password,
-		}
-		return json.Marshal(&creds)
-	}
-	return nil, errors.New("invalid credentials - neither username, token nor certificate were specified")
 }
 
 func (me *Credentials) MarshalHCL() (map[string]interface{}, error) {
@@ -194,29 +104,42 @@ func (me *Credentials) MarshalHCL() (map[string]interface{}, error) {
 		result["owner_access_only"] = me.OwnerAccessOnly
 	}
 	result["scope"] = string(me.Scope)
-	if me.Token != nil {
+	if me.Token != nil && len(*me.Token) > 0 {
 		result["token"] = *me.Token
 	}
-	if me.Password != nil {
+	if me.Password != nil && len(*me.Password) > 0 {
 		result["password"] = *me.Password
 	}
-	if me.Username != nil {
+	if me.Username != nil && len(*me.Username) > 0 {
 		result["username"] = *me.Username
 	}
-	if me.Certificate != nil {
+	if me.Certificate != nil && len(*me.Certificate) > 0 {
 		result["certificate"] = *me.Certificate
 	}
-	if me.CertificateFormat != nil {
+	if me.CertificateFormat != nil && len(*me.CertificateFormat) > 0 {
 		result["format"] = *me.CertificateFormat
 	}
-	if me.GetType() == CredentialsTypes.PublicCertificate {
+
+	if me.ExternalVault != nil {
+		marshalled, err := me.ExternalVault.MarshalHCL()
+		if err != nil {
+			return nil, err
+		}
+		result["external"] = []interface{}{marshalled}
+	}
+
+	switch me.Type {
+	case CredentialsTypes.PublicCertificate:
 		result["public"] = true
 	}
-	// result["type"] = string(me.GetType())
 	return result, nil
 }
 
 func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
+	if value, ok := decoder.GetOk("external.#"); ok && value.(int) == 1 {
+		me.ExternalVault = new(ExternalVaultConfig)
+		me.ExternalVault.UnmarshalHCL(hcl.NewDecoder(decoder, "external.0"))
+	}
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
 	}
@@ -247,55 +170,16 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("format"); ok {
 		me.CertificateFormat = CertificateFormat(value.(string)).Ref()
 	}
-	if value, ok := decoder.GetOk("public"); ok {
-		me.isPublic = value.(bool)
+	if me.Username != nil {
+		me.Type = CredentialsTypes.UsernamePassword
+	} else if me.Token != nil {
+		me.Type = CredentialsTypes.Token
+	} else if me.Certificate != nil || me.CertificateFormat != nil {
+		if value, ok := decoder.GetOk("public"); ok && value.(bool) {
+			me.Type = CredentialsTypes.PublicCertificate
+		} else {
+			me.Type = CredentialsTypes.Certificate
+		}
 	}
 	return nil
-}
-
-type CredentialsType string
-
-var CredentialsTypes = struct {
-	Certificate       CredentialsType
-	PublicCertificate CredentialsType
-	Token             CredentialsType
-	UsernamePassword  CredentialsType
-	Unknown           CredentialsType
-}{
-	"CERTIFICATE",
-	"PUBLIC_CERTIFICATE",
-	"TOKEN",
-	"USERNAME_PASSWORD",
-	"UNKNOWN",
-}
-
-// CertificateFormat The certificate format.
-type CertificateFormat string
-
-// CertificateFormats offers the known enum values
-var CertificateFormats = struct {
-	Pem     CertificateFormat
-	Pkcs12  CertificateFormat
-	Unknown CertificateFormat
-}{
-	"PEM",
-	"PKCS12",
-	"UNKNOWN",
-}
-
-func (me CertificateFormat) Ref() *CertificateFormat {
-	return &me
-}
-
-type Scope string
-
-// Scopes offers the known enum values
-var Scopes = struct {
-	All       Scope
-	Extension Scope
-	Synthetic Scope
-}{
-	"ALL",
-	"EXTENSION",
-	"SYNTHETIC",
 }

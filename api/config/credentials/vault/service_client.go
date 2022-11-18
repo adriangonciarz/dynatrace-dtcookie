@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/rest"
@@ -38,7 +37,6 @@ func (cs *ServiceClient) Create(config *Credentials) (*api.EntityShortRepresenta
 	}
 
 	if bytes, err = cs.client.POST("/credentials", config, 201); err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	var stub api.EntityShortRepresentation
@@ -70,6 +68,10 @@ func (cs *ServiceClient) Delete(id string) error {
 	return nil
 }
 
+func (cs *ServiceClient) GET(id string) (interface{}, error) {
+	return cs.Get(id)
+}
+
 // Get TODO: documentation
 func (cs *ServiceClient) Get(id string) (*Credentials, error) {
 	if len(id) == 0 {
@@ -95,6 +97,18 @@ func (cs *ServiceClient) ListInterface() (interface{}, error) {
 		return nil, err
 	}
 	return credentialList, nil
+}
+
+func (cs *ServiceClient) LIST() ([]string, error) {
+	list, err := cs.ListAll()
+	if err != nil {
+		return nil, err
+	}
+	res := []string{}
+	for _, credential := range list.Credentials {
+		res = append(res, *credential.ID)
+	}
+	return res, nil
 }
 
 // ListAll TODO: documentation
