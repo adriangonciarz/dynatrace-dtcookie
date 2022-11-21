@@ -10,13 +10,22 @@ import (
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
 
-const schemaVersion = "0.0.4"
+const schemaVersion = "0.0.28"
 
 type SettingsObject struct {
 	SchemaVersion string         `json:"schemaVersion"`
 	SchemaID      string         `json:"schemaId"`
 	Scope         string         `json:"scope"`
 	Value         *SpanAttribute `json:"value"`
+}
+
+type SettingsObjectList struct {
+	Items []*SettingsObjectListItem `json:"items"`
+}
+
+type SettingsObjectListItem struct {
+	ObjectID string         `json:"objectId"`
+	Value    *SpanAttribute `json:"value"`
 }
 
 // ServiceClient TODO: documentation
@@ -125,6 +134,21 @@ func (cs *ServiceClient) List() ([]string, error) {
 	}
 
 	return ids, nil
+}
+
+func (cs *ServiceClient) ListAll() (SettingsObjectList, error) {
+	var err error
+	var bytes []byte
+
+	if bytes, err = cs.client.GET("/settings/objects?schemaIds=builtin%3Aspan-attribute&scopes=environment&fields=objectId%2Cvalue&pageSize=500", 200); err != nil {
+		return SettingsObjectList{}, err
+	}
+	var sol SettingsObjectList
+	if err = json.Unmarshal(bytes, &sol); err != nil {
+		return SettingsObjectList{}, err
+	}
+
+	return sol, nil
 }
 
 func (cs *ServiceClient) GET(id string) (interface{}, error) {
