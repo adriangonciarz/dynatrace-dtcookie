@@ -22,6 +22,12 @@ func (me *SpanAttribute) Schema() map[string]*hcl.Schema {
 			Required:    true,
 			Description: "granular control over the visibility of attribute values",
 		},
+		"persistent": {
+			Type:        hcl.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Prevents the Span Attribute from getting deleted when running `terraform destroy` - to be used for Span Attributes that are defined by default on every Dynatrace environment.",
+		},
 	}
 }
 
