@@ -27,6 +27,32 @@ func NewService(baseURL string, token string) *ServiceClient {
 	return &ServiceClient{client: client}
 }
 
+func (cs *ServiceClient) Validate(dashboard *Dashboard) []string {
+	var err error
+
+	if len(opt.String(dashboard.ID)) > 0 {
+		return []string{"you MUST NOT provide an ID within the Dashboard payload upon creation"}
+	}
+
+	if _, err = cs.client.POST("/dashboards/validator", dashboard, 204); err != nil {
+		if env, ok := err.(*rest.Error); ok {
+			if len(env.ConstraintViolations) > 0 {
+				errs := []string{}
+				for _, violation := range env.ConstraintViolations {
+					errs = append(errs, violation.Message)
+				}
+				return errs
+			} else {
+				return []string{err.Error()}
+			}
+		} else {
+			return []string{err.Error()}
+		}
+
+	}
+	return nil
+}
+
 // Create TODO: documentation
 func (cs *ServiceClient) Create(dashboard *Dashboard) (*api.EntityShortRepresentation, error) {
 	var err error
