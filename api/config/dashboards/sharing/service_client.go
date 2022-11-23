@@ -52,6 +52,7 @@ func (cs *ServiceClient) Update(ctx context.Context, settings *DashboardSharing)
 
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
+	id = strings.TrimSuffix(id, "-sharing")
 	settings := DashboardSharing{
 		DashboardID: id,
 		Enabled:     false,
@@ -73,7 +74,6 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context, id string) (*DashboardSharing, error) {
 	id = strings.TrimSuffix(id, "-sharing")
-
 	var err error
 	var bytes []byte
 
