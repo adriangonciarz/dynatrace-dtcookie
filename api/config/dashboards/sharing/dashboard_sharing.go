@@ -58,7 +58,7 @@ func (me *DashboardSharing) MarshalHCL() (map[string]interface{}, error) {
 	m["dashboard_id"] = me.DashboardID
 	m["enabled"] = me.Enabled
 	m["preset"] = me.Preset
-	if me.Permissions != nil {
+	if len(me.Permissions) > 0 {
 		if marshalled, err := me.Permissions.MarshalHCL(); err != nil {
 			return nil, err
 		} else {
@@ -117,6 +117,9 @@ func (me *DashboardSharing) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if len(me.Permissions) == 0 {
 		me.Permissions = nil
+	}
+	if me.Permissions == nil {
+		me.Permissions = SharePermissions{}
 	}
 	me.PublicAccess = &AnonymousAccess{
 		ManagementZoneIDs: []string{},
