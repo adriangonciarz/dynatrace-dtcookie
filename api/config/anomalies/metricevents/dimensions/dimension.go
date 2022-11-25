@@ -19,8 +19,10 @@ type Dimension interface {
 // This is the base version of the filter, depending on the type,
 // the actual JSON may contain additional fields.
 type BaseDimension struct {
-	FilterType FilterType                 `json:"filterType"`    // Defines the actual set of fields depending on the value. See one of the following objects:  * `ENTITY` -> MetricEventEntityDimensions  * `STRING` -> MetricEventStringDimensions
-	Key        *string                    `json:"key,omitempty"` // The dimensions key on the metric.
+	FilterType FilterType                 `json:"filterType"`      // Defines the actual set of fields depending on the value. See one of the following objects:  * `ENTITY` -> MetricEventEntityDimensions  * `STRING` -> MetricEventStringDimensions
+	Key        *string                    `json:"key,omitempty"`   // The dimensions key on the metric.
+	Name       *string                    `json:"name,omitempty"`  // No documentation available
+	Index      *int                       `json:"index,omitempty"` // No documentation available
 	Unknowns   map[string]json.RawMessage `json:"-"`
 }
 
@@ -34,6 +36,16 @@ func (me *BaseDimension) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeString,
 			Optional:    true,
 			Description: "The dimensions key on the metric",
+		},
+		"name": {
+			Type:        hcl.TypeString,
+			Optional:    true,
+			Description: "No documentation available",
+		},
+		"index": {
+			Type:        hcl.TypeInt,
+			Optional:    true,
+			Description: "No documentation available",
 		},
 		"type": {
 			Type:        hcl.TypeString,
@@ -61,6 +73,12 @@ func (me *BaseDimension) MarshalHCL() (map[string]interface{}, error) {
 	if me.Key != nil {
 		result["key"] = *me.Key
 	}
+	if me.Name != nil {
+		result["name"] = *me.Name
+	}
+	if me.Index != nil {
+		result["index"] = *me.Index
+	}
 	result["type"] = string(me.FilterType)
 	return result, nil
 }
@@ -75,6 +93,8 @@ func (me *BaseDimension) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 		delete(me.Unknowns, "key")
 		delete(me.Unknowns, "filterType")
+		delete(me.Unknowns, "name")
+		delete(me.Unknowns, "index")
 
 		if len(me.Unknowns) == 0 {
 			me.Unknowns = nil
@@ -82,6 +102,12 @@ func (me *BaseDimension) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("key"); ok {
 		me.Key = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("name"); ok {
+		me.Name = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("index"); ok {
+		me.Index = opt.NewInt(value.(int))
 	}
 	if value, ok := decoder.GetOk("type"); ok {
 		me.FilterType = FilterType(value.(string))
@@ -94,6 +120,8 @@ func (me *BaseDimension) MarshalJSON() ([]byte, error) {
 	if err := properties.MarshalAll(map[string]interface{}{
 		"filterType": me.FilterType,
 		"key":        me.Key,
+		"name":       me.Name,
+		"index":      me.Index,
 	}); err != nil {
 		return nil, err
 	}
@@ -108,6 +136,8 @@ func (me *BaseDimension) UnmarshalJSON(data []byte) error {
 	if err := properties.UnmarshalAll(map[string]interface{}{
 		"filterType": &me.FilterType,
 		"key":        &me.Key,
+		"name":       &me.Name,
+		"index":      &me.Index,
 	}); err != nil {
 		return err
 	}

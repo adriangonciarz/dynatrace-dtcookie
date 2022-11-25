@@ -25,6 +25,16 @@ func (me *String) Schema() map[string]*hcl.Schema {
 			Optional:    true,
 			Description: "The dimensions key on the metric",
 		},
+		"name": {
+			Type:        hcl.TypeString,
+			Optional:    true,
+			Description: "No documentation available",
+		},
+		"index": {
+			Type:        hcl.TypeInt,
+			Optional:    true,
+			Description: "No documentation available",
+		},
 		"filter": {
 			Type:        hcl.TypeList,
 			Required:    true,
@@ -53,6 +63,12 @@ func (me *String) MarshalHCL() (map[string]interface{}, error) {
 	if me.Key != nil {
 		result["key"] = *me.Key
 	}
+	if me.Name != nil {
+		result["name"] = *me.Name
+	}
+	if me.Index != nil {
+		result["index"] = *me.Index
+	}
 	if me.TextFilter != nil {
 		if marshalled, err := me.TextFilter.MarshalHCL(); err == nil {
 			result["filter"] = []interface{}{marshalled}
@@ -72,6 +88,8 @@ func (me *String) UnmarshalHCL(decoder hcl.Decoder) error {
 			return err
 		}
 		delete(me.Unknowns, "key")
+		delete(me.Unknowns, "name")
+		delete(me.Unknowns, "index")
 		delete(me.Unknowns, "filterType")
 		delete(me.Unknowns, "textFilter")
 
@@ -81,6 +99,12 @@ func (me *String) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("key"); ok {
 		me.Key = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("name"); ok {
+		me.Name = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("index"); ok {
+		me.Index = opt.NewInt(value.(int))
 	}
 	if _, ok := decoder.GetOk("filter.#"); ok {
 		me.TextFilter = new(Filter)
@@ -96,6 +120,8 @@ func (me *String) MarshalJSON() ([]byte, error) {
 	if err := properties.MarshalAll(map[string]interface{}{
 		"filterType": me.GetType(),
 		"key":        me.Key,
+		"name":       me.Name,
+		"index":      me.Index,
 		"textFilter": me.TextFilter,
 	}); err != nil {
 		return nil, err
@@ -111,6 +137,8 @@ func (me *String) UnmarshalJSON(data []byte) error {
 	if err := properties.UnmarshalAll(map[string]interface{}{
 		"filterType": &me.FilterType,
 		"key":        &me.Key,
+		"name":       &me.Name,
+		"index":      &me.Index,
 		"textFilter": &me.TextFilter,
 	}); err != nil {
 		return err

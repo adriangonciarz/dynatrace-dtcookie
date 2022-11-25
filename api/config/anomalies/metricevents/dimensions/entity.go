@@ -53,6 +53,12 @@ func (me *Entity) MarshalHCL() (map[string]interface{}, error) {
 	if me.Key != nil {
 		result["key"] = *me.Key
 	}
+	if me.Name != nil {
+		result["name"] = *me.Name
+	}
+	if me.Index != nil {
+		result["index"] = *me.Index
+	}
 	if me.NameFilter != nil {
 		if marshalled, err := me.NameFilter.MarshalHCL(); err == nil {
 			result["filter"] = []interface{}{marshalled}
@@ -72,6 +78,8 @@ func (me *Entity) UnmarshalHCL(decoder hcl.Decoder) error {
 			return err
 		}
 		delete(me.Unknowns, "key")
+		delete(me.Unknowns, "name")
+		delete(me.Unknowns, "index")
 		delete(me.Unknowns, "filterType")
 		delete(me.Unknowns, "nameFilter")
 
@@ -81,6 +89,12 @@ func (me *Entity) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("key"); ok {
 		me.Key = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("name"); ok {
+		me.Name = opt.NewString(value.(string))
+	}
+	if value, ok := decoder.GetOk("index"); ok {
+		me.Index = opt.NewInt(value.(int))
 	}
 	if _, ok := decoder.GetOk("filter.#"); ok {
 		me.NameFilter = new(Filter)
@@ -96,6 +110,8 @@ func (me *Entity) MarshalJSON() ([]byte, error) {
 	if err := properties.MarshalAll(map[string]interface{}{
 		"filterType": me.GetType(),
 		"key":        me.Key,
+		"name":       me.Name,
+		"index":      me.Index,
 		"nameFilter": me.NameFilter,
 	}); err != nil {
 		return nil, err
@@ -111,6 +127,8 @@ func (me *Entity) UnmarshalJSON(data []byte) error {
 	if err := properties.UnmarshalAll(map[string]interface{}{
 		"filterType": &me.FilterType,
 		"key":        &me.Key,
+		"name":       &me.Name,
+		"index":      &me.Index,
 		"nameFilter": &me.NameFilter,
 	}); err != nil {
 		return err
