@@ -3,11 +3,11 @@ package maintenance
 import "github.com/dtcookie/hcl"
 
 type GeneralProperties struct {
-	Name             string      `json:"name"`                                       // The name of the maintenance window, displayed in the UI.
-	Description      *string     `json:"description,omitempty"`                      // A short description of the maintenance purpose.
-	Type             WindowType  `json:"maintenanceType"`                            // The type of the maintenance: planned or unplanned
-	Suppression      Suppression `json:"suppression"`                                // The type of suppression of alerting and problem detection during the maintenance.
-	DisableSynthetic *bool       `json:"disableSyntheticMonitorExecution,omitempty"` // Suppress execution of synthetic monitors during the maintenance
+	Name             string      `json:"name"`                             // The name of the maintenance window, displayed in the UI.
+	Description      *string     `json:"description,omitempty"`            // A short description of the maintenance purpose.
+	Type             WindowType  `json:"maintenanceType"`                  // The type of the maintenance: planned or unplanned
+	Suppression      Suppression `json:"suppression"`                      // The type of suppression of alerting and problem detection during the maintenance.
+	DisableSynthetic bool        `json:"disableSyntheticMonitorExecution"` // Suppress execution of synthetic monitors during the maintenance
 }
 
 func (me *GeneralProperties) Schema() map[string]*hcl.Schema {
