@@ -23,7 +23,9 @@ func (me *NewAppConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("name", &me.Name); err != nil {
 		return err
 	}
-	me.ApplicationType = &ApplicationTypes.MobileApplication
+	if err := decoder.Decode("application_type", &me.ApplicationType); err != nil {
+		return err
+	}
 	if err := decoder.Decode("application_id", &me.ApplicationID); err != nil {
 		return err
 	}
@@ -64,6 +66,11 @@ func (me *NewAppConfig) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if me.ApplicationID != nil {
 		if err := properties.Encode("application_id", me.ApplicationID); err != nil {
+			return nil, err
+		}
+	}
+	if me.ApplicationType != nil {
+		if err := properties.Encode("application_type", string(*me.ApplicationType)); err != nil {
 			return nil, err
 		}
 	}
@@ -123,6 +130,11 @@ func (me *NewAppConfig) Schema() map[string]*hcl.Schema {
 		"application_id": {
 			Type:        hcl.TypeString,
 			Description: "The UUID of the application.\n\nIt is used only by OneAgent to send data to Dynatrace. If not specified it will get generated.",
+			Optional:    true,
+		},
+		"application_type": {
+			Type:        hcl.TypeString,
+			Description: "The type of the application. Either `CUSTOM_APPLICATION` or `MOBILE_APPLICATION`.",
 			Optional:    true,
 		},
 		"user_session_percentage": {
