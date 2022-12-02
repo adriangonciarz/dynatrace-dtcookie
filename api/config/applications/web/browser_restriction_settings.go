@@ -27,14 +27,14 @@ func (me *BrowserRestrictionSettings) Schema() map[string]*hcl.Schema {
 
 func (me *BrowserRestrictionSettings) MarshalHCL() (map[string]interface{}, error) {
 	return hcl.Properties{}.EncodeAll(map[string]interface{}{
-		"mode":                me.Mode,
-		"browserRestrictions": me.BrowserRestrictions,
+		"mode":         me.Mode,
+		"restrictions": me.BrowserRestrictions,
 	})
 }
 
 func (me *BrowserRestrictionSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]interface{}{
-		"mode":                &me.Mode,
-		"browserRestrictions": &me.BrowserRestrictions,
+		"mode":         &me.Mode,
+		"restrictions": &me.BrowserRestrictions,
 	})
 }
