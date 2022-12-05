@@ -101,8 +101,8 @@ func (me *ConversionGoal) Schema() map[string]*hcl.Schema {
 
 func (me *ConversionGoal) MarshalHCL() (map[string]interface{}, error) {
 	return hcl.Properties{}.EncodeAll(map[string]interface{}{
-		"name":             me.Name,
-		"id":               me.ID,
+		"name": me.Name,
+		// "id":               me.ID,
 		"type":             me.Type,
 		"destination":      me.DestinationDetails,
 		"user_action":      me.UserActionDetails,
