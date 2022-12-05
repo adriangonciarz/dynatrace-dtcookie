@@ -12,7 +12,7 @@ type Boolean struct {
 	BaseComparisonInfo
 	Values     []bool            `json:"values,omitempty"` // The values to compare to.
 	Comparison BooleanComparison `json:"comparison"`       // Operator of the comparision. You can reverse it by setting **negate** to `true`.
-	Value      *bool             `json:"value,omitempty"`  // The value to compare to.
+	Value      bool              `json:"value"`            // The value to compare to.
 }
 
 func (me *Boolean) GetType() Type {
@@ -30,7 +30,7 @@ func (me *Boolean) Schema() map[string]*hcl.Schema {
 		},
 		"value": {
 			Type:        hcl.TypeBool,
-			Optional:    true,
+			Required:    true,
 			Description: "The value to compare to",
 		},
 		"operator": {
