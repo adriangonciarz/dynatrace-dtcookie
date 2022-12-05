@@ -1,7 +1,7 @@
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0 h1:dSWSlgwjvNVr3vQ4HerYce2k1O2f/heBzkKJgFaqu2Y=
 github.com/dtcookie/dynatrace/api/config/v2/common v1.0.0/go.mod h1:zKZFqz1pXn1Q8nEcCZTi2b3Rc5YKscCCVDmR7mS+z88=
-github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.1 h1:8TQiNYFIVAvoyHhe6k34sINElfndLO3e4JrwRZm4wqc=
-github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.1/go.mod h1:1aEY0ha/31rGlg6vE+YT2qr3CLrqpp9F0EF7V7Pky/Q=
+github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2 h1:1F6YYAIa1XcuZdna/wFamss8nArJFBLBqhBNhedCmzI=
+github.com/dtcookie/dynatrace/api/config/v2/spans/match v1.0.2/go.mod h1:1aEY0ha/31rGlg6vE+YT2qr3CLrqpp9F0EF7V7Pky/Q=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/hcl v0.0.13 h1:ia4xn2BL5E6nmC6TXUvRKEAr8m6G//GvL1A9MZ9IMRs=
