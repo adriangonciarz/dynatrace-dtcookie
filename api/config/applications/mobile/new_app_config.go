@@ -10,11 +10,11 @@ type NewAppConfig struct {
 	ApplicationID                    *string                        `json:"applicationId,omitempty"`                    // The UUID of the application.\n\nIt is used only by OneAgent to send data to Dynatrace
 	CostControlUserSessionPercentage *int32                         `json:"costControlUserSessionPercentage,omitempty"` // The percentage of user sessions to be analyzed
 	ApdexSettings                    *MobileCustomApdex             `json:"apdexSettings,omitempty"`
-	OptInModeEnabled                 bool                           `json:"optInModeEnabled"`            // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
-	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled"`        // The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
-	SessionReplayOnCrashEnabled      bool                           `json:"sessionReplayOnCrashEnabled"` // The session replay on crash is enabled (`true`) or disabled (`false`). \n\nEnabling requires both **sessionReplayEnabled** and **optInModeEnabled** values set to `true`.\nAlso, this value is only applicable to mobile and not to custom apps
-	BeaconEndpointType               BeaconEndpointType             `json:"beaconEndpointType"`          // The type of the beacon endpoint
-	BeaconEndpointUrl                *string                        `json:"beaconEndpointUrl,omitempty"` // The URL of the beacon endpoint.\n\nOnly applicable when the **beaconEndpointType** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
+	OptInModeEnabled                 bool                           `json:"optInModeEnabled,omitempty"`     // The opt-in mode is enabled (`true`) or disabled (`false`).\n\nThis value is only applicable to mobile and not to custom apps
+	SessionReplayEnabled             bool                           `json:"sessionReplayEnabled,omitempty"` // The session replay is enabled (`true`) or disabled (`false`).\nThis value is only applicable to mobile and not to custom apps
+	SessionReplayOnCrashEnabled      bool                           `json:"sessionReplayOnCrashEnabled"`    // The session replay on crash is enabled (`true`) or disabled (`false`). \n\nEnabling requires both **sessionReplayEnabled** and **optInModeEnabled** values set to `true`.\nAlso, this value is only applicable to mobile and not to custom apps
+	BeaconEndpointType               BeaconEndpointType             `json:"beaconEndpointType"`             // The type of the beacon endpoint
+	BeaconEndpointUrl                *string                        `json:"beaconEndpointUrl,omitempty"`    // The URL of the beacon endpoint.\n\nOnly applicable when the **beaconEndpointType** is set to `ENVIRONMENT_ACTIVE_GATE` or `INSTRUMENTED_WEB_SERVER`
 	KeyUserActions                   []string                       `json:"-"`
 	Properties                       UserActionAndSessionProperties `json:"-"`
 }
