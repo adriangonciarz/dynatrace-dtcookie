@@ -80,6 +80,13 @@ func (me *SpanMatcher) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 		me.Value = nil
 	}
+
+	if me.Source == Sources.InstrumentationLibraryName {
+		me.Source = Sources.InstrumentationScopeName
+	} else if me.Source == Sources.InstrumentationLibraryVersion {
+		me.Source = Sources.InstrumentationScopeVersion
+	}
+
 	return nil
 }
 
