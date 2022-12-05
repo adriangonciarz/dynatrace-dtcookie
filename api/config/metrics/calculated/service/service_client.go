@@ -54,6 +54,7 @@ func (cs *ServiceClient) Create(config *CalculatedServiceMetric) (*api.EntityRef
 			retry = false
 		}
 	}
+
 	var stub api.EntityRef
 	if err = json.Unmarshal(bytes, &stub); err != nil {
 		return nil, err
@@ -127,4 +128,8 @@ func (cs *ServiceClient) LIST() ([]string, error) {
 		}
 	}
 	return ids, err
+}
+
+func (cs *ServiceClient) ListInterface() (interface{}, error) {
+	return cs.ListAll()
 }
