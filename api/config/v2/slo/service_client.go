@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -46,8 +47,24 @@ func (cs *ServiceClient) Create(item *SLO) (string, error) {
 			}
 		}
 	}).Expect(201)
-	if _, err = post.Send(); err != nil {
-		return id, err
+	retry := true
+	maxAttempts := 10
+	attempts := 0
+	for retry {
+		attempts = attempts + 1
+		if _, err = post.Send(); err != nil {
+			if !strings.Contains(err.Error(), "calc:") && !strings.Contains(err.Error(), "Metric selector is invalid") {
+				return id, err
+			}
+			log.Println(".... calculated service metric may not be known yet by cluster - retrying")
+			if attempts < maxAttempts {
+				time.Sleep(2 * time.Second)
+			} else {
+				log.Println(".... giving up")
+			}
+		} else {
+			retry = false
+		}
 	}
 	length := 0
 	var bytes []byte
