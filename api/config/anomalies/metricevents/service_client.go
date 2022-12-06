@@ -3,7 +3,9 @@ package metricevents
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/url"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/rest"
@@ -28,10 +30,34 @@ func NewService(baseURL string, token string) *Service {
 
 // Create TODO: documentation
 func (cs *Service) Create(config *MetricEvent) (*api.EntityRef, error) {
+	return cs.creationAttempt(config, false)
+}
+
+func (cs *Service) creationAttempt(config *MetricEvent, isRetry bool) (*api.EntityRef, error) {
 	var err error
 	var bytes []byte
 
 	if bytes, err = cs.client.POST("/anomalyDetection/metricEvents", config, 201); err != nil {
+		if restErr, ok := err.(*rest.Error); ok {
+			if len(restErr.ConstraintViolations) > 0 {
+				for _, violation := range restErr.ConstraintViolations {
+					violationMessage := violation.Message
+					if strings.Contains(violationMessage, "Metric selectors could only be parsed in backward compatibility mode") {
+						if strings.Contains(violationMessage, "Consider querying `") && strings.Contains(violationMessage, "` instead..") {
+							metricSelector := violationMessage[strings.Index(violationMessage, "Consider querying `")+len("Consider querying `") : strings.Index(violationMessage, "` instead..")]
+							if isRetry {
+								log.Println("retry failed with another error: ", err.Error())
+								return nil, err
+							} else {
+								log.Println("retrying with metricSelector `" + metricSelector + "`")
+								config.MetricSelector = &metricSelector
+								return cs.creationAttempt(config, true)
+							}
+						}
+					}
+				}
+			}
+		}
 		return nil, err
 	}
 	var stub api.EntityRef
@@ -52,11 +78,11 @@ func (cs *Service) Update(config *MetricEvent) error {
 // Validate TODO: documentation
 func (cs *Service) Validate(config *MetricEvent) error {
 	if config.ID != nil {
-		if _, err := cs.client.PUT(fmt.Sprintf("/anomalyDetection/metricEvents/%s/validator", *config.ID), config, 204); err != nil {
+		if _, err := cs.client.POST(fmt.Sprintf("/anomalyDetection/metricEvents/%s/validator", *config.ID), config, 204); err != nil {
 			return err
 		}
 	} else {
-		if _, err := cs.client.PUT("/anomalyDetection/metricEvents/validator", config, 204); err != nil {
+		if _, err := cs.client.POST("/anomalyDetection/metricEvents/validator", config, 204); err != nil {
 			return err
 		}
 	}
