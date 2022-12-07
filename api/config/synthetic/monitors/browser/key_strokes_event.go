@@ -1,11 +1,14 @@
 package browser
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+	"github.com/dtcookie/opt"
+)
 
 type KeyStrokesEvent struct {
 	EventBase
 	TextValue         string         `json:"textValue,omitempty"`  // The text to enter
-	Masked            bool           `json:"masked"`               // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+	Masked            *bool          `json:"masked,omitempty"`     // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
 	SimulateBlurEvent bool           `json:"simulateBlurEvent"`    // Defines whether to blur the text field when it loses focus.\nSet to `true` to trigger the blur the `textValue`
 	Wait              *WaitCondition `json:"wait,omitempty"`       // The wait condition for the event—defines how long Dynatrace should wait before the next action is executed
 	Validate          Validations    `json:"validate,omitempty"`   // The validation rule for the event—helps you verify that your browser monitor loads the expected page content or page element
@@ -132,8 +135,16 @@ func (me *KeyStrokesEvent) MarshalHCL() (map[string]interface{}, error) {
 			return nil, err
 		}
 	}
+	if me.Credential == nil {
+		if me.Masked != nil && *me.Masked {
+			result["masked"] = me.Masked
+		} else {
+			result["masked"] = false
+		}
+	} else {
+		result["masked"] = false
+	}
 	result["text"] = me.TextValue
-	result["masked"] = me.Masked
 	result["simulate_blur_event"] = me.SimulateBlurEvent
 	return result, nil
 }
@@ -154,6 +165,9 @@ func (me *KeyStrokesEvent) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if err := decoder.Decode("credential", &me.Credential); err != nil {
 		return err
+	}
+	if me.Credential == nil && me.Masked == nil {
+		me.Masked = opt.NewBool(false)
 	}
 	if err := decoder.Decode("validate", &me.Validate); err != nil {
 		return err
