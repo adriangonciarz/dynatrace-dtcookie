@@ -2,6 +2,7 @@ package browser
 
 import (
 	"github.com/dtcookie/hcl"
+	"github.com/dtcookie/opt"
 )
 
 type Device struct {
@@ -64,13 +65,13 @@ func (me *Device) MarshalHCL() (map[string]interface{}, error) {
 	}
 	if me.Mobile != nil && *me.Mobile {
 		result["mobile"] = me.Mobile
+		if me.TouchEnabled != nil && *me.TouchEnabled {
+			result["touch_enabled"] = me.TouchEnabled
+		} else {
+			result["touch_enabled"] = false
+		}
 	} else {
 		result["mobile"] = false
-	}
-	if me.TouchEnabled != nil && *me.TouchEnabled {
-		result["touch_enabled"] = me.TouchEnabled
-	} else {
-		result["touch_enabled"] = false
 	}
 	if me.Width != nil {
 		result["width"] = *me.Width
@@ -96,6 +97,11 @@ func (me *Device) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if err := decoder.Decode("touch_enabled", &me.TouchEnabled); err != nil {
 		return err
+	}
+	if me.Mobile != nil && *me.Mobile {
+		if me.TouchEnabled == nil {
+			me.TouchEnabled = opt.NewBool(false)
+		}
 	}
 	if err := decoder.Decode("width", &me.Width); err != nil {
 		return err
