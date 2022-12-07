@@ -5,7 +5,7 @@ import "github.com/dtcookie/hcl"
 type KeyStrokesEvent struct {
 	EventBase
 	TextValue         string         `json:"textValue,omitempty"`  // The text to enter
-	Masked            bool           `json:"masked,omitempty"`     // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
+	Masked            bool           `json:"masked"`               // Indicates whether the `textValue` is encrypted (`true`) or not (`false`)
 	SimulateBlurEvent bool           `json:"simulateBlurEvent"`    // Defines whether to blur the text field when it loses focus.\nSet to `true` to trigger the blur the `textValue`
 	Wait              *WaitCondition `json:"wait,omitempty"`       // The wait condition for the event—defines how long Dynatrace should wait before the next action is executed
 	Validate          Validations    `json:"validate,omitempty"`   // The validation rule for the event—helps you verify that your browser monitor loads the expected page content or page element
