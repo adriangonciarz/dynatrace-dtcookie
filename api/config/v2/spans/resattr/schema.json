@@ -4,19 +4,44 @@
   "displayName": "Resource attributes",
   "description": "While Dynatrace automatically captures all OpenTracing and OpenTelemetry resource attributes, to prevent the accidental storage of personal data, only the values of resource attributes for which a related key is specified in the allow-list below are stored. This enables you to meet your privacy requirements while controlling the amount of monitoring data that's stored.",
   "documentation": "",
-  "version": "0.0.1",
+  "schemaGroups": [
+    "group:service-monitoring",
+    "group:service-monitoring.spans"
+  ],
+  "version": "1.0.24",
   "multiObject": false,
   "maxObjects": 1,
   "allowedScopes": [
     "environment"
   ],
-  "enums": {},
+  "enums": {
+    "MaskingType": {
+      "displayName": "MaskingType",
+      "description": "",
+      "documentation": "",
+      "items": [
+        {
+          "value": "NOT_MASKED",
+          "displayName": "Do not mask"
+        },
+        {
+          "value": "MASK_ONLY_CONFIDENTIAL_DATA",
+          "displayName": "Mask only confidential data"
+        },
+        {
+          "value": "MASK_ENTIRE_VALUE",
+          "displayName": "Mask entire value"
+        }
+      ],
+      "type": "enum"
+    }
+  },
   "types": {
     "RuleItem": {
       "version": "0",
       "versionInfo": "",
       "displayName": "Rule",
-      "summaryPattern": "{attributeKey}",
+      "summaryPattern": "{attributeKey} - {masking}",
       "description": "",
       "documentation": "",
       "properties": {
@@ -27,12 +52,13 @@
           "type": "boolean",
           "nullable": false,
           "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
           "default": true
         },
         "attributeKey": {
           "displayName": "Attribute key",
           "description": "",
-          "documentation": "",
+          "documentation": "Attribute key **service.name** is automatically captured by default",
           "type": "text",
           "nullable": false,
           "constraints": [
@@ -40,15 +66,45 @@
               "type": "NOT_EMPTY"
             },
             {
+              "type": "TRIMMED"
+            },
+            {
               "type": "LENGTH",
               "maxLength": 100,
               "minLength": 1
+            },
+            {
+              "type": "CUSTOM_VALIDATOR_REF",
+              "customValidatorId": "prohibit-service-name-key-validator"
             }
           ],
           "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
           "default": ""
+        },
+        "masking": {
+          "displayName": "Masking",
+          "description": "If this attribute contains confidential data, turn on masking to conceal its value from users",
+          "documentation": "Introduce more granular control over the visibility of attribute values.  \nChoose **Do not mask** to allow every user to see the actual value and use it in defining other configurations.  \nChoose **Mask entire value** to hide the whole value of this attribute from everyone who does not have 'View sensitive request data' permission. These attributes can't be used to define other configurations. \nChoose **Mask only confidential data** to apply automatic masking strategies to your data. These strategies include, for example, credit card numbers, IBAN, IPs, email-addresses, etc. It may not be possible to recognize all sensitive data so please always make sure to verify that sensitive data is actually masked. If sensitive data is not recognized, please use **Mask entire value** instead. Users with 'View sensitive request data' permission will be able to see the entire value, others only the non-sensitive parts. These attributes can't be used to define other configurations.",
+          "type": {
+            "$ref": "#/enums/MaskingType"
+          },
+          "nullable": false,
+          "maxObjects": 1,
+          "modificationPolicy": "DEFAULT",
+          "default": "NOT_MASKED"
         }
       },
+      "constraints": [
+        {
+          "type": "CUSTOM_VALIDATOR_REF",
+          "customValidatorId": "resource-attribute-config-disable-validator"
+        },
+        {
+          "type": "CUSTOM_VALIDATOR_REF",
+          "customValidatorId": "resource-attribute-config-confidential-consistency-validator"
+        }
+      ],
       "type": "object"
     }
   },
@@ -77,7 +133,14 @@
         }
       ],
       "minObjects": 0,
-      "maxObjects": 100
+      "maxObjects": 500,
+      "modificationPolicy": "DEFAULT"
     }
-  }
+  },
+  "constraints": [
+    {
+      "type": "CUSTOM_VALIDATOR_REF",
+      "customValidatorId": "resource-attribute-config-delete-validator"
+    }
+  ]
 }

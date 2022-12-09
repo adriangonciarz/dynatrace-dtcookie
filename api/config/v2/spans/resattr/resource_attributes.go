@@ -1,63 +1,67 @@
 package resattr
 
 import (
+	"encoding/json"
+	"sort"
+
 	"github.com/dtcookie/hcl"
 )
 
 // ResourceAttributes has no documentation
 type ResourceAttributes struct {
-	Keys []*RuleItem `json:"attributeKeys"`
+	AttributeKeys AttributeKeys `json:"attributeKeys"`
 }
 
 func (me *ResourceAttributes) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"enabled": {
-			Type:        hcl.TypeSet,
+		"keys": {
+			Type:        hcl.TypeList,
+			Description: "Attribute key allow-list",
 			Optional:    true,
-			Elem:        &hcl.Schema{Type: hcl.TypeString},
-			Description: "attributes that should get captured",
-		},
-		"disabled": {
-			Type:        hcl.TypeSet,
-			Optional:    true,
-			Elem:        &hcl.Schema{Type: hcl.TypeString},
-			Description: "configured attributes that currently shouldn't be taken into consideration",
+			MaxItems:    1,
+			MinItems:    1,
+			Elem:        &hcl.Resource{Schema: new(AttributeKeys).Schema()},
 		},
 	}
+}
+
+func (me *ResourceAttributes) EnsurePredictableOrder() {
+	if len(me.AttributeKeys) == 0 {
+		return
+	}
+	conds := AttributeKeys{}
+	condStrings := sort.StringSlice{}
+	for _, entry := range me.AttributeKeys {
+		condBytes, _ := json.Marshal(entry)
+		condStrings = append(condStrings, string(condBytes))
+	}
+	condStrings.Sort()
+	for _, condString := range condStrings {
+		cond := RuleItem{}
+		json.Unmarshal([]byte(condString), &cond)
+		conds = append(conds, &cond)
+	}
+	me.AttributeKeys = conds
 }
 
 func (me *ResourceAttributes) MarshalHCL() (map[string]interface{}, error) {
-	enableds := []string{}
-	disableds := []string{}
-	for _, item := range me.Keys {
-		if item.Enabled {
-			enableds = append(enableds, item.AttributeKey)
-		} else {
-			disableds = append(disableds, item.AttributeKey)
+	result := map[string]interface{}{}
+	if len(me.AttributeKeys) > 0 {
+		me.EnsurePredictableOrder()
+		marshalled, err := me.AttributeKeys.MarshalHCL()
+		if err != nil {
+			return nil, err
 		}
+		result["keys"] = []interface{}{marshalled}
 	}
-	m := map[string]interface{}{}
-	if len(enableds) > 0 {
-		m["enabled"] = enableds
-	}
-	if len(disableds) > 0 {
-		m["disabled"] = disableds
-	}
-	return m, nil
+	return result, nil
 }
 
 func (me *ResourceAttributes) UnmarshalHCL(decoder hcl.Decoder) error {
-	me.Keys = []*RuleItem{}
-	if enableds, ok := decoder.GetOk("enabled"); ok {
-		enabledSet := enableds.(hcl.Set)
-		for _, item := range enabledSet.List() {
-			me.Keys = append(me.Keys, &RuleItem{Enabled: true, AttributeKey: item.(string)})
-		}
-	}
-	if enableds, ok := decoder.GetOk("disabled"); ok {
-		enabledSet := enableds.(hcl.Set)
-		for _, item := range enabledSet.List() {
-			me.Keys = append(me.Keys, &RuleItem{Enabled: false, AttributeKey: item.(string)})
+	if _, ok := decoder.GetOk("keys.#"); ok {
+		me.AttributeKeys = AttributeKeys{}
+		if err := me.AttributeKeys.UnmarshalHCL(hcl.NewDecoder(decoder, "keys", 0)); err != nil {
+			return err
 		}
 	}
 	return nil

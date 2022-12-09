@@ -10,7 +10,7 @@ import (
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
 
-const schemaVersion = "0.0.1"
+const schemaVersion = "1.0.24"
 
 type SettingsObject struct {
 	SchemaVersion string              `json:"schemaVersion"`
