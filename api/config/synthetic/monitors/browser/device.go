@@ -63,15 +63,11 @@ func (me *Device) MarshalHCL() (map[string]interface{}, error) {
 	if me.Orientation != nil {
 		result["orientation"] = string(*me.Orientation)
 	}
-	if me.Mobile != nil && *me.Mobile {
-		result["mobile"] = me.Mobile
-		if me.TouchEnabled != nil && *me.TouchEnabled {
-			result["touch_enabled"] = me.TouchEnabled
-		} else {
-			result["touch_enabled"] = false
-		}
-	} else {
-		result["mobile"] = false
+	if me.Mobile != nil {
+		result["mobile"] = *me.Mobile
+	}
+	if me.TouchEnabled != nil {
+		result["touch_enabled"] = *me.TouchEnabled
 	}
 	if me.Width != nil {
 		result["width"] = *me.Width
@@ -98,10 +94,11 @@ func (me *Device) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.Decode("touch_enabled", &me.TouchEnabled); err != nil {
 		return err
 	}
-	if me.Mobile != nil && *me.Mobile {
-		if me.TouchEnabled == nil {
-			me.TouchEnabled = opt.NewBool(false)
-		}
+	if me.Mobile == nil && me.Name == nil {
+		me.Mobile = opt.NewBool(false)
+	}
+	if me.TouchEnabled == nil && me.Name == nil {
+		me.TouchEnabled = opt.NewBool(false)
 	}
 	if err := decoder.Decode("width", &me.Width); err != nil {
 		return err
