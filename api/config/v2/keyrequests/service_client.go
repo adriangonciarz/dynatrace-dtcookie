@@ -30,13 +30,15 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 type ListResponse struct {
-	Items []struct {
-		ObjectID string `json:"objectId"`
-		Scope    string `json:"scope"`
-		Value    struct {
-			KeyRequestNames []string `json:"keyRequestNames"`
-		} `json:"value"`
-	} `json:"items"`
+	Items Items `json:"items"`
+}
+
+type Items []struct {
+	ObjectID string `json:"objectId"`
+	Scope    string `json:"scope"`
+	Value    struct {
+		KeyRequestNames []string `json:"keyRequestNames"`
+	} `json:"value"`
 }
 
 func (cs *ServiceClient) List(serviceID string) (string, *KeyRequest, error) {
@@ -126,6 +128,43 @@ func (cs *ServiceClient) Delete(id string) error {
 	return nil
 }
 
-func (cs *ServiceClient) LIST(serviceID string) (string, interface{}, error) {
+func (cs *ServiceClient) LISTSVC(serviceID string) (string, interface{}, error) {
 	return cs.List(serviceID)
+}
+
+func (cs *ServiceClient) ListAll() (Items, error) {
+	var err error
+	var bytes []byte
+
+	if bytes, err = cs.client.GET(fmt.Sprintf("/settings/objects?schemaIds=builtin:settings.subscriptions.service&fields=objectId,scope,value"), 200); err != nil {
+		return nil, err
+	}
+	var listResponse ListResponse
+	if err = json.Unmarshal(bytes, &listResponse); err != nil {
+		return nil, err
+	}
+	if len(listResponse.Items) == 0 {
+		return nil, nil
+	}
+
+	return listResponse.Items, nil
+}
+
+func (cs *ServiceClient) GET(ID string) (interface{}, error) {
+	return cs.Get(ID)
+}
+
+func (cs *ServiceClient) LIST() ([]string, error) {
+	var err error
+	var ids []string
+
+	if items, err := cs.ListAll(); err == nil {
+		if items != nil {
+			for _, item := range items {
+				ids = append(ids, item.ObjectID)
+			}
+		}
+		return ids, nil
+	}
+	return nil, err
 }
