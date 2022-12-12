@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"strings"
 	"time"
@@ -29,12 +30,6 @@ func NewService(baseURL string, token string) *ServiceClient {
 	return &ServiceClient{client: client}
 }
 
-type nothing struct{}
-
-func (n *nothing) MarshalJSON() ([]byte, error) {
-	return []byte{}, nil
-}
-
 // Create TODO: documentation
 func (cs *ServiceClient) Create(applicationConfig *NewAppConfig) (*api.EntityShortRepresentation, error) {
 	var err error
@@ -47,20 +42,28 @@ func (cs *ServiceClient) Create(applicationConfig *NewAppConfig) (*api.EntitySho
 	if err = json.Unmarshal(bytes, &stub); err != nil {
 		return nil, err
 	}
-	for i := 0; i < 40; i++ {
+	successes := 0
+	for i := 0; i < 60; i++ {
 		if _, err = cs.Get(stub.ID); err == nil {
-			break
+			successes = successes + 1
+			if successes > 5 {
+				break
+			}
+		} else {
+			successes = 0
 		}
 		time.Sleep(time.Second * 3)
 	}
 
 	if len(applicationConfig.KeyUserActions) > 0 {
 		for _, keyUserAction := range applicationConfig.KeyUserActions {
-			if _, err = cs.client.POST(fmt.Sprintf("/applications/mobile/%s/keyUserActions/%s", stub.ID, url.PathEscape(keyUserAction)), new(nothing), 201); err != nil {
+			log.Println("  ", "POST", fmt.Sprintf("/applications/mobile/%s/keyUserActions/%s", stub.ID, url.PathEscape(keyUserAction)))
+			if _, err = cs.client.POST(fmt.Sprintf("/applications/mobile/%s/keyUserActions/%s", stub.ID, url.PathEscape(keyUserAction)), map[string]interface{}{}, 200); err != nil {
 				return nil, err
 			}
 		}
 	}
+
 	if len(applicationConfig.Properties) > 0 {
 		for _, property := range applicationConfig.Properties {
 			if _, err = cs.client.POST(fmt.Sprintf("/applications/mobile/%s/userActionAndSessionProperties", stub.ID), property, 201); err != nil {
@@ -121,7 +124,7 @@ func (cs *ServiceClient) Update(applicationConfig *NewAppConfig) error {
 		}
 	}
 	for _, keyUserAction := range keyUserActionsToAdd {
-		if _, err = cs.client.POST(fmt.Sprintf("/applications/mobile/%s/keyUserActions/%s", applicationConfig.ID, url.PathEscape(keyUserAction)), new(nothing), 201); err != nil {
+		if _, err = cs.client.POST(fmt.Sprintf("/applications/mobile/%s/keyUserActions/%s", applicationConfig.ID, url.PathEscape(keyUserAction)), map[string]interface{}{}, 201); err != nil {
 			return err
 		}
 	}
