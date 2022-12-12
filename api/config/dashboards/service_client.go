@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	api "github.com/dtcookie/dynatrace/api/config"
 	"github.com/dtcookie/dynatrace/rest"
@@ -28,12 +29,15 @@ func NewService(baseURL string, token string) *ServiceClient {
 }
 
 func (cs *ServiceClient) Validate(dashboard *Dashboard) []string {
+	return cs.validate(dashboard, 0)
+}
+
+func (cs *ServiceClient) validate(dashboard *Dashboard, retryCnt int) []string {
 	var err error
 
 	if len(opt.String(dashboard.ID)) > 0 {
 		return []string{"you MUST NOT provide an ID within the Dashboard payload upon creation"}
 	}
-
 	if _, err = cs.client.POST("/dashboards/validator", dashboard, 204); err != nil {
 		if env, ok := err.(*rest.Error); ok {
 			if len(env.ConstraintViolations) > 0 {
@@ -42,10 +46,17 @@ func (cs *ServiceClient) Validate(dashboard *Dashboard) []string {
 					errs = append(errs, violation.Message)
 				}
 				return errs
+			} else if env.Message == "Token is missing required scope. Use one of: WriteConfig (Write configuration)" {
+				return []string{env.Message}
 			} else {
 				return []string{err.Error()}
 			}
 		} else {
+			if strings.HasSuffix(err.Error(), "/validator\": EOF") {
+				if retryCnt < 5 {
+					return cs.validate(dashboard, retryCnt+1)
+				}
+			}
 			return []string{err.Error()}
 		}
 
