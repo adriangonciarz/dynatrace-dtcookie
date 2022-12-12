@@ -45,11 +45,17 @@ func (cs *ServiceClient) Create(applicationConfig *ApplicationConfig) (*api.Enti
 	//
 	// This retry loop does its best to ensure predictable results for subsequent REST calls
 	// for the currently created application
-	for i := 0; i < 40; i++ {
+	successes := 0
+	for i := 0; i < 60; i++ {
 		if appConfig, err := cs.Get(stub.ID); err == nil {
 			if appConfig.Name == applicationConfig.Name {
+				successes = successes + 1
+			}
+			if successes > 10 {
 				break
 			}
+		} else {
+			successes = 0
 		}
 		time.Sleep(time.Second * 3)
 	}
