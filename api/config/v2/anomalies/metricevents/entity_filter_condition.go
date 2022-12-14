@@ -2,7 +2,7 @@ package metricevents
 
 import "github.com/dtcookie/hcl"
 
-type EntityFilterConditions []*EntityFilterCondition
+type EntityFilterConditions []*EntityFilterCondition // Entity filter conditions
 
 func (me *EntityFilterConditions) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
@@ -10,7 +10,7 @@ func (me *EntityFilterConditions) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
-			Description: "A conditions for the metric usage",
+			Description: "Entity filter conditions",
 			Elem:        &hcl.Resource{Schema: new(EntityFilterCondition).Schema()},
 		},
 	}

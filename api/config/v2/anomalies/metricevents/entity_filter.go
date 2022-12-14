@@ -4,7 +4,7 @@ import "github.com/dtcookie/hcl"
 
 type EntityFilter struct {
 	DimensionKey *string                `json:"dimensionKey,omitempty"` // Dimension key of entity type to filter
-	Conditions   EntityFilterConditions `json:"conditions,omitempty"`
+	Conditions   EntityFilterConditions `json:"conditions,omitempty"`   // Conditions of entity type to filter
 }
 
 func (me *EntityFilter) Schema() map[string]*hcl.Schema {
@@ -16,7 +16,7 @@ func (me *EntityFilter) Schema() map[string]*hcl.Schema {
 		},
 		"conditions": {
 			Type:        hcl.TypeList,
-			Description: "",
+			Description: "Conditions of entity type to filter",
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(EntityFilterConditions).Schema()},
 			Optional:    true,

@@ -5,20 +5,20 @@ import (
 )
 
 type MetricEvents struct {
-	Enabled                 bool             `json:"enabled"`
-	Summary                 string           `json:"summary"` // The textual summary of the metric event entry
-	QueryDefinition         *QueryDefinition `json:"queryDefinition"`
-	ModelProperties         *ModelProperties `json:"modelProperties"`
-	EventTemplate           *EventTemplate   `json:"eventTemplate"`
+	Enabled                 bool             `json:"enabled"`                           // Enabled toggle of metric event entry
+	Summary                 string           `json:"summary"`                           // The textual summary of the metric event entry
+	QueryDefinition         *QueryDefinition `json:"queryDefinition"`                   // The query definition of the metric event entry
+	ModelProperties         *ModelProperties `json:"modelProperties"`                   // The model properties of the metric event entry
+	EventTemplate           *EventTemplate   `json:"eventTemplate"`                     // The event template of the metric event entry
 	EventEntityDimensionKey *string          `json:"eventEntityDimensionKey,omitempty"` // Controls the preferred entity type used for triggered events.
-	LegacyId                *string          `json:"legacyId,omitempty"`
+	LegacyId                *string          `json:"legacyId,omitempty"`                // The legacy id of the metric event entry
 }
 
 func (me *MetricEvents) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"enabled": {
 			Type:        hcl.TypeBool,
-			Description: "",
+			Description: "Enabled toggle of metric event entry",
 			Optional:    true,
 		},
 		"summary": {
@@ -28,7 +28,7 @@ func (me *MetricEvents) Schema() map[string]*hcl.Schema {
 		},
 		"query_definition": {
 			Type:        hcl.TypeList,
-			Description: "",
+			Description: "The query definition of the metric event entry",
 			MaxItems:    1,
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(QueryDefinition).Schema()},
@@ -36,7 +36,7 @@ func (me *MetricEvents) Schema() map[string]*hcl.Schema {
 		},
 		"model_properties": {
 			Type:        hcl.TypeList,
-			Description: "",
+			Description: "The model properties of the metric event entry",
 			MaxItems:    1,
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(ModelProperties).Schema()},
@@ -44,7 +44,7 @@ func (me *MetricEvents) Schema() map[string]*hcl.Schema {
 		},
 		"event_template": {
 			Type:        hcl.TypeList,
-			Description: "",
+			Description: "The event template of the metric event entry",
 			MaxItems:    1,
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(EventTemplate).Schema()},
@@ -57,7 +57,7 @@ func (me *MetricEvents) Schema() map[string]*hcl.Schema {
 		},
 		"legacy_id": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The legacy id of the metric event entry",
 			Optional:    true,
 		},
 	}

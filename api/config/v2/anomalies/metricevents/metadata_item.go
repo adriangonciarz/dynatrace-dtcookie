@@ -3,20 +3,20 @@ package metricevents
 import "github.com/dtcookie/hcl"
 
 type MetadataItem struct {
-	MetadataKey   string `json:"metadataKey"`
-	MetadataValue string `json:"metadataValue"`
+	MetadataKey   string `json:"metadataKey"`   // The key of the metadata item
+	MetadataValue string `json:"metadataValue"` // The value of the metadata item
 }
 
 func (me *MetadataItem) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"metadata_key": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The key of the metadata item",
 			Required:    true,
 		},
 		"metadata_value": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The value of the metadata item",
 			Required:    true,
 		},
 	}

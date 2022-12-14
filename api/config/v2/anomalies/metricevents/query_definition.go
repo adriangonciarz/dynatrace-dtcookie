@@ -3,20 +3,20 @@ package metricevents
 import "github.com/dtcookie/hcl"
 
 type QueryDefinition struct {
-	Type            Type             `json:"type"`
-	MetricSelector  *string          `json:"metricSelector,omitempty"` /// To learn more, visit [Metric Selector](https://dt-url.net/metselad)
-	MetricKey       string           `json:"metricKey"`
-	Aggregation     *Aggregation     `json:"aggregation,omitempty"`
-	QueryOffset     *int             `json:"queryOffset,omitempty"`  // Minute offset of sliding evaluation window for metrics with latency
-	EntityFilter    *EntityFilter    `json:"entityFilter,omitempty"` // Use rule-based filters to define the scope this event monitors.
-	DimensionFilter DimensionFilters `json:"dimensionFilter,omitempty"`
+	Type            Type             `json:"type"`                      // The type of query definition
+	MetricSelector  *string          `json:"metricSelector,omitempty"`  /// To learn more, visit [Metric Selector](https://dt-url.net/metselad)
+	MetricKey       string           `json:"metricKey"`                 // The metric key of the query definition
+	Aggregation     *Aggregation     `json:"aggregation,omitempty"`     // The aggregation of the query definition
+	QueryOffset     *int             `json:"queryOffset,omitempty"`     // Minute offset of sliding evaluation window for metrics with latency
+	EntityFilter    *EntityFilter    `json:"entityFilter,omitempty"`    // Use rule-based filters to define the scope this event monitors.
+	DimensionFilter DimensionFilters `json:"dimensionFilter,omitempty"` // The dimension filters of the query definition
 }
 
 func (me *QueryDefinition) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"type": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The type of query definition",
 			Required:    true,
 		},
 		"metric_selector": {
@@ -26,12 +26,12 @@ func (me *QueryDefinition) Schema() map[string]*hcl.Schema {
 		},
 		"metric_key": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The metric key of the query definition",
 			Required:    true,
 		},
 		"aggregation": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The aggregation of the query definition",
 			Optional:    true,
 		},
 		"query_offset": {
@@ -49,7 +49,7 @@ func (me *QueryDefinition) Schema() map[string]*hcl.Schema {
 		},
 		"dimension_filter": {
 			Type:        hcl.TypeList,
-			Description: "",
+			Description: "The dimension filters of the query definition",
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(DimensionFilters).Schema()},
 			Optional:    true,

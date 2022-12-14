@@ -2,7 +2,7 @@ package metricevents
 
 import "github.com/dtcookie/hcl"
 
-type DimensionFilters []*DimensionFilter
+type DimensionFilters []*DimensionFilter // Dimension filter definitions
 
 func (me *DimensionFilters) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
@@ -10,7 +10,7 @@ func (me *DimensionFilters) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
-			Description: "A conditions for the metric usage",
+			Description: "Dimension filter definitions",
 			Elem:        &hcl.Resource{Schema: new(DimensionFilter).Schema()},
 		},
 	}
@@ -25,20 +25,20 @@ func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type DimensionFilter struct {
-	DimensionKey   string `json:"dimensionKey"`
-	DimensionValue string `json:"dimensionValue"`
+	DimensionKey   string `json:"dimensionKey"`   // The key of the dimension filter
+	DimensionValue string `json:"dimensionValue"` // The value of the dimension filter
 }
 
 func (me *DimensionFilter) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"dimension_key": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The key of the dimension filter",
 			Required:    true,
 		},
 		"dimension_value": {
 			Type:        hcl.TypeString,
-			Description: "",
+			Description: "The value of the dimension filter",
 			Required:    true,
 		},
 	}
