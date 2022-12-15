@@ -1,13 +1,16 @@
 package managementzones
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 type Rules []*Rule
 
 func (me *Rules) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"rule": {
-			Type:        hcl.TypeList,
+			Type:        hcl.TypeSet,
 			Optional:    true,
 			MinItems:    1,
 			Description: "A management zone rule",
@@ -17,23 +20,45 @@ func (me *Rules) Schema() map[string]*hcl.Schema {
 }
 
 func (me Rules) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeSlice("rule", me)
+	result := map[string]interface{}{}
+	if len(me) > 0 {
+		entries := []interface{}{}
+		for _, entry := range me {
+			if marshalled, err := entry.MarshalHCL(); err == nil {
+				entries = append(entries, marshalled)
+			} else {
+				return nil, err
+			}
+		}
+		result["rule"] = entries
+	}
+	return result, nil
 }
 
 func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
-	if err := decoder.DecodeSlice("rule", me); err != nil {
-		return err
+	if value, ok := decoder.GetOk("rule"); ok {
+
+		entrySet := value.(*schema.Set)
+
+		for _, entryMap := range entrySet.List() {
+			hash := entrySet.F(entryMap)
+			entry := new(Rule)
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "rule", hash)); err != nil {
+				return err
+			}
+			*me = append(*me, entry)
+		}
 	}
 	return nil
 }
 
 // No documentation available
 type Rule struct {
-	Enabled        bool                         `json:"enabled" hcl:"enabled"`                // Enabled
-	Type           RuleType                     `json:"type" hcl:"type"`                      // Rule type
-	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule" hcl:"attribute_rule"`   // No documentation available
-	DimensionRule  *DimensionRule               `json:"dimensionRule" hcl:"dimension_rule"`   // No documentation available
-	EntitySelector string                       `json:"entitySelector" hcl:"entity_selector"` // Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
+	Enabled        bool                         `json:"enabled"`                  // Enabled
+	Type           RuleType                     `json:"type"`                     // Rule type
+	AttributeRule  *ManagementZoneAttributeRule `json:"attributeRule,omitempty"`  // No documentation available
+	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`  // No documentation available
+	EntitySelector string                       `json:"entitySelector,omitempty"` // Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).
 }
 
 func (me *Rule) Schema() map[string]*hcl.Schema {
@@ -41,7 +66,7 @@ func (me *Rule) Schema() map[string]*hcl.Schema {
 		"enabled": {
 			Type:        hcl.TypeBool,
 			Description: "Enabled",
-			Optional:    true,
+			Required:    true,
 		},
 		"type": {
 			Type:        hcl.TypeString,
@@ -54,7 +79,7 @@ func (me *Rule) Schema() map[string]*hcl.Schema {
 			MaxItems:    1,
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(ManagementZoneAttributeRule).Schema()},
-			Required:    true,
+			Optional:    true,
 		},
 		"dimension_rule": {
 			Type:        hcl.TypeList,
@@ -62,12 +87,34 @@ func (me *Rule) Schema() map[string]*hcl.Schema {
 			MaxItems:    1,
 			MinItems:    1,
 			Elem:        &hcl.Resource{Schema: new(DimensionRule).Schema()},
-			Required:    true,
+			Optional:    true,
 		},
 		"entity_selector": {
 			Type:        hcl.TypeString,
 			Description: "Entity selector. The documentation of the entity selector can be found [here](https://dt-url.net/apientityselector).",
-			Required:    true,
+			Optional:    true,
 		},
 	}
+}
+
+func (me *Rule) MarshalHCL() (map[string]interface{}, error) {
+	properties := hcl.Properties{}
+
+	return properties.EncodeAll(map[string]interface{}{
+		"enabled":         me.Enabled,
+		"type":            me.Type,
+		"attribute_rule":  me.AttributeRule,
+		"dimension_rule":  me.DimensionRule,
+		"entity_selector": me.EntitySelector,
+	})
+}
+
+func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]interface{}{
+		"enabled":         &me.Enabled,
+		"type":            &me.Type,
+		"attribute_rule":  &me.AttributeRule,
+		"dimension_rule":  &me.DimensionRule,
+		"entity_selector": &me.EntitySelector,
+	})
 }

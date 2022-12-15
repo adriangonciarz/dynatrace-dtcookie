@@ -3,9 +3,9 @@ package managementzones
 import "github.com/dtcookie/hcl"
 
 type Settings struct {
-	Description *string `json:"description" hcl:"description"` // Description
-	Rules       Rules   `json:"rules" hcl:"rules"`             // Rules
-	Name        string  `json:"name" hcl:"name"`               // **Be careful when renaming** - if there are policies that are referencing this Management zone, they will need to be adapted to the new name!
+	Description *string `json:"description,omitempty"` // Description
+	Rules       Rules   `json:"rules,omitempty"`       // Rules
+	Name        string  `json:"name"`                  // **Be careful when renaming** - if there are policies that are referencing this Management zone, they will need to be adapted to the new name!
 }
 
 func (me *Settings) Schema() map[string]*hcl.Schema {
@@ -13,7 +13,7 @@ func (me *Settings) Schema() map[string]*hcl.Schema {
 		"description": {
 			Type:        hcl.TypeString,
 			Description: "Description",
-			Required:    true,
+			Optional:    true,
 		},
 		"rules": {
 			Type:        hcl.TypeList,
@@ -21,7 +21,7 @@ func (me *Settings) Schema() map[string]*hcl.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(Rules).Schema()},
-			Required:    true,
+			Optional:    true,
 		},
 		"name": {
 			Type:        hcl.TypeString,
@@ -29,4 +29,22 @@ func (me *Settings) Schema() map[string]*hcl.Schema {
 			Required:    true,
 		},
 	}
+}
+
+func (me *Settings) MarshalHCL() (map[string]interface{}, error) {
+	properties := hcl.Properties{}
+
+	return properties.EncodeAll(map[string]interface{}{
+		"description": me.Description,
+		"rules":       me.Rules,
+		"name":        me.Name,
+	})
+}
+
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]interface{}{
+		"description": &me.Description,
+		"rules":       &me.Rules,
+		"name":        &me.Name,
+	})
 }
