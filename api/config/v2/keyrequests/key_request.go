@@ -15,7 +15,7 @@ func (me *KeyRequest) Schema() map[string]*hcl.Schema {
 		"service": {
 			Type:        hcl.TypeString,
 			Required:    true,
-			Description: "Whether to create an entry point or not",
+			Description: "ID of Dynatrace Service, eg. SERVICE-123ABC45678EFGH",
 		},
 		"names": {
 			Type:        hcl.TypeSet,
