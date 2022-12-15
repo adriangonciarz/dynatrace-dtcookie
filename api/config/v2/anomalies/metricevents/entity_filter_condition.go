@@ -1,13 +1,16 @@
 package metricevents
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 type EntityFilterConditions []*EntityFilterCondition // Entity filter conditions
 
 func (me *EntityFilterConditions) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"condition": {
-			Type:        hcl.TypeList,
+			Type:        hcl.TypeSet,
 			Optional:    true,
 			MinItems:    1,
 			Description: "Entity filter conditions",
@@ -17,11 +20,36 @@ func (me *EntityFilterConditions) Schema() map[string]*hcl.Schema {
 }
 
 func (me EntityFilterConditions) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeSlice("condition", me)
+	result := map[string]interface{}{}
+	if len(me) > 0 {
+		entries := []interface{}{}
+		for _, entry := range me {
+			if marshalled, err := entry.MarshalHCL(); err == nil {
+				entries = append(entries, marshalled)
+			} else {
+				return nil, err
+			}
+		}
+		result["condition"] = entries
+	}
+	return result, nil
 }
 
 func (me *EntityFilterConditions) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("condition", me)
+	if value, ok := decoder.GetOk("condition"); ok {
+
+		entrySet := value.(*schema.Set)
+
+		for _, entryMap := range entrySet.List() {
+			hash := entrySet.F(entryMap)
+			entry := new(EntityFilterCondition)
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "condition", hash)); err != nil {
+				return err
+			}
+			*me = append(*me, entry)
+		}
+	}
+	return nil
 }
 
 type EntityFilterCondition struct {

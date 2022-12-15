@@ -1,6 +1,8 @@
 package metricevents
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+)
 
 type QueryDefinition struct {
 	Type            Type             `json:"type"`                      // The type of query definition
@@ -51,6 +53,7 @@ func (me *QueryDefinition) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Description: "The dimension filters of the query definition",
 			MinItems:    1,
+			MaxItems:    1,
 			Elem:        &hcl.Resource{Schema: new(DimensionFilters).Schema()},
 			Optional:    true,
 		},

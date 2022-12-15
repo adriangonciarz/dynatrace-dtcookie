@@ -1,6 +1,8 @@
 package metricevents
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+)
 
 type EntityFilter struct {
 	DimensionKey *string                `json:"dimensionKey,omitempty"` // Dimension key of entity type to filter

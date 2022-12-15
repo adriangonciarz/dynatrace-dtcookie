@@ -1,13 +1,16 @@
 package metricevents
 
-import "github.com/dtcookie/hcl"
+import (
+	"github.com/dtcookie/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
 
 type DimensionFilters []*DimensionFilter // Dimension filter definitions
 
 func (me *DimensionFilters) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
 		"filter": {
-			Type:        hcl.TypeList,
+			Type:        hcl.TypeSet,
 			Optional:    true,
 			MinItems:    1,
 			Description: "Dimension filter definitions",
@@ -17,11 +20,36 @@ func (me *DimensionFilters) Schema() map[string]*hcl.Schema {
 }
 
 func (me DimensionFilters) MarshalHCL() (map[string]interface{}, error) {
-	return hcl.Properties{}.EncodeSlice("filter", me)
+	result := map[string]interface{}{}
+	if len(me) > 0 {
+		entries := []interface{}{}
+		for _, entry := range me {
+			if marshalled, err := entry.MarshalHCL(); err == nil {
+				entries = append(entries, marshalled)
+			} else {
+				return nil, err
+			}
+		}
+		result["filter"] = entries
+	}
+	return result, nil
 }
 
 func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("filter", me)
+	if value, ok := decoder.GetOk("filter"); ok {
+
+		entrySet := value.(*schema.Set)
+
+		for _, entryMap := range entrySet.List() {
+			hash := entrySet.F(entryMap)
+			entry := new(DimensionFilter)
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "filter", hash)); err != nil {
+				return err
+			}
+			*me = append(*me, entry)
+		}
+	}
+	return nil
 }
 
 type DimensionFilter struct {
