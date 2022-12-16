@@ -3,9 +3,9 @@ package remote
 type PerformanceProfile string
 
 var PerformanceProfiles = struct {
-	High    PerformanceProfile
 	Default PerformanceProfile
+	High    PerformanceProfile
 }{
-	PerformanceProfile("HIGH"),
 	PerformanceProfile("DEFAULT"),
+	PerformanceProfile("HIGH"),
 }

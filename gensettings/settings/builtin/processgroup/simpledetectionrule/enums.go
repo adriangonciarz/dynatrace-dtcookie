@@ -3,9 +3,9 @@ package simpledetectionrule
 type DetectionRuleType string
 
 var DetectionRuleTypes = struct {
-	Prop DetectionRuleType
 	Env  DetectionRuleType
+	Prop DetectionRuleType
 }{
-	DetectionRuleType("Prop"),
 	DetectionRuleType("Env"),
+	DetectionRuleType("Prop"),
 }

@@ -1,19 +1,15 @@
 package detectionrules
 
-type Technology string
+type Base string
 
-var Technologies = struct {
-	Php    Technology
-	Java   Technology
-	Dotnet Technology
-	Go     Technology
-	Nodejs Technology
+var Bases = struct {
+	FileName Base
+	Fqcn     Base
+	Package  Base
 }{
-	Technology("PHP"),
-	Technology("Java"),
-	Technology("DotNet"),
-	Technology("Go"),
-	Technology("Nodejs"),
+	Base("FILE_NAME"),
+	Base("FQCN"),
+	Base("PACKAGE"),
 }
 
 type Matcher string
@@ -26,14 +22,18 @@ var Matchers = struct {
 	Matcher("CONTAINS"),
 }
 
-type Base string
+type Technology string
 
-var Bases = struct {
-	Fqcn     Base
-	FileName Base
-	Package  Base
+var Technologies = struct {
+	Dotnet Technology
+	Go     Technology
+	Java   Technology
+	Nodejs Technology
+	Php    Technology
 }{
-	Base("FQCN"),
-	Base("FILE_NAME"),
-	Base("PACKAGE"),
+	Technology("DotNet"),
+	Technology("Go"),
+	Technology("Java"),
+	Technology("Nodejs"),
+	Technology("PHP"),
 }

@@ -3,9 +3,9 @@ package limit
 type LimitType string
 
 var LimitTypes = struct {
-	Monthly LimitType
 	Annual  LimitType
+	Monthly LimitType
 }{
-	LimitType("MONTHLY"),
 	LimitType("ANNUAL"),
+	LimitType("MONTHLY"),
 }

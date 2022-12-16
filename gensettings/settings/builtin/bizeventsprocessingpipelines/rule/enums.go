@@ -3,21 +3,21 @@ package rule
 type TransformationFieldType string
 
 var TransformationFieldTypes = struct {
-	Long      TransformationFieldType
+	Boolean   TransformationFieldType
 	Double    TransformationFieldType
 	Duration  TransformationFieldType
-	Timestamp TransformationFieldType
-	Ipaddr    TransformationFieldType
-	String    TransformationFieldType
-	Boolean   TransformationFieldType
 	Int       TransformationFieldType
+	Ipaddr    TransformationFieldType
+	Long      TransformationFieldType
+	String    TransformationFieldType
+	Timestamp TransformationFieldType
 }{
-	TransformationFieldType("LONG"),
+	TransformationFieldType("BOOLEAN"),
 	TransformationFieldType("DOUBLE"),
 	TransformationFieldType("DURATION"),
-	TransformationFieldType("TIMESTAMP"),
-	TransformationFieldType("IPADDR"),
-	TransformationFieldType("STRING"),
-	TransformationFieldType("BOOLEAN"),
 	TransformationFieldType("INT"),
+	TransformationFieldType("IPADDR"),
+	TransformationFieldType("LONG"),
+	TransformationFieldType("STRING"),
+	TransformationFieldType("TIMESTAMP"),
 }

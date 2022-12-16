@@ -3,9 +3,9 @@ package allowlist
 type RuleEnum string
 
 var RuleEnums = struct {
-	Startswith RuleEnum
 	Equals     RuleEnum
+	Startswith RuleEnum
 }{
-	RuleEnum("StartsWith"),
 	RuleEnum("Equals"),
+	RuleEnum("StartsWith"),
 }

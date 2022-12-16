@@ -3,39 +3,39 @@ package kpms
 type LoadKpm string
 
 var LoadKpms = struct {
-	VisuallyComplete       LoadKpm
-	ResponseEnd            LoadKpm
-	LargestContentfulPaint LoadKpm
-	SpeedIndex             LoadKpm
-	LoadEventStart         LoadKpm
-	ResponseStart          LoadKpm
 	CumulativeLayoutShift  LoadKpm
 	DomInteractive         LoadKpm
+	LargestContentfulPaint LoadKpm
 	LoadEventEnd           LoadKpm
+	LoadEventStart         LoadKpm
+	ResponseEnd            LoadKpm
+	ResponseStart          LoadKpm
+	SpeedIndex             LoadKpm
 	UserActionDuration     LoadKpm
+	VisuallyComplete       LoadKpm
 }{
-	LoadKpm("VISUALLY_COMPLETE"),
-	LoadKpm("RESPONSE_END"),
-	LoadKpm("LARGEST_CONTENTFUL_PAINT"),
-	LoadKpm("SPEED_INDEX"),
-	LoadKpm("LOAD_EVENT_START"),
-	LoadKpm("RESPONSE_START"),
 	LoadKpm("CUMULATIVE_LAYOUT_SHIFT"),
 	LoadKpm("DOM_INTERACTIVE"),
+	LoadKpm("LARGEST_CONTENTFUL_PAINT"),
 	LoadKpm("LOAD_EVENT_END"),
+	LoadKpm("LOAD_EVENT_START"),
+	LoadKpm("RESPONSE_END"),
+	LoadKpm("RESPONSE_START"),
+	LoadKpm("SPEED_INDEX"),
 	LoadKpm("USER_ACTION_DURATION"),
+	LoadKpm("VISUALLY_COMPLETE"),
 }
 
 type XhrKpm string
 
 var XhrKpms = struct {
-	VisuallyComplete   XhrKpm
-	ResponseStart      XhrKpm
 	ResponseEnd        XhrKpm
+	ResponseStart      XhrKpm
 	UserActionDuration XhrKpm
+	VisuallyComplete   XhrKpm
 }{
-	XhrKpm("VISUALLY_COMPLETE"),
-	XhrKpm("RESPONSE_START"),
 	XhrKpm("RESPONSE_END"),
+	XhrKpm("RESPONSE_START"),
 	XhrKpm("USER_ACTION_DURATION"),
+	XhrKpm("VISUALLY_COMPLETE"),
 }

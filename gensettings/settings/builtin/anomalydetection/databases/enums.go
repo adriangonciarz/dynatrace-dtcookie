@@ -3,11 +3,11 @@ package databases
 type DetectionMode string
 
 var DetectionModes = struct {
-	Fixed DetectionMode
 	Auto  DetectionMode
+	Fixed DetectionMode
 }{
-	DetectionMode("Fixed"),
 	DetectionMode("Auto"),
+	DetectionMode("Fixed"),
 }
 
 type Sensitivity string

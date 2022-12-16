@@ -2,6 +2,7 @@ package golang
 
 import (
 	"bytes"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -28,6 +29,10 @@ func (me *Enum) Kind() CodeContributorKind {
 	return EnumContrib
 }
 
+func (me *Enum) SortName() string {
+	return me.Name
+}
+
 func NewEnum(t *reflection.Type) *Enum {
 	enumDef := &Enum{
 		Name:   EnumTypeName(t.ID),
@@ -39,6 +44,10 @@ func NewEnum(t *reflection.Type) *Enum {
 			Literal: propertyName,
 		})
 	}
+	sort.Slice(enumDef.Instances, func(i, j int) bool {
+		return strings.Compare(enumDef.Instances[i].Name, enumDef.Instances[j].Name) < 0
+	})
+
 	return enumDef
 }
 

@@ -3,17 +3,17 @@ package name
 type ApplicationType string
 
 var ApplicationTypes = struct {
-	Ufo        ApplicationType
 	Desktop    ApplicationType
 	Echo       ApplicationType
+	EmbeddedPc ApplicationType
 	Hololens   ApplicationType
 	Iot        ApplicationType
-	EmbeddedPc ApplicationType
+	Ufo        ApplicationType
 }{
-	ApplicationType("Ufo"),
 	ApplicationType("Desktop"),
 	ApplicationType("Echo"),
+	ApplicationType("Embedded_pc"),
 	ApplicationType("Hololens"),
 	ApplicationType("Iot"),
-	ApplicationType("Embedded_pc"),
+	ApplicationType("Ufo"),
 }

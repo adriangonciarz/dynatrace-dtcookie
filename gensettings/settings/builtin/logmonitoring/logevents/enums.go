@@ -3,25 +3,25 @@ package logevents
 type EventTypeEnum string
 
 var EventTypeEnums = struct {
-	Resource             EventTypeEnum
-	CustomAnnotation     EventTypeEnum
 	Availability         EventTypeEnum
-	CustomConfiguration  EventTypeEnum
-	MarkedForTermination EventTypeEnum
-	Error                EventTypeEnum
-	Slowdown             EventTypeEnum
-	CustomDeployment     EventTypeEnum
-	Info                 EventTypeEnum
 	CustomAlert          EventTypeEnum
+	CustomAnnotation     EventTypeEnum
+	CustomConfiguration  EventTypeEnum
+	CustomDeployment     EventTypeEnum
+	Error                EventTypeEnum
+	Info                 EventTypeEnum
+	MarkedForTermination EventTypeEnum
+	Resource             EventTypeEnum
+	Slowdown             EventTypeEnum
 }{
-	EventTypeEnum("RESOURCE"),
-	EventTypeEnum("CUSTOM_ANNOTATION"),
 	EventTypeEnum("AVAILABILITY"),
-	EventTypeEnum("CUSTOM_CONFIGURATION"),
-	EventTypeEnum("MARKED_FOR_TERMINATION"),
-	EventTypeEnum("ERROR"),
-	EventTypeEnum("SLOWDOWN"),
-	EventTypeEnum("CUSTOM_DEPLOYMENT"),
-	EventTypeEnum("INFO"),
 	EventTypeEnum("CUSTOM_ALERT"),
+	EventTypeEnum("CUSTOM_ANNOTATION"),
+	EventTypeEnum("CUSTOM_CONFIGURATION"),
+	EventTypeEnum("CUSTOM_DEPLOYMENT"),
+	EventTypeEnum("ERROR"),
+	EventTypeEnum("INFO"),
+	EventTypeEnum("MARKED_FOR_TERMINATION"),
+	EventTypeEnum("RESOURCE"),
+	EventTypeEnum("SLOWDOWN"),
 }

@@ -1,51 +1,25 @@
 package metricevents
 
-type EventTypeEnum string
-
-var EventTypeEnums = struct {
-	CustomAlert          EventTypeEnum
-	CustomDeployment     EventTypeEnum
-	Error                EventTypeEnum
-	Slowdown             EventTypeEnum
-	Info                 EventTypeEnum
-	MarkedForTermination EventTypeEnum
-	Availability         EventTypeEnum
-	Resource             EventTypeEnum
-	CustomAnnotation     EventTypeEnum
-	CustomConfiguration  EventTypeEnum
-}{
-	EventTypeEnum("CUSTOM_ALERT"),
-	EventTypeEnum("CUSTOM_DEPLOYMENT"),
-	EventTypeEnum("ERROR"),
-	EventTypeEnum("SLOWDOWN"),
-	EventTypeEnum("INFO"),
-	EventTypeEnum("MARKED_FOR_TERMINATION"),
-	EventTypeEnum("AVAILABILITY"),
-	EventTypeEnum("RESOURCE"),
-	EventTypeEnum("CUSTOM_ANNOTATION"),
-	EventTypeEnum("CUSTOM_CONFIGURATION"),
-}
-
 type Aggregation string
 
 var Aggregations = struct {
-	Sum          Aggregation
-	Count        Aggregation
 	Avg          Aggregation
-	Value        Aggregation
-	Median       Aggregation
-	Percentile90 Aggregation
-	Min          Aggregation
+	Count        Aggregation
 	Max          Aggregation
+	Median       Aggregation
+	Min          Aggregation
+	Percentile90 Aggregation
+	Sum          Aggregation
+	Value        Aggregation
 }{
-	Aggregation("SUM"),
-	Aggregation("COUNT"),
 	Aggregation("AVG"),
-	Aggregation("VALUE"),
-	Aggregation("MEDIAN"),
-	Aggregation("PERCENTILE90"),
-	Aggregation("MIN"),
+	Aggregation("COUNT"),
 	Aggregation("MAX"),
+	Aggregation("MEDIAN"),
+	Aggregation("MIN"),
+	Aggregation("PERCENTILE90"),
+	Aggregation("SUM"),
+	Aggregation("VALUE"),
 }
 
 type AlertCondition string
@@ -63,25 +37,75 @@ var AlertConditions = struct {
 type EntityFilterOperator string
 
 var EntityFilterOperators = struct {
-	Equals                  EntityFilterOperator
 	ContainsCaseInsensitive EntityFilterOperator
 	ContainsCaseSensitive   EntityFilterOperator
+	Equals                  EntityFilterOperator
 }{
-	EntityFilterOperator("EQUALS"),
 	EntityFilterOperator("CONTAINS_CASE_INSENSITIVE"),
 	EntityFilterOperator("CONTAINS_CASE_SENSITIVE"),
+	EntityFilterOperator("EQUALS"),
+}
+
+type EntityFilterType string
+
+var EntityFilterTypes = struct {
+	CustomDeviceGroupName EntityFilterType
+	EntityId              EntityFilterType
+	HostGroupName         EntityFilterType
+	HostName              EntityFilterType
+	ManagementZone        EntityFilterType
+	Name                  EntityFilterType
+	ProcessGroupId        EntityFilterType
+	ProcessGroupName      EntityFilterType
+	Tag                   EntityFilterType
+}{
+	EntityFilterType("CUSTOM_DEVICE_GROUP_NAME"),
+	EntityFilterType("ENTITY_ID"),
+	EntityFilterType("HOST_GROUP_NAME"),
+	EntityFilterType("HOST_NAME"),
+	EntityFilterType("MANAGEMENT_ZONE"),
+	EntityFilterType("NAME"),
+	EntityFilterType("PROCESS_GROUP_ID"),
+	EntityFilterType("PROCESS_GROUP_NAME"),
+	EntityFilterType("TAG"),
+}
+
+type EventTypeEnum string
+
+var EventTypeEnums = struct {
+	Availability         EventTypeEnum
+	CustomAlert          EventTypeEnum
+	CustomAnnotation     EventTypeEnum
+	CustomConfiguration  EventTypeEnum
+	CustomDeployment     EventTypeEnum
+	Error                EventTypeEnum
+	Info                 EventTypeEnum
+	MarkedForTermination EventTypeEnum
+	Resource             EventTypeEnum
+	Slowdown             EventTypeEnum
+}{
+	EventTypeEnum("AVAILABILITY"),
+	EventTypeEnum("CUSTOM_ALERT"),
+	EventTypeEnum("CUSTOM_ANNOTATION"),
+	EventTypeEnum("CUSTOM_CONFIGURATION"),
+	EventTypeEnum("CUSTOM_DEPLOYMENT"),
+	EventTypeEnum("ERROR"),
+	EventTypeEnum("INFO"),
+	EventTypeEnum("MARKED_FOR_TERMINATION"),
+	EventTypeEnum("RESOURCE"),
+	EventTypeEnum("SLOWDOWN"),
 }
 
 type ModelType string
 
 var ModelTypes = struct {
-	StaticThreshold       ModelType
 	AutoAdaptiveThreshold ModelType
 	SeasonalBaseline      ModelType
+	StaticThreshold       ModelType
 }{
-	ModelType("STATIC_THRESHOLD"),
 	ModelType("AUTO_ADAPTIVE_THRESHOLD"),
 	ModelType("SEASONAL_BASELINE"),
+	ModelType("STATIC_THRESHOLD"),
 }
 
 type Type string
@@ -92,28 +116,4 @@ var Types = struct {
 }{
 	Type("METRIC_KEY"),
 	Type("METRIC_SELECTOR"),
-}
-
-type EntityFilterType string
-
-var EntityFilterTypes = struct {
-	EntityId              EntityFilterType
-	ProcessGroupId        EntityFilterType
-	HostName              EntityFilterType
-	ProcessGroupName      EntityFilterType
-	CustomDeviceGroupName EntityFilterType
-	Name                  EntityFilterType
-	ManagementZone        EntityFilterType
-	HostGroupName         EntityFilterType
-	Tag                   EntityFilterType
-}{
-	EntityFilterType("ENTITY_ID"),
-	EntityFilterType("PROCESS_GROUP_ID"),
-	EntityFilterType("HOST_NAME"),
-	EntityFilterType("PROCESS_GROUP_NAME"),
-	EntityFilterType("CUSTOM_DEVICE_GROUP_NAME"),
-	EntityFilterType("NAME"),
-	EntityFilterType("MANAGEMENT_ZONE"),
-	EntityFilterType("HOST_GROUP_NAME"),
-	EntityFilterType("TAG"),
 }

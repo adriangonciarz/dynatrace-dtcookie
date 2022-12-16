@@ -3,23 +3,23 @@ package privacypreferences
 type MaskingPreset string
 
 var MaskingPresets = struct {
+	AllowList     MaskingPreset
 	BlockList     MaskingPreset
 	MaskAll       MaskingPreset
 	MaskUserInput MaskingPreset
-	AllowList     MaskingPreset
 }{
+	MaskingPreset("ALLOW_LIST"),
 	MaskingPreset("BLOCK_LIST"),
 	MaskingPreset("MASK_ALL"),
 	MaskingPreset("MASK_USER_INPUT"),
-	MaskingPreset("ALLOW_LIST"),
 }
 
 type MaskingTargetType string
 
 var MaskingTargetTypes = struct {
-	Element   MaskingTargetType
 	Attribute MaskingTargetType
+	Element   MaskingTargetType
 }{
-	MaskingTargetType("ELEMENT"),
 	MaskingTargetType("ATTRIBUTE"),
+	MaskingTargetType("ELEMENT"),
 }

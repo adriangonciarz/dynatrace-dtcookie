@@ -1,41 +1,41 @@
 package custommetrics
 
-type ValueType string
-
-var ValueTypes = struct {
-	Field   ValueType
-	Counter ValueType
-}{
-	ValueType("FIELD"),
-	ValueType("COUNTER"),
-}
-
 type Operator string
 
 var Operators = struct {
-	Like                 Operator
-	LessThan             Operator
-	NotEqual             Operator
-	StartsWith           Operator
-	LessThanOrEqualTo    Operator
-	GreaterThan          Operator
 	Equals               Operator
-	IsNull               Operator
-	NotLike              Operator
+	GreaterThan          Operator
 	GreaterThanOrEqualTo Operator
-	IsNotNull            Operator
 	In                   Operator
+	IsNotNull            Operator
+	IsNull               Operator
+	LessThan             Operator
+	LessThanOrEqualTo    Operator
+	Like                 Operator
+	NotEqual             Operator
+	NotLike              Operator
+	StartsWith           Operator
 }{
-	Operator("LIKE"),
-	Operator("LESS_THAN"),
-	Operator("NOT_EQUAL"),
-	Operator("STARTS_WITH"),
-	Operator("LESS_THAN_OR_EQUAL_TO"),
-	Operator("GREATER_THAN"),
 	Operator("EQUALS"),
-	Operator("IS_NULL"),
-	Operator("NOT_LIKE"),
+	Operator("GREATER_THAN"),
 	Operator("GREATER_THAN_OR_EQUAL_TO"),
-	Operator("IS_NOT_NULL"),
 	Operator("IN"),
+	Operator("IS_NOT_NULL"),
+	Operator("IS_NULL"),
+	Operator("LESS_THAN"),
+	Operator("LESS_THAN_OR_EQUAL_TO"),
+	Operator("LIKE"),
+	Operator("NOT_EQUAL"),
+	Operator("NOT_LIKE"),
+	Operator("STARTS_WITH"),
+}
+
+type ValueType string
+
+var ValueTypes = struct {
+	Counter ValueType
+	Field   ValueType
+}{
+	ValueType("COUNTER"),
+	ValueType("FIELD"),
 }

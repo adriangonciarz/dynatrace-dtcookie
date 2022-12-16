@@ -3,11 +3,11 @@ package providerbreakdown
 type ResourceType string
 
 var ResourceTypes = struct {
+	Cdn        ResourceType
 	Firstparty ResourceType
 	Thirdparty ResourceType
-	Cdn        ResourceType
 }{
+	ResourceType("Cdn"),
 	ResourceType("FirstParty"),
 	ResourceType("ThirdParty"),
-	ResourceType("Cdn"),
 }

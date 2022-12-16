@@ -3,13 +3,13 @@ package customunit
 type UnitCombinations string
 
 var UnitCombinationss = struct {
-	Scalar   UnitCombinations
-	Quotient UnitCombinations
-	Product  UnitCombinations
 	Power    UnitCombinations
+	Product  UnitCombinations
+	Quotient UnitCombinations
+	Scalar   UnitCombinations
 }{
-	UnitCombinations("SCALAR"),
-	UnitCombinations("QUOTIENT"),
-	UnitCombinations("PRODUCT"),
 	UnitCombinations("POWER"),
+	UnitCombinations("PRODUCT"),
+	UnitCombinations("QUOTIENT"),
+	UnitCombinations("SCALAR"),
 }

@@ -1,5 +1,15 @@
 package privacy
 
+type DoNotTrackOption string
+
+var DoNotTrackOptions = struct {
+	Anonymous  DoNotTrackOption
+	DisableRum DoNotTrackOption
+}{
+	DoNotTrackOption("Anonymous"),
+	DoNotTrackOption("Disable_rum"),
+}
+
 type IpAddressMaskingOption string
 
 var IpAddressMaskingOptions = struct {
@@ -8,14 +18,4 @@ var IpAddressMaskingOptions = struct {
 }{
 	IpAddressMaskingOption("All"),
 	IpAddressMaskingOption("Public"),
-}
-
-type DoNotTrackOption string
-
-var DoNotTrackOptions = struct {
-	DisableRum DoNotTrackOption
-	Anonymous  DoNotTrackOption
-}{
-	DoNotTrackOption("Disable_rum"),
-	DoNotTrackOption("Anonymous"),
 }

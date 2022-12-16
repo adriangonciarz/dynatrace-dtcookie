@@ -1,17 +1,5 @@
 package rumcustomcrashrateincrease
 
-type Sensitivity string
-
-var Sensitivities = struct {
-	Low    Sensitivity
-	Medium Sensitivity
-	High   Sensitivity
-}{
-	Sensitivity("Low"),
-	Sensitivity("Medium"),
-	Sensitivity("High"),
-}
-
 type DetectionMode string
 
 var DetectionModes = struct {
@@ -20,4 +8,16 @@ var DetectionModes = struct {
 }{
 	DetectionMode("Auto"),
 	DetectionMode("Fixed"),
+}
+
+type Sensitivity string
+
+var Sensitivities = struct {
+	High   Sensitivity
+	Low    Sensitivity
+	Medium Sensitivity
+}{
+	Sensitivity("High"),
+	Sensitivity("Low"),
+	Sensitivity("Medium"),
 }

@@ -3,27 +3,27 @@ package notifications
 type NotificationType string
 
 var NotificationTypes = struct {
-	Email        NotificationType
-	Slack        NotificationType
 	Ansibletower NotificationType
-	OpsGenie     NotificationType
-	Victorops    NotificationType
-	Xmatters     NotificationType
-	Trello       NotificationType
-	PagerDuty    NotificationType
-	Webhook      NotificationType
+	Email        NotificationType
 	Jira         NotificationType
+	OpsGenie     NotificationType
+	PagerDuty    NotificationType
 	ServiceNow   NotificationType
+	Slack        NotificationType
+	Trello       NotificationType
+	Victorops    NotificationType
+	Webhook      NotificationType
+	Xmatters     NotificationType
 }{
-	NotificationType("EMAIL"),
-	NotificationType("SLACK"),
 	NotificationType("ANSIBLETOWER"),
-	NotificationType("OPS_GENIE"),
-	NotificationType("VICTOROPS"),
-	NotificationType("XMATTERS"),
-	NotificationType("TRELLO"),
-	NotificationType("PAGER_DUTY"),
-	NotificationType("WEBHOOK"),
+	NotificationType("EMAIL"),
 	NotificationType("JIRA"),
+	NotificationType("OPS_GENIE"),
+	NotificationType("PAGER_DUTY"),
 	NotificationType("SERVICE_NOW"),
+	NotificationType("SLACK"),
+	NotificationType("TRELLO"),
+	NotificationType("VICTOROPS"),
+	NotificationType("WEBHOOK"),
+	NotificationType("XMATTERS"),
 }

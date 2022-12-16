@@ -3,17 +3,17 @@ package generictype
 type IngestDataSource string
 
 var IngestDataSources = struct {
-	Logs     IngestDataSource
-	Spans    IngestDataSource
 	Entities IngestDataSource
-	Topology IngestDataSource
 	Events   IngestDataSource
+	Logs     IngestDataSource
 	Metrics  IngestDataSource
+	Spans    IngestDataSource
+	Topology IngestDataSource
 }{
-	IngestDataSource("Logs"),
-	IngestDataSource("Spans"),
 	IngestDataSource("Entities"),
-	IngestDataSource("Topology"),
 	IngestDataSource("Events"),
+	IngestDataSource("Logs"),
 	IngestDataSource("Metrics"),
+	IngestDataSource("Spans"),
+	IngestDataSource("Topology"),
 }

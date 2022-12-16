@@ -13,11 +13,11 @@ var DetectionModes = struct {
 type Sensitivity string
 
 var Sensitivities = struct {
+	High   Sensitivity
 	Low    Sensitivity
 	Medium Sensitivity
-	High   Sensitivity
 }{
+	Sensitivity("High"),
 	Sensitivity("Low"),
 	Sensitivity("Medium"),
-	Sensitivity("High"),
 }

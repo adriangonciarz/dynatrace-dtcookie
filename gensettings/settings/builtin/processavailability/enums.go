@@ -3,11 +3,11 @@ package processavailability
 type ProcessItem string
 
 var ProcessItems = struct {
+	Commandline    ProcessItem
 	Executable     ProcessItem
 	Executablepath ProcessItem
-	Commandline    ProcessItem
 }{
+	ProcessItem("CommandLine"),
 	ProcessItem("Executable"),
 	ProcessItem("ExecutablePath"),
-	ProcessItem("CommandLine"),
 }

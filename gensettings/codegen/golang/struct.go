@@ -70,6 +70,10 @@ func (me *Struct) Kind() CodeContributorKind {
 	return StructContrib
 }
 
+func (me *Struct) SortName() string {
+	return me.Name
+}
+
 func NewStruct(t *reflection.Type) *Struct {
 	structDef := Struct{
 		Name:     TypeName(t),

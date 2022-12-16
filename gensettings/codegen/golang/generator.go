@@ -104,7 +104,14 @@ func (me *generator) Write(folder string) error {
 			Imports: []string{},
 		}
 		sort.Slice(contributors, func(i, j int) bool {
-			return contributors[i].Kind() < contributors[j].Kind()
+			kindI := contributors[i].Kind()
+			kindJ := contributors[j].Kind()
+			if kindI < kindJ {
+				return true
+			} else if kindI > kindJ {
+				return false
+			}
+			return strings.Compare(contributors[i].SortName(), contributors[j].SortName()) < 0
 		})
 		for _, contributor := range contributors {
 			data, err := contributor.Bytes()

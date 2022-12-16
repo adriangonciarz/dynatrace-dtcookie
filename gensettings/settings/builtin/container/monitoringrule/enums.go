@@ -1,23 +1,49 @@
 package monitoringrule
 
+type ConditionOperator string
+
+var ConditionOperators = struct {
+	Contains    ConditionOperator
+	Ends        ConditionOperator
+	Equals      ConditionOperator
+	Exists      ConditionOperator
+	NotContains ConditionOperator
+	NotEnds     ConditionOperator
+	NotEquals   ConditionOperator
+	NotExists   ConditionOperator
+	NotStarts   ConditionOperator
+	Starts      ConditionOperator
+}{
+	ConditionOperator("CONTAINS"),
+	ConditionOperator("ENDS"),
+	ConditionOperator("EQUALS"),
+	ConditionOperator("EXISTS"),
+	ConditionOperator("NOT_CONTAINS"),
+	ConditionOperator("NOT_ENDS"),
+	ConditionOperator("NOT_EQUALS"),
+	ConditionOperator("NOT_EXISTS"),
+	ConditionOperator("NOT_STARTS"),
+	ConditionOperator("STARTS"),
+}
+
 type ContainerItem string
 
 var ContainerItems = struct {
-	KubernetesPoduid        ContainerItem
 	ContainerName           ContainerItem
 	ImageName               ContainerItem
-	KubernetesNamespace     ContainerItem
-	KubernetesContainername ContainerItem
 	KubernetesBasepodname   ContainerItem
+	KubernetesContainername ContainerItem
 	KubernetesFullpodname   ContainerItem
+	KubernetesNamespace     ContainerItem
+	KubernetesPoduid        ContainerItem
 }{
-	ContainerItem("KUBERNETES_PODUID"),
 	ContainerItem("CONTAINER_NAME"),
 	ContainerItem("IMAGE_NAME"),
-	ContainerItem("KUBERNETES_NAMESPACE"),
-	ContainerItem("KUBERNETES_CONTAINERNAME"),
 	ContainerItem("KUBERNETES_BASEPODNAME"),
+	ContainerItem("KUBERNETES_CONTAINERNAME"),
 	ContainerItem("KUBERNETES_FULLPODNAME"),
+	ContainerItem("KUBERNETES_NAMESPACE"),
+	ContainerItem("KUBERNETES_PODUID"),
 }
 
 type MonitoringMode string
@@ -28,30 +54,4 @@ var MonitoringModes = struct {
 }{
 	MonitoringMode("MONITORING_OFF"),
 	MonitoringMode("MONITORING_ON"),
-}
-
-type ConditionOperator string
-
-var ConditionOperators = struct {
-	NotContains ConditionOperator
-	Equals      ConditionOperator
-	NotExists   ConditionOperator
-	Starts      ConditionOperator
-	Ends        ConditionOperator
-	Contains    ConditionOperator
-	NotEquals   ConditionOperator
-	Exists      ConditionOperator
-	NotStarts   ConditionOperator
-	NotEnds     ConditionOperator
-}{
-	ConditionOperator("NOT_CONTAINS"),
-	ConditionOperator("EQUALS"),
-	ConditionOperator("NOT_EXISTS"),
-	ConditionOperator("STARTS"),
-	ConditionOperator("ENDS"),
-	ConditionOperator("CONTAINS"),
-	ConditionOperator("NOT_EQUALS"),
-	ConditionOperator("EXISTS"),
-	ConditionOperator("NOT_STARTS"),
-	ConditionOperator("NOT_ENDS"),
 }

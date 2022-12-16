@@ -3,11 +3,11 @@ package infrastructurehosts
 type ConnectionLostDetectionSensitivity string
 
 var ConnectionLostDetectionSensitivities = struct {
-	DontAlertOnGracefulShutdown ConnectionLostDetectionSensitivity
 	AlertOnGracefulShutdown     ConnectionLostDetectionSensitivity
+	DontAlertOnGracefulShutdown ConnectionLostDetectionSensitivity
 }{
-	ConnectionLostDetectionSensitivity("DONT_ALERT_ON_GRACEFUL_SHUTDOWN"),
 	ConnectionLostDetectionSensitivity("ALERT_ON_GRACEFUL_SHUTDOWN"),
+	ConnectionLostDetectionSensitivity("DONT_ALERT_ON_GRACEFUL_SHUTDOWN"),
 }
 
 type DetectionMode string

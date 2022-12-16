@@ -3,21 +3,21 @@ package rumcustom
 type DetectionMode string
 
 var DetectionModes = struct {
-	Fixed DetectionMode
 	Auto  DetectionMode
+	Fixed DetectionMode
 }{
-	DetectionMode("Fixed"),
 	DetectionMode("Auto"),
+	DetectionMode("Fixed"),
 }
 
 type Sensitivity string
 
 var Sensitivities = struct {
+	High   Sensitivity
 	Low    Sensitivity
 	Medium Sensitivity
-	High   Sensitivity
 }{
+	Sensitivity("High"),
 	Sensitivity("Low"),
 	Sensitivity("Medium"),
-	Sensitivity("High"),
 }

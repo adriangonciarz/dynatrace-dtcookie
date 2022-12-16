@@ -3,63 +3,63 @@ package spanentrypoints
 type SpanEntrypointAction string
 
 var SpanEntrypointActions = struct {
-	DontCreateEntrypoint SpanEntrypointAction
 	CreateEntrypoint     SpanEntrypointAction
+	DontCreateEntrypoint SpanEntrypointAction
 }{
-	SpanEntrypointAction("DONT_CREATE_ENTRYPOINT"),
 	SpanEntrypointAction("CREATE_ENTRYPOINT"),
-}
-
-type SpanMatcherSource string
-
-var SpanMatcherSources = struct {
-	InstrumentationScopeVersion SpanMatcherSource
-	SpanName                    SpanMatcherSource
-	SpanKind                    SpanMatcherSource
-	Attribute                   SpanMatcherSource
-	InstrumentationScopeName    SpanMatcherSource
-}{
-	SpanMatcherSource("INSTRUMENTATION_SCOPE_VERSION"),
-	SpanMatcherSource("SPAN_NAME"),
-	SpanMatcherSource("SPAN_KIND"),
-	SpanMatcherSource("ATTRIBUTE"),
-	SpanMatcherSource("INSTRUMENTATION_SCOPE_NAME"),
-}
-
-type SpanMatcherType string
-
-var SpanMatcherTypes = struct {
-	DoesNotEndWith   SpanMatcherType
-	Equals           SpanMatcherType
-	Contains         SpanMatcherType
-	StartsWith       SpanMatcherType
-	EndsWith         SpanMatcherType
-	DoesNotEqual     SpanMatcherType
-	DoesNotContain   SpanMatcherType
-	DoesNotStartWith SpanMatcherType
-}{
-	SpanMatcherType("DOES_NOT_END_WITH"),
-	SpanMatcherType("EQUALS"),
-	SpanMatcherType("CONTAINS"),
-	SpanMatcherType("STARTS_WITH"),
-	SpanMatcherType("ENDS_WITH"),
-	SpanMatcherType("DOES_NOT_EQUAL"),
-	SpanMatcherType("DOES_NOT_CONTAIN"),
-	SpanMatcherType("DOES_NOT_START_WITH"),
+	SpanEntrypointAction("DONT_CREATE_ENTRYPOINT"),
 }
 
 type SpanKind string
 
 var SpanKinds = struct {
-	Internal SpanKind
-	Server   SpanKind
 	Client   SpanKind
-	Producer SpanKind
 	Consumer SpanKind
+	Internal SpanKind
+	Producer SpanKind
+	Server   SpanKind
 }{
-	SpanKind("INTERNAL"),
-	SpanKind("SERVER"),
 	SpanKind("CLIENT"),
-	SpanKind("PRODUCER"),
 	SpanKind("CONSUMER"),
+	SpanKind("INTERNAL"),
+	SpanKind("PRODUCER"),
+	SpanKind("SERVER"),
+}
+
+type SpanMatcherSource string
+
+var SpanMatcherSources = struct {
+	Attribute                   SpanMatcherSource
+	InstrumentationScopeName    SpanMatcherSource
+	InstrumentationScopeVersion SpanMatcherSource
+	SpanKind                    SpanMatcherSource
+	SpanName                    SpanMatcherSource
+}{
+	SpanMatcherSource("ATTRIBUTE"),
+	SpanMatcherSource("INSTRUMENTATION_SCOPE_NAME"),
+	SpanMatcherSource("INSTRUMENTATION_SCOPE_VERSION"),
+	SpanMatcherSource("SPAN_KIND"),
+	SpanMatcherSource("SPAN_NAME"),
+}
+
+type SpanMatcherType string
+
+var SpanMatcherTypes = struct {
+	Contains         SpanMatcherType
+	DoesNotContain   SpanMatcherType
+	DoesNotEndWith   SpanMatcherType
+	DoesNotEqual     SpanMatcherType
+	DoesNotStartWith SpanMatcherType
+	EndsWith         SpanMatcherType
+	Equals           SpanMatcherType
+	StartsWith       SpanMatcherType
+}{
+	SpanMatcherType("CONTAINS"),
+	SpanMatcherType("DOES_NOT_CONTAIN"),
+	SpanMatcherType("DOES_NOT_END_WITH"),
+	SpanMatcherType("DOES_NOT_EQUAL"),
+	SpanMatcherType("DOES_NOT_START_WITH"),
+	SpanMatcherType("ENDS_WITH"),
+	SpanMatcherType("EQUALS"),
+	SpanMatcherType("STARTS_WITH"),
 }

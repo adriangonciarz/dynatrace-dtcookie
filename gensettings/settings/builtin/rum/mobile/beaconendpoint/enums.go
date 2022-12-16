@@ -3,11 +3,11 @@ package beaconendpoint
 type BeaconEndpointType string
 
 var BeaconEndpointTypes = struct {
-	InstrumentedWebserver BeaconEndpointType
 	ClusterActivegate     BeaconEndpointType
 	EnvironmentActivegate BeaconEndpointType
+	InstrumentedWebserver BeaconEndpointType
 }{
-	BeaconEndpointType("INSTRUMENTED_WEBSERVER"),
 	BeaconEndpointType("CLUSTER_ACTIVEGATE"),
 	BeaconEndpointType("ENVIRONMENT_ACTIVEGATE"),
+	BeaconEndpointType("INSTRUMENTED_WEBSERVER"),
 }

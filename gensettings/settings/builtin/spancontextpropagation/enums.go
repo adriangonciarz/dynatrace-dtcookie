@@ -3,63 +3,63 @@ package spancontextpropagation
 type SpanContextPropagationAction string
 
 var SpanContextPropagationActions = struct {
-	Propagate     SpanContextPropagationAction
 	DontPropagate SpanContextPropagationAction
+	Propagate     SpanContextPropagationAction
 }{
-	SpanContextPropagationAction("PROPAGATE"),
 	SpanContextPropagationAction("DONT_PROPAGATE"),
+	SpanContextPropagationAction("PROPAGATE"),
+}
+
+type SpanKind string
+
+var SpanKinds = struct {
+	Client   SpanKind
+	Consumer SpanKind
+	Internal SpanKind
+	Producer SpanKind
+	Server   SpanKind
+}{
+	SpanKind("CLIENT"),
+	SpanKind("CONSUMER"),
+	SpanKind("INTERNAL"),
+	SpanKind("PRODUCER"),
+	SpanKind("SERVER"),
 }
 
 type SpanMatcherSource string
 
 var SpanMatcherSources = struct {
-	SpanKind                    SpanMatcherSource
 	Attribute                   SpanMatcherSource
 	InstrumentationScopeName    SpanMatcherSource
 	InstrumentationScopeVersion SpanMatcherSource
+	SpanKind                    SpanMatcherSource
 	SpanName                    SpanMatcherSource
 }{
-	SpanMatcherSource("SPAN_KIND"),
 	SpanMatcherSource("ATTRIBUTE"),
 	SpanMatcherSource("INSTRUMENTATION_SCOPE_NAME"),
 	SpanMatcherSource("INSTRUMENTATION_SCOPE_VERSION"),
+	SpanMatcherSource("SPAN_KIND"),
 	SpanMatcherSource("SPAN_NAME"),
 }
 
 type SpanMatcherType string
 
 var SpanMatcherTypes = struct {
-	DoesNotContain   SpanMatcherType
-	DoesNotStartWith SpanMatcherType
-	DoesNotEndWith   SpanMatcherType
-	Equals           SpanMatcherType
 	Contains         SpanMatcherType
-	StartsWith       SpanMatcherType
-	EndsWith         SpanMatcherType
+	DoesNotContain   SpanMatcherType
+	DoesNotEndWith   SpanMatcherType
 	DoesNotEqual     SpanMatcherType
+	DoesNotStartWith SpanMatcherType
+	EndsWith         SpanMatcherType
+	Equals           SpanMatcherType
+	StartsWith       SpanMatcherType
 }{
-	SpanMatcherType("DOES_NOT_CONTAIN"),
-	SpanMatcherType("DOES_NOT_START_WITH"),
-	SpanMatcherType("DOES_NOT_END_WITH"),
-	SpanMatcherType("EQUALS"),
 	SpanMatcherType("CONTAINS"),
-	SpanMatcherType("STARTS_WITH"),
-	SpanMatcherType("ENDS_WITH"),
+	SpanMatcherType("DOES_NOT_CONTAIN"),
+	SpanMatcherType("DOES_NOT_END_WITH"),
 	SpanMatcherType("DOES_NOT_EQUAL"),
-}
-
-type SpanKind string
-
-var SpanKinds = struct {
-	Producer SpanKind
-	Consumer SpanKind
-	Internal SpanKind
-	Server   SpanKind
-	Client   SpanKind
-}{
-	SpanKind("PRODUCER"),
-	SpanKind("CONSUMER"),
-	SpanKind("INTERNAL"),
-	SpanKind("SERVER"),
-	SpanKind("CLIENT"),
+	SpanMatcherType("DOES_NOT_START_WITH"),
+	SpanMatcherType("ENDS_WITH"),
+	SpanMatcherType("EQUALS"),
+	SpanMatcherType("STARTS_WITH"),
 }

@@ -3,11 +3,11 @@ package declarativegrouping
 type ProcessItem string
 
 var ProcessItems = struct {
-	Executablepath ProcessItem
 	Commandline    ProcessItem
 	Executable     ProcessItem
+	Executablepath ProcessItem
 }{
-	ProcessItem("ExecutablePath"),
 	ProcessItem("CommandLine"),
 	ProcessItem("Executable"),
+	ProcessItem("ExecutablePath"),
 }

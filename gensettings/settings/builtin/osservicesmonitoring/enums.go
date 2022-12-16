@@ -10,28 +10,28 @@ var LinuxServiceProps = struct {
 	LinuxServiceProp("StartupType"),
 }
 
-type WindowsServiceProps string
-
-var WindowsServicePropss = struct {
-	Path         WindowsServiceProps
-	Startuptype  WindowsServiceProps
-	Manufacturer WindowsServiceProps
-	Displayname  WindowsServiceProps
-	Servicename  WindowsServiceProps
-}{
-	WindowsServiceProps("Path"),
-	WindowsServiceProps("StartupType"),
-	WindowsServiceProps("Manufacturer"),
-	WindowsServiceProps("DisplayName"),
-	WindowsServiceProps("ServiceName"),
-}
-
 type System string
 
 var Systems = struct {
-	Windows System
 	Linux   System
+	Windows System
 }{
-	System("WINDOWS"),
 	System("LINUX"),
+	System("WINDOWS"),
+}
+
+type WindowsServiceProps string
+
+var WindowsServicePropss = struct {
+	Displayname  WindowsServiceProps
+	Manufacturer WindowsServiceProps
+	Path         WindowsServiceProps
+	Servicename  WindowsServiceProps
+	Startuptype  WindowsServiceProps
+}{
+	WindowsServiceProps("DisplayName"),
+	WindowsServiceProps("Manufacturer"),
+	WindowsServiceProps("Path"),
+	WindowsServiceProps("ServiceName"),
+	WindowsServiceProps("StartupType"),
 }

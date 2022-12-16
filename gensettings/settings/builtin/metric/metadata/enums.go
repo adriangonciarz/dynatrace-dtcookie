@@ -1,17 +1,5 @@
 package metadata
 
-type ValueType string
-
-var ValueTypes = struct {
-	Score   ValueType
-	Unknown ValueType
-	Error   ValueType
-}{
-	ValueType("Score"),
-	ValueType("Unknown"),
-	ValueType("Error"),
-}
-
 type UnitDisplayFormat string
 
 var UnitDisplayFormats = struct {
@@ -20,4 +8,16 @@ var UnitDisplayFormats = struct {
 }{
 	UnitDisplayFormat("Binary"),
 	UnitDisplayFormat("Decimal"),
+}
+
+type ValueType string
+
+var ValueTypes = struct {
+	Error   ValueType
+	Score   ValueType
+	Unknown ValueType
+}{
+	ValueType("Error"),
+	ValueType("Score"),
+	ValueType("Unknown"),
 }

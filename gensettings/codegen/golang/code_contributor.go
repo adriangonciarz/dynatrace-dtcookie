@@ -14,4 +14,5 @@ type CodeContributor interface {
 	Imports() []string
 	Prettify()
 	Kind() CodeContributorKind
+	SortName() string
 }

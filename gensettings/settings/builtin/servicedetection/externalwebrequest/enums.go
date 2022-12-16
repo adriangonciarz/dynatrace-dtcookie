@@ -1,95 +1,33 @@
 package externalwebrequest
 
-type FrameworkType string
-
-var FrameworkTypes = struct {
-	Hessian    FrameworkType
-	Websphere  FrameworkType
-	Axis       FrameworkType
-	Restlet    FrameworkType
-	Jersey     FrameworkType
-	Progress   FrameworkType
-	Wink       FrameworkType
-	JaxWsRi    FrameworkType
-	Webmethods FrameworkType
-	Cxf        FrameworkType
-	Weblogic   FrameworkType
-	Jboss      FrameworkType
-	Resteasy   FrameworkType
-	Spring     FrameworkType
-	Tibco      FrameworkType
-}{
-	FrameworkType("HESSIAN"),
-	FrameworkType("WEBSPHERE"),
-	FrameworkType("AXIS"),
-	FrameworkType("RESTLET"),
-	FrameworkType("JERSEY"),
-	FrameworkType("PROGRESS"),
-	FrameworkType("WINK"),
-	FrameworkType("JAX_WS_RI"),
-	FrameworkType("WEBMETHODS"),
-	FrameworkType("CXF"),
-	FrameworkType("WEBLOGIC"),
-	FrameworkType("JBOSS"),
-	FrameworkType("RESTEASY"),
-	FrameworkType("SPRING"),
-	FrameworkType("TIBCO"),
-}
-
 type ContextRootTransformationType string
 
 var ContextRootTransformationTypes = struct {
+	Before            ContextRootTransformationType
 	RemoveCreditCards ContextRootTransformationType
 	RemoveIbans       ContextRootTransformationType
 	RemoveIps         ContextRootTransformationType
-	Before            ContextRootTransformationType
-	ReplaceBetween    ContextRootTransformationType
 	RemoveNumbers     ContextRootTransformationType
+	ReplaceBetween    ContextRootTransformationType
 }{
+	ContextRootTransformationType("BEFORE"),
 	ContextRootTransformationType("REMOVE_CREDIT_CARDS"),
 	ContextRootTransformationType("REMOVE_IBANS"),
 	ContextRootTransformationType("REMOVE_IPS"),
-	ContextRootTransformationType("BEFORE"),
-	ContextRootTransformationType("REPLACE_BETWEEN"),
 	ContextRootTransformationType("REMOVE_NUMBERS"),
-}
-
-type TransformationType string
-
-var TransformationTypes = struct {
-	RemoveCreditCards TransformationType
-	RemoveIbans       TransformationType
-	TakeSegments      TransformationType
-	SplitSelect       TransformationType
-	After             TransformationType
-	RemoveNumbers     TransformationType
-	Before            TransformationType
-	Between           TransformationType
-	ReplaceBetween    TransformationType
-	RemoveIps         TransformationType
-}{
-	TransformationType("REMOVE_CREDIT_CARDS"),
-	TransformationType("REMOVE_IBANS"),
-	TransformationType("TAKE_SEGMENTS"),
-	TransformationType("SPLIT_SELECT"),
-	TransformationType("AFTER"),
-	TransformationType("REMOVE_NUMBERS"),
-	TransformationType("BEFORE"),
-	TransformationType("BETWEEN"),
-	TransformationType("REPLACE_BETWEEN"),
-	TransformationType("REMOVE_IPS"),
+	ContextRootTransformationType("REPLACE_BETWEEN"),
 }
 
 type ContributionType string
 
 var ContributionTypes = struct {
 	Originalvalue  ContributionType
-	Transformvalue ContributionType
 	Transformurl   ContributionType
+	Transformvalue ContributionType
 }{
 	ContributionType("OriginalValue"),
-	ContributionType("TransformValue"),
 	ContributionType("TransformURL"),
+	ContributionType("TransformValue"),
 }
 
 type ContributionTypeWithOverride string
@@ -102,4 +40,66 @@ var ContributionTypeWithOverrides = struct {
 	ContributionTypeWithOverride("OriginalValue"),
 	ContributionTypeWithOverride("OverrideValue"),
 	ContributionTypeWithOverride("TransformValue"),
+}
+
+type FrameworkType string
+
+var FrameworkTypes = struct {
+	Axis       FrameworkType
+	Cxf        FrameworkType
+	Hessian    FrameworkType
+	JaxWsRi    FrameworkType
+	Jboss      FrameworkType
+	Jersey     FrameworkType
+	Progress   FrameworkType
+	Resteasy   FrameworkType
+	Restlet    FrameworkType
+	Spring     FrameworkType
+	Tibco      FrameworkType
+	Weblogic   FrameworkType
+	Webmethods FrameworkType
+	Websphere  FrameworkType
+	Wink       FrameworkType
+}{
+	FrameworkType("AXIS"),
+	FrameworkType("CXF"),
+	FrameworkType("HESSIAN"),
+	FrameworkType("JAX_WS_RI"),
+	FrameworkType("JBOSS"),
+	FrameworkType("JERSEY"),
+	FrameworkType("PROGRESS"),
+	FrameworkType("RESTEASY"),
+	FrameworkType("RESTLET"),
+	FrameworkType("SPRING"),
+	FrameworkType("TIBCO"),
+	FrameworkType("WEBLOGIC"),
+	FrameworkType("WEBMETHODS"),
+	FrameworkType("WEBSPHERE"),
+	FrameworkType("WINK"),
+}
+
+type TransformationType string
+
+var TransformationTypes = struct {
+	After             TransformationType
+	Before            TransformationType
+	Between           TransformationType
+	RemoveCreditCards TransformationType
+	RemoveIbans       TransformationType
+	RemoveIps         TransformationType
+	RemoveNumbers     TransformationType
+	ReplaceBetween    TransformationType
+	SplitSelect       TransformationType
+	TakeSegments      TransformationType
+}{
+	TransformationType("AFTER"),
+	TransformationType("BEFORE"),
+	TransformationType("BETWEEN"),
+	TransformationType("REMOVE_CREDIT_CARDS"),
+	TransformationType("REMOVE_IBANS"),
+	TransformationType("REMOVE_IPS"),
+	TransformationType("REMOVE_NUMBERS"),
+	TransformationType("REPLACE_BETWEEN"),
+	TransformationType("SPLIT_SELECT"),
+	TransformationType("TAKE_SEGMENTS"),
 }

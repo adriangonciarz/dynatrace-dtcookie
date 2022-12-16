@@ -3,33 +3,21 @@ package maintenancewindow
 type DayOfWeekType string
 
 var DayOfWeekTypes = struct {
-	Wednesday DayOfWeekType
-	Thursday  DayOfWeekType
 	Friday    DayOfWeekType
+	Monday    DayOfWeekType
 	Saturday  DayOfWeekType
 	Sunday    DayOfWeekType
-	Monday    DayOfWeekType
+	Thursday  DayOfWeekType
 	Tuesday   DayOfWeekType
+	Wednesday DayOfWeekType
 }{
-	DayOfWeekType("WEDNESDAY"),
-	DayOfWeekType("THURSDAY"),
 	DayOfWeekType("FRIDAY"),
+	DayOfWeekType("MONDAY"),
 	DayOfWeekType("SATURDAY"),
 	DayOfWeekType("SUNDAY"),
-	DayOfWeekType("MONDAY"),
+	DayOfWeekType("THURSDAY"),
 	DayOfWeekType("TUESDAY"),
-}
-
-type SuppressionType string
-
-var SuppressionTypes = struct {
-	DetectProblemsAndAlert  SuppressionType
-	DetectProblemsDontAlert SuppressionType
-	DontDetectProblems      SuppressionType
-}{
-	SuppressionType("DETECT_PROBLEMS_AND_ALERT"),
-	SuppressionType("DETECT_PROBLEMS_DONT_ALERT"),
-	SuppressionType("DONT_DETECT_PROBLEMS"),
+	DayOfWeekType("WEDNESDAY"),
 }
 
 type MaintenanceType string
@@ -45,13 +33,25 @@ var MaintenanceTypes = struct {
 type ScheduleType string
 
 var ScheduleTypes = struct {
-	Once    ScheduleType
 	Daily   ScheduleType
-	Weekly  ScheduleType
 	Monthly ScheduleType
+	Once    ScheduleType
+	Weekly  ScheduleType
 }{
-	ScheduleType("ONCE"),
 	ScheduleType("DAILY"),
-	ScheduleType("WEEKLY"),
 	ScheduleType("MONTHLY"),
+	ScheduleType("ONCE"),
+	ScheduleType("WEEKLY"),
+}
+
+type SuppressionType string
+
+var SuppressionTypes = struct {
+	DetectProblemsAndAlert  SuppressionType
+	DetectProblemsDontAlert SuppressionType
+	DontDetectProblems      SuppressionType
+}{
+	SuppressionType("DETECT_PROBLEMS_AND_ALERT"),
+	SuppressionType("DETECT_PROBLEMS_DONT_ALERT"),
+	SuppressionType("DONT_DETECT_PROBLEMS"),
 }

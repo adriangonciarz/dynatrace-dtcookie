@@ -3,11 +3,11 @@ package resourceattribute
 type MaskingType string
 
 var MaskingTypes = struct {
-	NotMasked                MaskingType
-	MaskOnlyConfidentialData MaskingType
 	MaskEntireValue          MaskingType
+	MaskOnlyConfidentialData MaskingType
+	NotMasked                MaskingType
 }{
-	MaskingType("NOT_MASKED"),
-	MaskingType("MASK_ONLY_CONFIDENTIAL_DATA"),
 	MaskingType("MASK_ENTIRE_VALUE"),
+	MaskingType("MASK_ONLY_CONFIDENTIAL_DATA"),
+	MaskingType("NOT_MASKED"),
 }

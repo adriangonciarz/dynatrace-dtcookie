@@ -16,10 +16,10 @@ type Theme string
 
 var Themes = struct {
 	Auto  Theme
-	Light Theme
 	Dark  Theme
+	Light Theme
 }{
 	Theme("Auto"),
-	Theme("Light"),
 	Theme("Dark"),
+	Theme("Light"),
 }

@@ -3,29 +3,29 @@ package integration
 type IssueTheme string
 
 var IssueThemes = struct {
-	Info     IssueTheme
 	Error    IssueTheme
+	Info     IssueTheme
 	Resolved IssueTheme
 }{
-	IssueTheme("INFO"),
 	IssueTheme("ERROR"),
+	IssueTheme("INFO"),
 	IssueTheme("RESOLVED"),
 }
 
 type IssueTrackerSystem string
 
 var IssueTrackerSystems = struct {
-	Gitlab        IssueTrackerSystem
-	Servicenow    IssueTrackerSystem
-	JiraOnPremise IssueTrackerSystem
-	JiraCloud     IssueTrackerSystem
-	Jira          IssueTrackerSystem
 	Github        IssueTrackerSystem
+	Gitlab        IssueTrackerSystem
+	Jira          IssueTrackerSystem
+	JiraCloud     IssueTrackerSystem
+	JiraOnPremise IssueTrackerSystem
+	Servicenow    IssueTrackerSystem
 }{
-	IssueTrackerSystem("GITLAB"),
-	IssueTrackerSystem("SERVICENOW"),
-	IssueTrackerSystem("JIRA_ON_PREMISE"),
-	IssueTrackerSystem("JIRA_CLOUD"),
-	IssueTrackerSystem("JIRA"),
 	IssueTrackerSystem("GITHUB"),
+	IssueTrackerSystem("GITLAB"),
+	IssueTrackerSystem("JIRA"),
+	IssueTrackerSystem("JIRA_CLOUD"),
+	IssueTrackerSystem("JIRA_ON_PREMISE"),
+	IssueTrackerSystem("SERVICENOW"),
 }

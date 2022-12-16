@@ -9,7 +9,7 @@ type Exceptions []*Exception
 
 func (me *Exceptions) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"ignoredException": {
+		"customHandledException": {
 			Type:        hcl.TypeSet,
 			Required:    true,
 			MinItems:    1,
@@ -30,20 +30,20 @@ func (me Exceptions) MarshalHCL() (map[string]interface{}, error) {
 				return nil, err
 			}
 		}
-		result["ignoredException"] = entries
+		result["customHandledException"] = entries
 	}
 	return result, nil
 }
 
 func (me *Exceptions) UnmarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("ignoredException"); ok {
+	if value, ok := decoder.GetOk("customHandledException"); ok {
 
 		entrySet := value.(*schema.Set)
 
 		for _, entryMap := range entrySet.List() {
 			hash := entrySet.F(entryMap)
 			entry := new(Exception)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "ignoredException", hash)); err != nil {
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "customHandledException", hash)); err != nil {
 				return err
 			}
 			*me = append(*me, entry)

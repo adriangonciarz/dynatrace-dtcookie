@@ -44,6 +44,10 @@ func (me *SliceAlias) Kind() CodeContributorKind {
 	return AliasContrib
 }
 
+func (me *SliceAlias) SortName() string {
+	return me.Name
+}
+
 func NewSliceAlias(t *reflection.Type, item string) *SliceAlias {
 	return &SliceAlias{
 		Name: Plural(TypeName(t.Elem.Unref())),

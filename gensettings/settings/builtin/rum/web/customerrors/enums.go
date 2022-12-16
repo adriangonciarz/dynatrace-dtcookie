@@ -3,15 +3,15 @@ package customerrors
 type Matcher string
 
 var Matchers = struct {
-	EndsWith   Matcher
-	Contains   Matcher
-	Equals     Matcher
 	All        Matcher
 	BeginsWith Matcher
+	Contains   Matcher
+	EndsWith   Matcher
+	Equals     Matcher
 }{
-	Matcher("ENDS_WITH"),
-	Matcher("CONTAINS"),
-	Matcher("EQUALS"),
 	Matcher("ALL"),
 	Matcher("BEGINS_WITH"),
+	Matcher("CONTAINS"),
+	Matcher("ENDS_WITH"),
+	Matcher("EQUALS"),
 }

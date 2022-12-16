@@ -3,23 +3,23 @@ package appdetection
 type Matcher string
 
 var Matchers = struct {
-	UrlContains      Matcher
-	UrlEndsWith      Matcher
+	DomainContains   Matcher
+	DomainEndsWith   Matcher
 	DomainEquals     Matcher
 	DomainMatches    Matcher
 	DomainStartsWith Matcher
-	UrlStartsWith    Matcher
-	DomainEndsWith   Matcher
+	UrlContains      Matcher
+	UrlEndsWith      Matcher
 	UrlEquals        Matcher
-	DomainContains   Matcher
+	UrlStartsWith    Matcher
 }{
-	Matcher("URL_CONTAINS"),
-	Matcher("URL_ENDS_WITH"),
+	Matcher("DOMAIN_CONTAINS"),
+	Matcher("DOMAIN_ENDS_WITH"),
 	Matcher("DOMAIN_EQUALS"),
 	Matcher("DOMAIN_MATCHES"),
 	Matcher("DOMAIN_STARTS_WITH"),
-	Matcher("URL_STARTS_WITH"),
-	Matcher("DOMAIN_ENDS_WITH"),
+	Matcher("URL_CONTAINS"),
+	Matcher("URL_ENDS_WITH"),
 	Matcher("URL_EQUALS"),
-	Matcher("DOMAIN_CONTAINS"),
+	Matcher("URL_STARTS_WITH"),
 }
