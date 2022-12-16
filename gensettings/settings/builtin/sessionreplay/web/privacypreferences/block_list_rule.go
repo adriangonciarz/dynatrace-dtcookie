@@ -9,7 +9,7 @@ type BlockListRules []*BlockListRule
 
 func (me *BlockListRules) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"recordingMaskingBlockListRule": {
+		"playbackMaskingBlockListRule": {
 			Type:        hcl.TypeSet,
 			Required:    true,
 			MinItems:    1,
@@ -30,20 +30,20 @@ func (me BlockListRules) MarshalHCL() (map[string]interface{}, error) {
 				return nil, err
 			}
 		}
-		result["recordingMaskingBlockListRule"] = entries
+		result["playbackMaskingBlockListRule"] = entries
 	}
 	return result, nil
 }
 
 func (me *BlockListRules) UnmarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("recordingMaskingBlockListRule"); ok {
+	if value, ok := decoder.GetOk("playbackMaskingBlockListRule"); ok {
 
 		entrySet := value.(*schema.Set)
 
 		for _, entryMap := range entrySet.List() {
 			hash := entrySet.F(entryMap)
 			entry := new(BlockListRule)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "recordingMaskingBlockListRule", hash)); err != nil {
+			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "playbackMaskingBlockListRule", hash)); err != nil {
 				return err
 			}
 			*me = append(*me, entry)
