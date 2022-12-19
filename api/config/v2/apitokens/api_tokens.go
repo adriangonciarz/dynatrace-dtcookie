@@ -93,7 +93,7 @@ func (me *ApiToken) Schema() map[string]*hcl.Schema {
 
 func (me *ApiToken) MarshalHCL() (map[string]interface{}, error) {
 	properties := hcl.Properties{}
-	return properties.EncodeAll(map[string]interface{}{
+	if _, err := properties.EncodeAll(map[string]interface{}{
 		"name":                  me.Name,
 		"enabled":               me.Enabled,
 		"personal_access_token": me.PersonalAccessToken,
@@ -104,7 +104,15 @@ func (me *ApiToken) MarshalHCL() (map[string]interface{}, error) {
 		"last_used_date":        me.LastUsedDate,
 		"last_used_ip_address":  me.LastUsedIpAddress,
 		"scopes":                me.Scopes,
-	})
+	}); err != nil {
+		return nil, err
+	}
+	if me.Token != nil {
+		if err := properties.Encode("token", me.Token); err != nil {
+			return nil, err
+		}
+	}
+	return properties, nil
 }
 
 func (me *ApiToken) UnmarshalHCL(decoder hcl.Decoder) error {

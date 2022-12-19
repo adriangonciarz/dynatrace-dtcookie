@@ -7,7 +7,6 @@ import (
 
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
-	"github.com/dtcookie/opt"
 )
 
 // ServiceClient TODO: documentation
@@ -26,27 +25,21 @@ func NewService(baseURL string, token string) *ServiceClient {
 	return &ServiceClient{client: client}
 }
 
-type TokenResponse struct {
-	ID             string `json:"id"`                       // The ID of the token, consisting of prefix and public part of the token.
-	ExpirationDate string `json:"expirationDate,omitempty"` // The token expiration date in ISO 8601 format (yyyy-MM-dd'T'HH:mm:ss.SSS'Z').
-	Token          string `json:"token"`                    // The secret of the token.
-}
-
 // Create TODO: documentation
-func (cs *ServiceClient) Create(item *ApiToken) (*TokenResponse, error) {
+func (cs *ServiceClient) Create(item *ApiToken) (*ApiToken, error) {
 	var err error
 	var bytes []byte
 
 	if bytes, err = cs.client.POST("/apiTokens", item, 201); err != nil {
 		return nil, err
 	}
-	var stub TokenResponse
-	if err = json.Unmarshal(bytes, &stub); err != nil {
+	var resultToken ApiToken
+	if err = json.Unmarshal(bytes, &resultToken); err != nil {
 		return nil, err
 	}
-	item.Token = opt.NewString(stub.Token)
-
-	return &stub, nil
+	resultToken.Name = item.Name
+	resultToken.Scopes = item.Scopes
+	return &resultToken, nil
 }
 
 // Update TODO: documentation
