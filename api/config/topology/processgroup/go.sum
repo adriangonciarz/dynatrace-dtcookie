@@ -1,4 +1,4 @@
-github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0 h1:XLxBZJwfenHqQ2WKakSKKt3iBt+DGAHzPTJt2LZC7ZQ=
-github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.0/go.mod h1:Wty4r/AkYsJJFl7mj1w+Ma70Irfh/jQOmehhnVk4ylI=
+github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.1 h1:3X2RM4EkMNwNhpsHFngD9jo6zjUf+kCS0IG1Ihnhyl8=
+github.com/dtcookie/dynatrace/api/config/topology/tag v1.0.1/go.mod h1:O1kstAGUBbFZvJ2cE2m8IXygYWzAh96soPHXdu5WFlw=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
