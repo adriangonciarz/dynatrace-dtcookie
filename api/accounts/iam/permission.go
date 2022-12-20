@@ -2,7 +2,6 @@ package iam
 
 import (
 	"github.com/dtcookie/hcl"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Permissions []*Permission
@@ -19,37 +18,12 @@ func (me *Permissions) Schema() map[string]*hcl.Schema {
 	}
 }
 
-func (me *Permissions) MarshalHCL() (map[string]interface{}, error) {
-	result := map[string]interface{}{}
-	if len(*me) > 0 {
-		entries := []interface{}{}
-		for _, entry := range *me {
-			if marshalled, err := entry.MarshalHCL(); err == nil {
-				entries = append(entries, marshalled)
-			} else {
-				return nil, err
-			}
-		}
-		result["permission"] = entries
-	}
-	return result, nil
+func (me Permissions) MarshalHCL() (map[string]interface{}, error) {
+	return hcl.Properties{}.EncodeSlice("permission", me)
 }
 
 func (me *Permissions) UnmarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("permission"); ok {
-
-		entrySet := value.(*schema.Set)
-
-		for _, entryMap := range entrySet.List() {
-			hash := entrySet.F(entryMap)
-			entry := new(Permission)
-			if err := entry.UnmarshalHCL(hcl.NewDecoder(decoder, "permission", hash)); err != nil {
-				return err
-			}
-			*me = append(*me, entry)
-		}
-	}
-	return nil
+	return decoder.DecodeSlice("permission", me)
 }
 
 type Permission struct {

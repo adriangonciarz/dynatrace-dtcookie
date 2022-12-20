@@ -40,7 +40,7 @@ func (me *Group) MarshalHCL() (map[string]interface{}, error) {
 		"name":                       me.Name,
 		"description":                me.Description,
 		"federated_attribute_values": me.FederatedAttributeValues,
-		"permissions":                &me.Permissions,
+		"permissions":                me.Permissions,
 	})
 }
 
