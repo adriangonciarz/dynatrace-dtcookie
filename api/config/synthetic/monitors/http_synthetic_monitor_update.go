@@ -3,7 +3,7 @@ package monitors
 import (
 	"encoding/json"
 
-	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors/http"
+	"github.com/tshortess/dynatrace/tree/master/api/config/synthetic/monitors/http"
 	"github.com/dtcookie/hcl"
 )
 
