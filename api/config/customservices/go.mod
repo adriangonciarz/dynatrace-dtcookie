@@ -1,6 +1,6 @@
 module github.com/dtcookie/dynatrace/api/config/customservices
 
-go 1.15
+go 1.19
 
 require (
 	github.com/dtcookie/dynatrace/api/config v1.0.11
