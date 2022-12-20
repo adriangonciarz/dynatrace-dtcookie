@@ -4,12 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // ServiceClient TODO: documentation
@@ -38,11 +36,11 @@ func (cs *ServiceClient) Create(ctx context.Context, settings *DashboardSharing)
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, settings *DashboardSharing) error {
-	debugFlag := os.Getenv("TF_LOG_PROVIDER_DYNATRACE")
-	if strings.ToUpper(debugFlag) == "DEBUG" {
-		data, _ := json.Marshal(settings)
-		tflog.Debug(ctx, fmt.Sprintf("\nPUT /dashboards/%s/shareSettings\n    %s\n", settings.DashboardID, string(data)))
-	}
+	// debugFlag := os.Getenv("TF_LOG_PROVIDER_DYNATRACE")
+	// if strings.ToUpper(debugFlag) == "DEBUG" {
+	// data, _ := json.Marshal(settings)
+	// tflog.Debug(ctx, fmt.Sprintf("\nPUT /dashboards/%s/shareSettings\n    %s\n", settings.DashboardID, string(data)))
+	// }
 	_, err := cs.client.PUT(fmt.Sprintf("/dashboards/%s/shareSettings", settings.DashboardID), settings, 201)
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
