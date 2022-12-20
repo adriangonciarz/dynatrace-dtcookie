@@ -7,6 +7,7 @@ import (
 
 	"github.com/dtcookie/dynatrace/rest"
 	"github.com/dtcookie/dynatrace/rest/credentials"
+	"github.com/dtcookie/opt"
 )
 
 // ServiceClient TODO: documentation
@@ -36,6 +37,13 @@ func (cs *ServiceClient) Create(item *ApiToken) (*ApiToken, error) {
 	var resultToken ApiToken
 	if err = json.Unmarshal(bytes, &resultToken); err != nil {
 		return nil, err
+	}
+	if item.Enabled == nil || *item.Enabled == false {
+		item.Enabled = opt.NewBool(false)
+		if _, err = cs.client.PUT(fmt.Sprintf("/apiTokens/%s", *resultToken.ID), item, 204); err != nil {
+			return nil, err
+		}
+		resultToken.Enabled = item.Enabled
 	}
 	resultToken.Name = item.Name
 	resultToken.Scopes = item.Scopes

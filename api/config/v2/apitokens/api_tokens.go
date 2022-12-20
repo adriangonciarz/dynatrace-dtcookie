@@ -8,7 +8,7 @@ import (
 type ApiToken struct {
 	ID                  *string  `json:"id,omitempty"`                  // The ID of the api tokem
 	Name                string   `json:"name"`                          // The name of the token.
-	Enabled             *bool    `json:"enabled,omitempty"`             // The token is enabled (true) or disabled (false).
+	Enabled             *bool    `json:"enabled,omitempty"`             // The token is enabled (true) or disabled (false), default disabled (false).
 	PersonalAccessToken *bool    `json:"personalAccessToken,omitempty"` // The token is a personal access token (true) or an API token (false).
 	ExpirationDate      *string  `json:"expirationDate,omitempty"`      // The expiration date of the token.
 	Owner               *string  `json:"owner,omitempty"`               // The owner of the token
@@ -33,7 +33,7 @@ func (me *ApiToken) Schema() map[string]*hcl.Schema {
 		},
 		"enabled": {
 			Type:        hcl.TypeBool,
-			Description: "The token is enabled (true) or disabled (false).",
+			Description: "The token is enabled (true) or disabled (false), default disabled (false).",
 			Optional:    true,
 		},
 		"personal_access_token": {
