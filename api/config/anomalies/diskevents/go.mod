@@ -1,12 +1,12 @@
 module github.com/dtcookie/dynatrace/api/config/anomalies/diskevents
 
-go 1.15
+go 1.19
 
 require (
-	github.com/dtcookie/dynatrace/api/config v1.0.9
-	github.com/dtcookie/dynatrace/api/config/common v1.0.4
+	github.com/dtcookie/dynatrace/api/config v1.0.11
+	github.com/dtcookie/dynatrace/api/config/common v1.0.5
 	github.com/dtcookie/dynatrace/rest v1.0.15
-	github.com/dtcookie/hcl v0.0.13
+	github.com/dtcookie/hcl v1.0.2
 	github.com/dtcookie/opt v1.0.0
 	github.com/dtcookie/xjson v1.0.2
 )
