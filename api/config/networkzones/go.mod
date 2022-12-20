@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/dtcookie/dynatrace/rest v1.0.15
-	github.com/dtcookie/hcl v0.0.16
+	github.com/dtcookie/hcl v1.0.2
 	github.com/google/uuid v1.3.0
 )
 
