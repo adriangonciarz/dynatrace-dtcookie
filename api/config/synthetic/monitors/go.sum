@@ -1,5 +1,3 @@
-github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.20 h1:cfcb89C+l+jJhvm5q6w78j4uAKMtgphyBgJOZ+GD3OQ=
-github.com/dtcookie/dynatrace/api/config/synthetic/monitors v1.0.20/go.mod h1:ZX485yUyjSp7vEgYrjQwtCS8yYNayI+9nK0IngJ2lfE=
 github.com/dtcookie/dynatrace/rest v1.0.15 h1:SMxw7XxvFqPRpRpLpJyLCPueZCoQtFMV2JxdrnZWSXM=
 github.com/dtcookie/dynatrace/rest v1.0.15/go.mod h1://1AkUkyFQFG43vhMg2aykz13PgB/4eTUIE8SS+vnNw=
 github.com/dtcookie/hcl v1.0.2 h1:wYAXiy2sPUaUmz7M1HPBUJuR4rNo90EiWbmQ87IxBCk=

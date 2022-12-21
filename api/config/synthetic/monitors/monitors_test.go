@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/tshortess/dynatrace/tree/master/api/config/synthetic/monitors"
+	"github.com/dtcookie/dynatrace/api/config/synthetic/monitors"
 )
 
 var input = `{
