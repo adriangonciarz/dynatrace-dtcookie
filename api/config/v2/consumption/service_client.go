@@ -10,8 +10,8 @@ import (
 	"github.com/dtcookie/dynatrace/rest/credentials"
 )
 
-const schemaVersion = "0.0.12"
-const schemaID = "builtin:ibmmq.queue-managers"
+const schemaVersion = "3.4.1"
+const schemaID = "builtin:accounting.ddu.limit"
 
 type SettingsObject struct {
 	SchemaVersion string   `json:"schemaVersion"`
