@@ -6,11 +6,11 @@ import (
 
 // DDUPool TODO: documentation
 type DDUPool struct {
-	MetricsPool       *DDUPoolConfig `json:"metrics,omitempty"`
-	LogMonitoringPool *DDUPoolConfig `json:"logMonitoring,omitempty"`
-	ServerlessPool    *DDUPoolConfig `json:"serverless,omitempty"`
-	EventsPool        *DDUPoolConfig `json:"events,omitempty"`
-	TracesPool        *DDUPoolConfig `json:"traces,omitempty"`
+	MetricsPool       DDUPoolConfig `json:"metrics"`
+	LogMonitoringPool DDUPoolConfig `json:"logMonitoring"`
+	ServerlessPool    DDUPoolConfig `json:"serverless"`
+	EventsPool        DDUPoolConfig `json:"events"`
+	TracesPool        DDUPoolConfig `json:"traces"`
 }
 
 func (me *DDUPool) Schema() map[string]*hcl.Schema {
@@ -71,13 +71,33 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 func (me *DDUPool) MarshalHCL() (map[string]interface{}, error) {
 	properties := hcl.Properties{}
 
-	return properties.EncodeAll(map[string]interface{}{
-		"metrics":        me.MetricsPool,
-		"log_monitoring": me.LogMonitoringPool,
-		"serverless":     me.ServerlessPool,
-		"events":         me.EventsPool,
-		"traces":         me.TracesPool,
-	})
+	if me.MetricsPool.LimitEnabled {
+		if err := properties.Encode("metrics", &me.MetricsPool); err != nil {
+			return nil, err
+		}
+	}
+	if me.LogMonitoringPool.LimitEnabled {
+		if err := properties.Encode("log_monitoring", &me.LogMonitoringPool); err != nil {
+			return nil, err
+		}
+	}
+	if me.ServerlessPool.LimitEnabled {
+		if err := properties.Encode("serverless", &me.ServerlessPool); err != nil {
+			return nil, err
+		}
+	}
+	if me.EventsPool.LimitEnabled {
+		if err := properties.Encode("events", &me.EventsPool); err != nil {
+			return nil, err
+		}
+	}
+	if me.TracesPool.LimitEnabled {
+		if err := properties.Encode("traces", &me.TracesPool); err != nil {
+			return nil, err
+		}
+	}
+
+	return properties, nil
 }
 
 func (me *DDUPool) UnmarshalHCL(decoder hcl.Decoder) error {
