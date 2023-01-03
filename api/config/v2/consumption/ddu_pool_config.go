@@ -12,17 +12,17 @@ type DDUPoolConfig struct {
 
 func (me *DDUPoolConfig) Schema() map[string]*hcl.Schema {
 	return map[string]*hcl.Schema{
-		"limit_enabled": {
+		"enabled": {
 			Type:        hcl.TypeBool,
 			Required:    true,
 			Description: "Is the limit configuration enabled",
 		},
-		"limit_type": {
+		"type": {
 			Type:        hcl.TypeString,
 			Optional:    true,
 			Description: "Type of the limit applied: MONTHLY or ANNUAL",
 		},
-		"limit_value": {
+		"value": {
 			Type:        hcl.TypeInt,
 			Optional:    true,
 			Description: "Value of the DDU limit applied for provided timerange",
@@ -34,18 +34,17 @@ func (me *DDUPoolConfig) MarshalHCL() (map[string]interface{}, error) {
 	properties := hcl.Properties{}
 
 	return properties.EncodeAll(map[string]interface{}{
-		"limit_enabled": me.LimitEnabled,
-		"limit_type":    me.LimitType,
-		"limit_value":   me.LimitValue,
+		"enabled": me.LimitEnabled,
+		"type":    me.LimitType,
+		"value":   me.LimitValue,
 	})
 }
 
 func (me *DDUPoolConfig) UnmarshalHCL(decoder hcl.Decoder) error {
-
 	err := decoder.DecodeAll(map[string]interface{}{
-		"limit_enabled": &me.LimitEnabled,
-		"limit_type":    &me.LimitType,
-		"limit_value":   &me.LimitValue,
+		"enabled": &me.LimitEnabled,
+		"type":    &me.LimitType,
+		"value":   &me.LimitValue,
 	})
 
 	if err != nil {
