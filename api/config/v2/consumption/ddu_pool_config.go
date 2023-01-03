@@ -5,9 +5,9 @@ import (
 )
 
 type DDUPoolConfig struct {
-	LimitEnabled bool   `json:"limitEnabled"`
-	LimitType    string `json:"limitType"`
-	LimitValue   int    `json:"limitValue"`
+	LimitEnabled bool    `json:"limitEnabled"`
+	LimitType    *string `json:"limitType,omitempty"`
+	LimitValue   *int    `json:"limitValue,omitempty"`
 }
 
 func (me *DDUPoolConfig) Schema() map[string]*hcl.Schema {
@@ -41,9 +41,23 @@ func (me *DDUPoolConfig) MarshalHCL() (map[string]interface{}, error) {
 }
 
 func (me *DDUPoolConfig) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]interface{}{
+
+	err := decoder.DecodeAll(map[string]interface{}{
 		"limit_enabled": &me.LimitEnabled,
 		"limit_type":    &me.LimitType,
 		"limit_value":   &me.LimitValue,
 	})
+
+	if err != nil {
+		return err
+	}
+
+	//  Sanity check -> if limit_enabled is false, the type and value must not be sent
+	if !me.LimitEnabled {
+		me.LimitType = nil
+		me.LimitValue = nil
+	}
+
+	return nil
+
 }

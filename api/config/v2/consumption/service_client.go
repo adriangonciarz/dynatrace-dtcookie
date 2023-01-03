@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 
 	v2common "github.com/dtcookie/dynatrace/api/config/v2/common"
 	"github.com/dtcookie/dynatrace/rest"
@@ -70,7 +71,7 @@ func (cs *ServiceClient) Update(id string, item *DDUPool) error {
 		Value:         item,
 		SchemaVersion: schemaVersion,
 	}
-	if _, err := cs.client.PUT(fmt.Sprintf("/settings/objects/%s", id), &payload, 200); err != nil {
+	if _, err := cs.client.PUT(fmt.Sprintf("/settings/objects/%s", url.PathEscape(id)), &payload, 200); err != nil {
 		return err
 	}
 	return nil
@@ -81,7 +82,7 @@ func (cs *ServiceClient) Delete(id string) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the item to delete")
 	}
-	if _, err := cs.client.DELETE(fmt.Sprintf("/settings/objects/%s", id), 204); err != nil {
+	if _, err := cs.client.DELETE(fmt.Sprintf("/settings/objects/%s", url.PathEscape(id)), 204); err != nil {
 		return err
 	}
 	return nil
@@ -96,7 +97,7 @@ func (cs *ServiceClient) Get(id string) (*DDUPool, error) {
 	var err error
 	var bytes []byte
 
-	if bytes, err = cs.client.GET(fmt.Sprintf("/settings/objects/%s", id), 200); err != nil {
+	if bytes, err = cs.client.GET(fmt.Sprintf("/settings/objects/%s", url.PathEscape(id)), 200); err != nil {
 		return nil, err
 	}
 	var settingsObject SettingsObject
@@ -111,7 +112,7 @@ func (cs *ServiceClient) List() ([]string, error) {
 	var err error
 	var bytes []byte
 
-	if bytes, err = cs.client.GET(fmt.Sprintf("/settings/objects?schemaIds=%s&fields=objectId&pageSize=500", schemaID), 200); err != nil {
+	if bytes, err = cs.client.GET(fmt.Sprintf("/settings/objects?schemaIds=%s&fields=objectId&pageSize=500", url.QueryEscape(schemaID)), 200); err != nil {
 		return nil, err
 	}
 	var sol v2common.SettingsObjectList

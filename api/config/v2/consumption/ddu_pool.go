@@ -6,11 +6,11 @@ import (
 
 // DDUPool TODO: documentation
 type DDUPool struct {
-	MetricsPool       DDUPoolConfig `json:"metrics"`
-	LogMonitoringPool DDUPoolConfig `json:"logMonitoring"`
-	ServerlessPool    DDUPoolConfig `json:"serverless"`
-	EventsPool        DDUPoolConfig `json:"events"`
-	TracesPool        DDUPoolConfig `json:"traces"`
+	MetricsPool       *DDUPoolConfig `json:"metrics,omitempty"`
+	LogMonitoringPool *DDUPoolConfig `json:"logMonitoring,omitempty"`
+	ServerlessPool    *DDUPoolConfig `json:"serverless,omitempty"`
+	EventsPool        *DDUPoolConfig `json:"events,omitempty"`
+	TracesPool        *DDUPoolConfig `json:"traces,omitempty"`
 }
 
 func (me *DDUPool) Schema() map[string]*hcl.Schema {
@@ -19,6 +19,7 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Description: "DDU pool settings for Metrics",
 			Elem: &hcl.Resource{
 				Schema: new(DDUPoolConfig).Schema(),
@@ -28,6 +29,7 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Description: "DDU pool settings for Log Monitoring",
 			Elem: &hcl.Resource{
 				Schema: new(DDUPoolConfig).Schema(),
@@ -37,6 +39,7 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Description: "DDU pool settings for Serverless",
 			Elem: &hcl.Resource{
 				Schema: new(DDUPoolConfig).Schema(),
@@ -46,6 +49,7 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Description: "DDU pool settings for Events",
 			Elem: &hcl.Resource{
 				Schema: new(DDUPoolConfig).Schema(),
@@ -55,6 +59,7 @@ func (me *DDUPool) Schema() map[string]*hcl.Schema {
 			Type:        hcl.TypeList,
 			Optional:    true,
 			MinItems:    1,
+			MaxItems:    1,
 			Description: "DDU pool settings for Traces",
 			Elem: &hcl.Resource{
 				Schema: new(DDUPoolConfig).Schema(),
